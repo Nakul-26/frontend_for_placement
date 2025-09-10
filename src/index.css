@@ -43,7 +43,7 @@ body{
 .brand h1{font-size:1.1rem;margin:0}
 
 .btn{display:inline-flex;align-items:center;gap:.5rem;border:0;padding:.5rem .8rem;border-radius:6px;cursor:pointer;background:transparent}
-.btn.small{padding:.35rem .6rem;font-size:.85rem}
+.btn.small{padding:.35rem .6rem;font-size:.85rem; color: #ffffff;}
 .btn.primary{background:var(--primary);color:white;box-shadow:var(--shadow-sm)}
 .btn.outline{border:1px solid rgba(15,23,42,0.06);background:white}
 

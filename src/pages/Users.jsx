@@ -1,5 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 
 const TABS = [
   { label: "Users", key: "users" },
@@ -8,18 +10,19 @@ const TABS = [
   { label: "Role-Permission Assignments", key: "role-permissions" },
 ];
 
+
 export default function Users() {
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
   const [search, setSearch] = React.useState("");
   const [activeTab, setActiveTab] = React.useState("users");
+  const [searchField, setSearchField] = React.useState("email");
 
-  // Fetch users via GraphQL
-  const fetchUsers = async () => {
+  const fetchUsers = async (searchValue = "") => {
     const query = `
-      query {
-        users {
+      query FindUsers($by: usersearch) {
+        searchUsers(by: $by) {
           id
           name
           email
@@ -32,19 +35,36 @@ export default function Users() {
       }
     `;
 
+    // Create the variables object dynamically
+    // If searchValue is empty, we don't need any search criteria
+    const by = searchValue
+      ? {
+          [searchField]: searchValue, // Use computed property to set the key dynamically
+        }
+      : {};
+
+    const variables = {
+      by,
+    };
+
     try {
       setLoading(true);
-      const response = await fetch("/graphql", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // send session cookie
-        body: JSON.stringify({ query }),
-      });
+      const response = await api.post(
+        `/graphql`,
+        { query, variables },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
 
-      const result = await response.json();
-      setUsers(Array.isArray(result.data?.users) ? result.data.users : []);
+      const result = response.data;
+      setUsers(
+        Array.isArray(result.data?.searchUsers) ? result.data.searchUsers : []
+      );
       setError("");
     } catch (err) {
+      console.error(err);
       setError("Failed to load users");
       setUsers([]);
     } finally {
@@ -52,9 +72,14 @@ export default function Users() {
     }
   };
 
+  // Initial load
   React.useEffect(() => {
-    fetchUsers();
-  }, []);
+    const timeout = setTimeout(() => {
+      fetchUsers(search);
+    }, 300);
+    return () => clearTimeout(timeout);
+    // Add searchField to the dependency array
+  }, [search, searchField]);
 
   // 🗑️ Delete user
   const handleDelete = async (id) => {
@@ -82,9 +107,16 @@ export default function Users() {
     window.location.href = `/admin/users/${id}/edit`;
   };
 
-  const filteredUsers = users.filter((u) =>
-    (u.email || "").toLowerCase().includes(search.toLowerCase())
-  );
+
+  // When search changes, fetch users
+  React.useEffect(() => {
+    // Debounce: only search if user stops typing for 300ms
+    const timeout = setTimeout(() => {
+      fetchUsers(search);
+    }, 300);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line
+  }, [search]);
 
   return (
     <div className="app-layout">
@@ -101,6 +133,8 @@ export default function Users() {
             Manage roles, permissions, and access control for the system.
           </div>
         </div>
+
+        
 
         {/* Tabs */}
         <div
@@ -138,7 +172,6 @@ export default function Users() {
           ))}
         </div>
 
-        {/* Search bar */}
         <div
           style={{
             marginBottom: 16,
@@ -150,7 +183,7 @@ export default function Users() {
           <div style={{ flex: 1, position: "relative" }}>
             <input
               type="text"
-              placeholder="Search by email address..."
+              placeholder={`Search by ${searchField}...`}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{
@@ -161,29 +194,34 @@ export default function Users() {
                 fontSize: 15,
               }}
             />
-            <span
-              style={{
-                position: "absolute",
-                right: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "#2563eb",
-                fontSize: 18,
-                cursor: "pointer",
-              }}
-              title="Search by email"
-            >
-              📧
-            </span>
           </div>
+
+          {/* New search field selector */}
+          <select
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+            style={{
+              padding: "10px 18px",
+              border: "1px solid #e5e7eb",
+              borderRadius: 8,
+              background: "#ffffffff",
+              color: "#374151",
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+          >
+            <option value="email">Email</option>
+            <option value="name">Name</option>
+            <option value="roleName">Role</option>
+          </select>
           <button
             onClick={() => setSearch("")}
             style={{
               padding: "10px 18px",
               border: "1px solid #e5e7eb",
               borderRadius: 8,
-              background: "#f9fafb",
-              color: "#374151",
+              background: "#0051ffff",
+              color: "#ffffffff",
               fontWeight: 500,
               cursor: "pointer",
             }}
@@ -191,6 +229,7 @@ export default function Users() {
             Reset
           </button>
         </div>
+
 
         {/* Users Table */}
         <section className="card" style={{ padding: 0 }}>
@@ -213,7 +252,7 @@ export default function Users() {
               <span role="img" aria-label="users">
                 👥
               </span>{" "}
-              Users Management ({filteredUsers.length})
+              Users Management ({users.length})
             </div>
             <button
               style={{
@@ -279,14 +318,14 @@ export default function Users() {
                       {error}
                     </td>
                   </tr>
-                ) : filteredUsers.length === 0 ? (
+                ) : users.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ textAlign: "center", padding: "24px" }}>
                       No users found.
                     </td>
                   </tr>
                 ) : (
-                  filteredUsers.map((u, i) => (
+                  users.map((u, i) => (
                     <tr key={u.id} style={{ borderBottom: "1px solid #f1f1f1" }}>
                       <td style={{ padding: "10px 12px", color: "#64748b" }}>#{i + 1}</td>
                       <td style={{ padding: "10px 12px" }}>{u.name || "-"}</td>

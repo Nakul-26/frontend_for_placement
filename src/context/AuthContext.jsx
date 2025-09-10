@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("/userdata", { withCredentials: true });
+        const res = await axios.get("/api/userdata", { withCredentials: true });
         setUser(res.data);
       } catch (err) {
         console.error("Session check failed:", err);
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const res = await axios.post(
-        "/login",
+        "/api/login",
         { email, password },
         { withCredentials: true }
       );
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     console.log("Logging out...");
     try {
-      const res = await axios.get("/logout", { withCredentials: true });
+      const res = await axios.get("/api/logout", { withCredentials: true });
       console.log("Logout response:", res.data);
       setUser(null);
       return { success: true };
