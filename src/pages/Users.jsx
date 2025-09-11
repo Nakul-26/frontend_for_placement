@@ -1,24 +1,19 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
-
-const TABS = [
-  { label: "Users", key: "users" },
-  { label: "Roles", key: "roles" },
-  { label: "Permissions", key: "permissions" },
-  { label: "Role-Permission Assignments", key: "role-permissions" },
-];
-
 
 export default function Users() {
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
   const [search, setSearch] = React.useState("");
-  const [activeTab, setActiveTab] = React.useState("users");
   const [searchField, setSearchField] = React.useState("email");
 
+  // Add/Edit state
+  const [editingUser, setEditingUser] = React.useState(null);
+  const [newUser, setNewUser] = React.useState(null);
+
+  // 🔎 Search users
   const fetchUsers = async (searchValue = "") => {
     const query = `
       query FindUsers($by: usersearch) {
@@ -34,34 +29,16 @@ export default function Users() {
         }
       }
     `;
-
-    // Create the variables object dynamically
-    // If searchValue is empty, we don't need any search criteria
-    const by = searchValue
-      ? {
-          [searchField]: searchValue, // Use computed property to set the key dynamically
-        }
-      : {};
-
-    const variables = {
-      by,
-    };
+    const by = searchValue ? { [searchField]: searchValue } : {};
 
     try {
       setLoading(true);
       const response = await api.post(
         `/graphql`,
-        { query, variables },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+        { query, variables: { by } },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
-
-      const result = response.data;
-      setUsers(
-        Array.isArray(result.data?.searchUsers) ? result.data.searchUsers : []
-      );
+      setUsers(response.data.data?.searchUsers || []);
       setError("");
     } catch (err) {
       console.error(err);
@@ -72,319 +49,202 @@ export default function Users() {
     }
   };
 
-  // Initial load
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      fetchUsers(search);
-    }, 300);
-    return () => clearTimeout(timeout);
-    // Add searchField to the dependency array
-  }, [search, searchField]);
+  // 📋 Fetch all users
+  const fetchUsers2 = async () => {
+    const query = `
+      query {
+        users {
+          id
+          name
+          email
+          created_at
+          role {
+            name
+            description
+          }
+        }
+      }
+    `;
+    try {
+      setLoading(true);
+      const response = await api.post(
+        `/graphql`,
+        { query },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+      );
+      setUsers(response.data.data?.users || []);
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load users");
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // 🗑️ Delete user
+  // 🗑️ Delete
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
-
     try {
       const res = await fetch(`/api/users/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete user");
-      }
-
-      await fetchUsers(); // refresh list
+      if (!res.ok) throw new Error("Failed to delete user");
+      await fetchUsers2();
     } catch (err) {
       alert(err.message);
     }
   };
 
-  // ✏️ Edit user
-  const handleEdit = (id) => {
-    // redirect to a user edit page
-    window.location.href = `/admin/users/${id}/edit`;
+  // ✏️ Save Edit
+  const handleSaveEdit = async () => {
+    try {
+      const res = await fetch(`/api/users/${editingUser.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(editingUser),
+      });
+      if (!res.ok) throw new Error("Failed to update user");
+      setEditingUser(null);
+      await fetchUsers2();
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
+  // ➕ Save New
+  const handleSaveNew = async () => {
+    try {
+      const res = await fetch(`/api/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(newUser),
+      });
+      if (!res.ok) throw new Error("Failed to create user");
+      setNewUser(null);
+      await fetchUsers2();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
-  // When search changes, fetch users
+  // 🚀 Initial load
   React.useEffect(() => {
-    // Debounce: only search if user stops typing for 300ms
-    const timeout = setTimeout(() => {
-      fetchUsers(search);
-    }, 300);
+    fetchUsers2();
+  }, []);
+
+  // ⌨️ Debounced search
+  React.useEffect(() => {
+    if (search === "") return;
+    const timeout = setTimeout(() => fetchUsers(search), 300);
     return () => clearTimeout(timeout);
-    // eslint-disable-next-line
-  }, [search]);
+  }, [search, searchField]);
 
   return (
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">
-        <div className="page-header" style={{ marginBottom: 0 }}>
-          <h2 style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span role="img" aria-label="shield">
-              🛡️
-            </span>{" "}
-            Access Control
-          </h2>
-          <div className="muted" style={{ marginTop: 4 }}>
-            Manage roles, permissions, and access control for the system.
-          </div>
+        <div className="page-header">
+          <h2>🛡️ Access Control</h2>
+          <div className="muted">Manage roles, permissions, and access control</div>
         </div>
 
-        
-
-        {/* Tabs */}
-        <div
-          className="tabs"
-          style={{
-            marginTop: 24,
-            marginBottom: 16,
-            display: "flex",
-            gap: 24,
-            borderBottom: "1px solid #e5e7eb",
-          }}
-        >
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              className={"tab-btn" + (activeTab === tab.key ? " active" : "")}
-              style={{
-                background: "none",
-                border: "none",
-                outline: "none",
-                padding: "8px 0",
-                fontWeight: activeTab === tab.key ? 600 : 400,
-                cursor: "pointer",
-                borderBottom:
-                  activeTab === tab.key
-                    ? "2px solid #2563eb"
-                    : "2px solid transparent",
-                color: activeTab === tab.key ? "#2563eb" : "#374151",
-                fontSize: 15,
-              }}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div
-          style={{
-            marginBottom: 16,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <div style={{ flex: 1, position: "relative" }}>
-            <input
-              type="text"
-              placeholder={`Search by ${searchField}...`}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 16px",
-                border: "1px solid #e5e7eb",
-                borderRadius: 8,
-                fontSize: 15,
-              }}
-            />
-          </div>
-
-          {/* New search field selector */}
+        {/* Search */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+          <input
+            type="text"
+            placeholder={`Search by ${searchField}...`}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ flex: 1, padding: 10, borderRadius: 8, border: "1px solid #ccc" }}
+          />
           <select
             value={searchField}
             onChange={(e) => setSearchField(e.target.value)}
-            style={{
-              padding: "10px 18px",
-              border: "1px solid #e5e7eb",
-              borderRadius: 8,
-              background: "#ffffffff",
-              color: "#374151",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
+            style={{ padding: 10, borderRadius: 8 }}
           >
             <option value="email">Email</option>
             <option value="name">Name</option>
-            <option value="roleName">Role</option>
+            <option value="id">ID</option>
           </select>
-          <button
-            onClick={() => setSearch("")}
-            style={{
-              padding: "10px 18px",
-              border: "1px solid #e5e7eb",
-              borderRadius: 8,
-              background: "#0051ffff",
-              color: "#ffffffff",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-          >
+          <button onClick={() => { setSearch(""); fetchUsers2(); }}>
             Reset
           </button>
         </div>
 
-
         {/* Users Table */}
         <section className="card" style={{ padding: 0 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "20px 24px 0 24px",
-            }}
-          >
-            <div
-              style={{
-                fontWeight: 600,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <span role="img" aria-label="users">
-                👥
-              </span>{" "}
-              Users Management ({users.length})
-            </div>
-            <button
-              style={{
-                background: "#2563eb",
-                color: "#fff",
-                border: "none",
-                borderRadius: 8,
-                padding: "8px 16px",
-                fontWeight: 500,
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                cursor: "pointer",
-                fontSize: 15,
-              }}
-              onClick={() => (window.location.href = "/admin/users/new")}
-            >
-              <span role="img" aria-label="add">
-                ⚙️
-              </span>{" "}
-              Add User
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
+            <strong>👥 Users Management ({users.length})</strong>
+            <button onClick={() => setNewUser({ name: "", email: "", role: { name: "User" } })}>
+              ➕ Add User
             </button>
           </div>
-          <div style={{ overflowX: "auto", marginTop: 12 }}>
-            <table
-              style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}
-            >
-              <thead>
-                <tr style={{ background: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    ID
-                  </th>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    Name
-                  </th>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    Email
-                  </th>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    Role
-                  </th>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    Status
-                  </th>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    Created
-                  </th>
-                  <th style={{ padding: "10px 12px", textAlign: "left", fontWeight: 600 }}>
-                    Actions
-                  </th>
+
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#f9fafb" }}>
+                <th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Add New User Row */}
+              {newUser && (
+                <tr style={{ background: "#eef" }}>
+                  <td>New</td>
+                  <td><input value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} /></td>
+                  <td><input value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} /></td>
+                  <td><input value={newUser.role?.name} onChange={(e) => setNewUser({ ...newUser, role: { name: e.target.value } })} /></td>
+                  <td>-</td>
+                  <td>
+                    <button onClick={handleSaveNew}>Save</button>
+                    <button onClick={() => setNewUser(null)}>Cancel</button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={7} style={{ textAlign: "center", padding: "24px" }}>
-                      Loading...
-                    </td>
-                  </tr>
-                ) : error ? (
-                  <tr>
-                    <td colSpan={7} style={{ textAlign: "center", padding: "24px", color: "#dc2626" }}>
-                      {error}
-                    </td>
-                  </tr>
-                ) : users.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} style={{ textAlign: "center", padding: "24px" }}>
-                      No users found.
-                    </td>
-                  </tr>
-                ) : (
-                  users.map((u, i) => (
-                    <tr key={u.id} style={{ borderBottom: "1px solid #f1f1f1" }}>
-                      <td style={{ padding: "10px 12px", color: "#64748b" }}>#{i + 1}</td>
-                      <td style={{ padding: "10px 12px" }}>{u.name || "-"}</td>
-                      <td style={{ padding: "10px 12px" }}>{u.email || "-"}</td>
-                      <td style={{ padding: "10px 12px" }}>
-                        <span
-                          style={{
-                            background: "#eef2ff",
-                            color: "#2563eb",
-                            padding: "2px 10px",
-                            borderRadius: 12,
-                            fontSize: 13,
-                            fontWeight: 500,
-                            cursor: u.role?.description ? "help" : "default",
-                          }}
-                          title={u.role?.description || ""}
-                        >
-                          {u.role?.name || "User"}
-                        </span>
-                      </td>
-                      <td style={{ padding: "10px 12px" }}>
-                        <span
-                          style={{
-                            background: "#ecfdf5",
-                            color: "#16a34a",
-                            padding: "2px 10px",
-                            borderRadius: 12,
-                            fontSize: 13,
-                            fontWeight: 500,
-                          }}
-                        >
-                          Active
-                        </span>
-                      </td>
-                      <td style={{ padding: "10px 12px" }}>
-                        {u.created_at ? new Date(u.created_at).toLocaleDateString() : "-"}
-                      </td>
-                      <td style={{ padding: "10px 12px" }}>
-                        <span
-                          style={{ cursor: "pointer", color: "#2563eb", marginRight: 10 }}
-                          title="Edit"
-                          onClick={() => handleEdit(u.id)}
-                        >
-                          ✏️
-                        </span>
-                        <span
-                          style={{ cursor: "pointer", color: "#dc2626" }}
-                          title="Delete"
-                          onClick={() => handleDelete(u.id)}
-                        >
-                          🗑️
-                        </span>
+              )}
+
+              {/* User Rows */}
+              {loading ? (
+                <tr><td colSpan={6}>Loading...</td></tr>
+              ) : error ? (
+                <tr><td colSpan={6} style={{ color: "red" }}>{error}</td></tr>
+              ) : users.length === 0 ? (
+                <tr><td colSpan={6}>No users found</td></tr>
+              ) : (
+                users.map((u, i) => (
+                  editingUser?.id === u.id ? (
+                    <tr key={u.id} style={{ background: "#fef9c3" }}>
+                      <td>#{i + 1}</td>
+                      <td><input value={editingUser.name} onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })} /></td>
+                      <td><input value={editingUser.email} onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })} /></td>
+                      <td><input value={editingUser.role?.name} onChange={(e) => setEditingUser({ ...editingUser, role: { name: e.target.value } })} /></td>
+                      <td>{u.created_at ? new Date(u.created_at).toLocaleDateString() : "-"}</td>
+                      <td>
+                        <button onClick={handleSaveEdit}>Save</button>
+                        <button onClick={() => setEditingUser(null)}>Cancel</button>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ) : (
+                    <tr key={u.id}>
+                      <td>{i + 1}</td>
+                      <td>{u.name}</td>
+                      <td>{u.email}</td>
+                      <td>{u.role?.name || "User"}</td>
+                      <td>{u.created_at ? new Date(u.created_at).toLocaleDateString() : "-"}</td>
+                      <td>
+                        <button onClick={() => setEditingUser(u)}>✏️ Edit</button>
+                        <button onClick={() => handleDelete(u.id)}>🗑️ Delete</button>
+                      </td>
+                    </tr>
+                  )
+                ))
+              )}
+            </tbody>
+          </table>
         </section>
       </main>
     </div>
