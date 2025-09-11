@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import api from "../services/api";
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
@@ -10,22 +11,32 @@ export default function Roles() {
   const [newRole, setNewRole] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
 
-  // Fetch roles
+  // Fetch roles (GraphQL)
   const fetchRoles = async () => {
+    const query = `
+      query {
+        roles {
+          name
+          description
+        }
+      }
+    `;
+
     try {
       setLoading(true);
-      const res = await fetch("/api/roles", {
-        method: "GET",
-        credentials: "include",
-      });
+      const res = await api.post(
+        "/graphql",
+        { query },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-      if (!res.ok) throw new Error("Failed to fetch roles");
-
-      const data = await res.json();
-      setRoles(data.roles || []);
+      setRoles(res.data.data.roles || []);
       setError(null);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to fetch roles");
     } finally {
       setLoading(false);
     }
@@ -34,56 +45,35 @@ export default function Roles() {
   // ➕ Create role
   const handleSaveNew = async () => {
     try {
-      const res = await fetch("/api/roles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(newRole),
-      });
-
-      if (!res.ok) throw new Error("Failed to create role");
-
+      await api.post("/roles", newRole, { withCredentials: true });
       setNewRole(null);
       fetchRoles();
     } catch (err) {
-      alert(err.message);
+      alert(err.response?.data?.message || err.message);
     }
   };
 
   // ✏️ Update role
   const handleSaveEdit = async () => {
     try {
-      const res = await fetch(`/api/roles/${editingRole.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(editingRole),
+      await api.put(`/roles/${editingRole.name}`, editingRole, {
+        withCredentials: true,
       });
-
-      if (!res.ok) throw new Error("Failed to update role");
-
       setEditingRole(null);
       fetchRoles();
     } catch (err) {
-      alert(err.message);
+      alert(err.response?.data?.message || err.message);
     }
   };
 
   // 🗑️ Delete role
-  const handleDelete = async (roleId) => {
+  const handleDelete = async (roleName) => {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
-
     try {
-      const res = await fetch(`/api/roles/${roleId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      if (!res.ok) throw new Error("Failed to delete role");
-
+      await api.delete(`/roles/${roleName}`, { withCredentials: true });
       fetchRoles();
     } catch (err) {
-      alert(err.message);
+      alert(err.response?.data?.message || err.message);
     }
   };
 
@@ -109,7 +99,9 @@ export default function Roles() {
           >
             <strong>Available Roles ({roles.length})</strong>
             <button
-              onClick={() => setNewRole({ name: "", description: "", is_active: true })}
+              onClick={() =>
+                setNewRole({ name: "", description: "" })
+              }
               style={{
                 background: "#2563eb",
                 color: "#fff",
@@ -143,10 +135,8 @@ export default function Roles() {
                       borderBottom: "1px solid #e5e7eb",
                     }}
                   >
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Active</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -154,7 +144,6 @@ export default function Roles() {
                   {/* ➕ New Role Row */}
                   {newRole && (
                     <tr style={{ background: "#eef" }}>
-                      <td>New</td>
                       <td>
                         <input
                           value={newRole.name}
@@ -167,23 +156,18 @@ export default function Roles() {
                         <input
                           value={newRole.description}
                           onChange={(e) =>
-                            setNewRole({ ...newRole, description: e.target.value })
+                            setNewRole({
+                              ...newRole,
+                              description: e.target.value,
+                            })
                           }
                         />
                       </td>
                       <td>
-                        <select
-                          value={newRole.is_active ? "true" : "false"}
-                          onChange={(e) =>
-                            setNewRole({ ...newRole, is_active: e.target.value === "true" })
-                          }
+                        <button
+                          onClick={handleSaveNew}
+                          style={{ marginRight: 8 }}
                         >
-                          <option value="true">Yes</option>
-                          <option value="false">No</option>
-                        </select>
-                      </td>
-                      <td>
-                        <button onClick={handleSaveNew} style={{ marginRight: 8 }}>
                           Save
                         </button>
                         <button onClick={() => setNewRole(null)}>Cancel</button>
@@ -194,14 +178,16 @@ export default function Roles() {
                   {/* Existing Roles */}
                   {roles.length > 0 ? (
                     roles.map((role) =>
-                      editingRole?.id === role.id ? (
-                        <tr key={role.id} style={{ background: "#fef9c3" }}>
-                          <td>{role.id}</td>
+                      editingRole?.name === role.name ? (
+                        <tr key={role.name} style={{ background: "#fef9c3" }}>
                           <td>
                             <input
                               value={editingRole.name}
                               onChange={(e) =>
-                                setEditingRole({ ...editingRole, name: e.target.value })
+                                setEditingRole({
+                                  ...editingRole,
+                                  name: e.target.value,
+                                })
                               }
                             />
                           </td>
@@ -217,32 +203,24 @@ export default function Roles() {
                             />
                           </td>
                           <td>
-                            <select
-                              value={editingRole.is_active ? "true" : "false"}
-                              onChange={(e) =>
-                                setEditingRole({
-                                  ...editingRole,
-                                  is_active: e.target.value === "true",
-                                })
-                              }
+                            <button
+                              onClick={handleSaveEdit}
+                              style={{ marginRight: 8 }}
                             >
-                              <option value="true">Yes</option>
-                              <option value="false">No</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button onClick={handleSaveEdit} style={{ marginRight: 8 }}>
                               Save
                             </button>
-                            <button onClick={() => setEditingRole(null)}>Cancel</button>
+                            <button onClick={() => setEditingRole(null)}>
+                              Cancel
+                            </button>
                           </td>
                         </tr>
                       ) : (
-                        <tr key={role.id} style={{ borderBottom: "1px solid #f1f1f1" }}>
-                          <td>{role.id}</td>
+                        <tr
+                          key={role.name}
+                          style={{ borderBottom: "1px solid #f1f1f1" }}
+                        >
                           <td>{role.name}</td>
                           <td>{role.description}</td>
-                          <td>{role.is_active ? "Yes" : "No"}</td>
                           <td>
                             <button
                               onClick={() => setEditingRole(role)}
@@ -259,7 +237,7 @@ export default function Roles() {
                               Edit
                             </button>
                             <button
-                              onClick={() => handleDelete(role.id)}
+                              onClick={() => handleDelete(role.name)}
                               style={{
                                 color: "#dc2626",
                                 background: "#fff1f2",
@@ -277,7 +255,7 @@ export default function Roles() {
                     )
                   ) : (
                     <tr>
-                      <td colSpan="5" style={{ textAlign: "center", padding: 24 }}>
+                      <td colSpan="3" style={{ textAlign: "center", padding: 24 }}>
                         No roles found
                       </td>
                     </tr>
