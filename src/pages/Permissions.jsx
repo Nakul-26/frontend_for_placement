@@ -16,7 +16,7 @@ export default function Permissions() {
   const fetchPermissions = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/permissions");
+      const res = await api.get("/api/permissions");
       setPermissions(Array.isArray(res.data) ? res.data : []);
       setError("");
     } catch (err) {
@@ -38,7 +38,7 @@ export default function Permissions() {
     if (!newPermission.name.trim()) return alert("Name is required");
 
     try {
-      const res = await api.post("/permissions", newPermission, { withCredentials: true });
+      const res = await api.post("/api/permissions", newPermission, { withCredentials: true });
       setPermissions([...permissions, res.data]); // backend should return the created permission
       setNewPermission({ name: "", description: "" });
     } catch (err) {
@@ -53,7 +53,7 @@ export default function Permissions() {
 
   const handleEditSave = async (id) => {
     try {
-      const res = await api.put(`/permissions/${id}`, editData, { withCredentials: true });
+      const res = await api.put(`/api/permissions/${id}`, editData, { withCredentials: true });
       setPermissions(permissions.map(p => (p.id === id ? res.data : p))); // backend should return updated permission
       setEditingId(null);
     } catch (err) {
@@ -64,7 +64,7 @@ export default function Permissions() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this permission?")) return;
     try {
-      await api.delete(`/permissions/${id}`, { withCredentials: true });
+      await api.delete(`/api/permissions/${id}`, { withCredentials: true });
       setPermissions(permissions.filter(p => p.id !== id));
     } catch (err) {
       alert("Failed to delete permission");

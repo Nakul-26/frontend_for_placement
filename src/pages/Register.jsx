@@ -45,7 +45,7 @@ const Register = () => {
 
     try {
       setLoading(true);
-      const res = await api.post("/register", form, { withCredentials: true });
+      const res = await api.post("/api/register", form, { withCredentials: true });
       if (res.data.success) {
         setSuccess("✅ Registered successfully! Redirecting to login...");
         setTimeout(() => navigate("/login"), 1500);

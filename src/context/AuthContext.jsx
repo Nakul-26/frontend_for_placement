@@ -8,12 +8,12 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);   // true until we check session
   const [error, setError] = useState(null);
 
-  // ✅ Check session on load
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get("/api/userdata", { withCredentials: true });
-        setUser(res.data);
+        console.log("fetch user for referesh:",res);
+        setUser(res.data.data);
       } catch (err) {
         console.error("Session check failed:", err);
         setUser(null);
@@ -34,7 +34,8 @@ export const AuthProvider = ({ children }) => {
         { email, password },
         { withCredentials: true }
       );
-      setUser(res.data);
+      console.log("user:",res.data.user);
+      setUser(res.data.user);
       return { success: true, data: res.data };
     } catch (err) {
       console.error("Login error:", err);

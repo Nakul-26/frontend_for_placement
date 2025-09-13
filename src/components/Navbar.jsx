@@ -1,23 +1,45 @@
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="site-nav">
       <div className="site-nav__inner">
+        {/* Brand */}
         <div className="brand">
-          <h1>ERP System</h1>
+          <Link to="/dashboard">
+            <h1>Placement</h1>
+          </Link>
         </div>
 
-        <div className="nav-actions">
+        {/* Menu toggle for mobile */}
+        <button
+          className="menu-toggle"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
+
+        {/* Navigation Actions */}
+        <div className={`nav-actions ${menuOpen ? "open" : ""}`}>
           {user ? (
-            <button className="btn small" onClick={logout}>Logout</button>
+            <>
+              {/* <span className="user-info">Hello, {user.name || "User"}</span> */}
+              <button className="btn primary small" onClick={logout}>
+                Logout
+              </button>
+            </>
           ) : (
-            <div className="nav-placeholder" />
+            <Link to="/login" className="btn outline small">
+              Login
+            </Link>
           )}
         </div>
-
-        
       </div>
     </header>
   );

@@ -1,15 +1,33 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+const links = [
+  { to: "/dashboard", label: "Dashboard" },
+  { to: "/users", label: "Users" },
+  { to: "/roles", label: "Roles" },
+  { to: "/permissions", label: "Permissions" },
+  { to: "/register", label: "Register" },
+];
 
 export default function Sidebar() {
   return (
     <aside className="sidebar">
+      <div className="sidebar-header">
+        {/* <h2>Menu</h2> */}
+      </div>
       <nav className="sidebar-nav">
         <ul>
-          <li><Link to="/dashboard" className="sidebar-link">Dashboard</Link></li>
-          <li><Link to="/users" className="sidebar-link">Users</Link></li>
-          <li><Link to="/roles" className="sidebar-link">Roles</Link></li>
-          <li><Link to="/permissions" className="sidebar-link">Permissions</Link></li>
-          <li><Link to="/register" className="sidebar-link">Register</Link></li>
+          {links.map(({ to, label }) => (
+            <li key={to}>
+              <NavLink
+                to={to}
+                className={({ isActive }) =>
+                  `sidebar-link ${isActive ? "active" : ""}`
+                }
+              >
+                {label}
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
     </aside>

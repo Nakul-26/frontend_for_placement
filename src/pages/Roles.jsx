@@ -45,7 +45,7 @@ export default function Roles() {
   // ➕ Create role
   const handleSaveNew = async () => {
     try {
-      await api.post("/roles", newRole, { withCredentials: true });
+      await api.post("/api/roles", newRole, { withCredentials: true });
       setNewRole(null);
       fetchRoles();
     } catch (err) {
@@ -56,7 +56,7 @@ export default function Roles() {
   // ✏️ Update role
   const handleSaveEdit = async () => {
     try {
-      await api.put(`/roles/${editingRole.name}`, editingRole, {
+      await api.put(`/api/roles/${editingRole.name}`, editingRole, {
         withCredentials: true,
       });
       setEditingRole(null);
@@ -70,7 +70,7 @@ export default function Roles() {
   const handleDelete = async (roleName) => {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
     try {
-      await api.delete(`/roles/${roleName}`, { withCredentials: true });
+      await api.delete(`/api/roles/${roleName}`, { withCredentials: true });
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
