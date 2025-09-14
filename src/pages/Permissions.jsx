@@ -14,18 +14,45 @@ export default function Permissions() {
 
   // Fetch permissions
   const fetchPermissions = async () => {
+    const query = `
+      query {
+        permissions {
+          id
+          name
+          description
+        }
+      }
+    `;
+
     try {
       setLoading(true);
-      const res = await api.get("/api/permissions");
-      setPermissions(Array.isArray(res.data) ? res.data : []);
+
+      const res = await api.post(
+        "/graphql",
+        { query },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log("permission response:", res.data);
+
+      setPermissions(
+        Array.isArray(res.data?.data?.permissions)
+          ? res.data.data.permissions
+          : []
+      );
       setError("");
     } catch (err) {
+      console.error("fetchPermissions error:", err);
       setError("Failed to load permissions");
       setPermissions([]);
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchPermissions();

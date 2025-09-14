@@ -10,7 +10,7 @@ export default function Dashboard() {
       <Sidebar />
       <main className="main-content">
         <div className="page-header">
-          <h2>Welcome to ERP Dashboard</h2>
+          <h2>Welcome to Placement Dashboard</h2>
           {user && (
             <>
               <h3>Hello, {user.name}</h3>

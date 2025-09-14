@@ -6,7 +6,8 @@ const links = [
   { to: "/roles", label: "Roles" },
   { to: "/permissions", label: "Permissions" },
   { to: "/register", label: "Register" },
-];
+  { to: "/role-permission", label: "Role-Permission"}
+];  
 
 export default function Sidebar() {
   return (

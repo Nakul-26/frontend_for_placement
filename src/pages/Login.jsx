@@ -74,7 +74,7 @@ export default function Login() {
           </div>
 
           <div className="form-actions">
-            <button className="btn primary" type="submit" disabled={loading}>
+            <button className="btn primary btn-wide" type="submit" disabled={loading}>
               {loading ? "Logging in..." : "Sign in"}
             </button>
           </div>
@@ -83,7 +83,7 @@ export default function Login() {
         <div className="divider" />
 
         <div className="social-login">
-          <button className="btn outline" onClick={handleGoogleLogin} disabled={loading}>
+          <button className="btn outline btn-wide" onClick={handleGoogleLogin} disabled={loading}>
             {loading ? "Redirecting..." : "Sign in with Google"}
           </button>
         </div>

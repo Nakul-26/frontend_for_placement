@@ -1,38 +1,33 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import api from "../services/api";
+// import "./Roles.css"; // new CSS file
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Add/Edit state
   const [newRole, setNewRole] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
 
-  // Fetch roles (GraphQL)
   const fetchRoles = async () => {
     const query = `
       query {
         roles {
+          id
           name
           description
         }
       }
     `;
-
     try {
       setLoading(true);
       const res = await api.post(
         "/graphql",
         { query },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
+        { withCredentials: true, headers: { "Content-Type": "application/json" } }
       );
-
       setRoles(res.data.data.roles || []);
       setError(null);
     } catch (err) {
@@ -42,7 +37,6 @@ export default function Roles() {
     }
   };
 
-  // ➕ Create role
   const handleSaveNew = async () => {
     try {
       await api.post("/api/roles", newRole, { withCredentials: true });
@@ -53,10 +47,9 @@ export default function Roles() {
     }
   };
 
-  // ✏️ Update role
   const handleSaveEdit = async () => {
     try {
-      await api.put(`/api/roles/${editingRole.name}`, editingRole, {
+      await api.put(`/api/roles/${editingRole.id}`, editingRole, {
         withCredentials: true,
       });
       setEditingRole(null);
@@ -66,11 +59,10 @@ export default function Roles() {
     }
   };
 
-  // 🗑️ Delete role
-  const handleDelete = async (roleName) => {
+  const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
     try {
-      await api.delete(`/api/roles/${roleName}`, { withCredentials: true });
+      await api.delete(`/api/roles/${id}`, { withCredentials: true });
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -89,164 +81,122 @@ export default function Roles() {
           <h2>Role Management</h2>
         </div>
 
-        <section className="card" style={{ padding: 0 }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "12px 16px",
-            }}
-          >
+        <section className="card roles-card">
+          <div className="roles-header">
             <strong>Available Roles ({roles.length})</strong>
-            <button
-              onClick={() =>
-                setNewRole({ name: "", description: "" })
-              }
-              style={{
-                background: "#2563eb",
-                color: "#fff",
-                border: "none",
-                borderRadius: 6,
-                padding: "6px 14px",
-                cursor: "pointer",
-              }}
-            >
+            <button className="btn primary" onClick={() => setNewRole({name: "", description: "", is_Active:true })}>
               ➕ Add Role
             </button>
           </div>
 
-          <div style={{ overflowX: "auto", marginTop: 0 }}>
+          <div className="table-wrapper">
             {loading ? (
-              <div style={{ padding: 24 }}>Loading roles...</div>
+              <div className="loading">Loading roles...</div>
             ) : error ? (
-              <div style={{ padding: 24, color: "red" }}>Error: {error}</div>
+              <div className="error">Error: {error}</div>
             ) : (
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  fontSize: 15,
-                }}
-              >
+              <table className="roles-table">
                 <thead>
-                  <tr
-                    style={{
-                      background: "#f9fafb",
-                      borderBottom: "1px solid #e5e7eb",
-                    }}
-                  >
+                  <tr>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* ➕ New Role Row */}
                   {newRole && (
-                    <tr style={{ background: "#eef" }}>
+                    <tr className="row-new">
                       <td>
                         <input
                           value={newRole.name}
-                          onChange={(e) =>
-                            setNewRole({ ...newRole, name: e.target.value })
-                          }
+                          onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
                         />
                       </td>
                       <td>
                         <input
                           value={newRole.description}
-                          onChange={(e) =>
-                            setNewRole({
-                              ...newRole,
-                              description: e.target.value,
-                            })
-                          }
+                          onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
                         />
                       </td>
                       <td>
-                        <button
-                          onClick={handleSaveNew}
-                          style={{ marginRight: 8 }}
+                        <select
+                          name="is_Active"
+                          value={newRole.is_Active} 
+                          onChange={(e) =>
+                            setNewRole({
+                              ...newRole,
+                              is_Active: e.target.value === "true",
+                            })
+                          }
                         >
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      </td>
+                      <td>
+                        <button className="btn success" onClick={handleSaveNew}>
                           Save
                         </button>
-                        <button onClick={() => setNewRole(null)}>Cancel</button>
+                        <button className="btn secondary" onClick={() => setNewRole(null)}>
+                          Cancel
+                        </button>
                       </td>
                     </tr>
                   )}
 
-                  {/* Existing Roles */}
                   {roles.length > 0 ? (
                     roles.map((role) =>
                       editingRole?.name === role.name ? (
-                        <tr key={role.name} style={{ background: "#fef9c3" }}>
+                        <tr key={role.name} className="row-edit">
                           <td>
                             <input
                               value={editingRole.name}
-                              onChange={(e) =>
-                                setEditingRole({
-                                  ...editingRole,
-                                  name: e.target.value,
-                                })
-                              }
+                              onChange={(e) => setEditingRole({ ...editingRole, name: e.target.value })}
                             />
                           </td>
                           <td>
                             <input
                               value={editingRole.description}
                               onChange={(e) =>
-                                setEditingRole({
-                                  ...editingRole,
-                                  description: e.target.value,
-                                })
+                                setEditingRole({ ...editingRole, description: e.target.value })
                               }
                             />
                           </td>
                           <td>
-                            <button
-                              onClick={handleSaveEdit}
-                              style={{ marginRight: 8 }}
+                            <select
+                              name="is_Active"
+                              value={editingRole.is_Active} 
+                              onChange={(e) =>
+                                setNewRole({
+                                  ...editingRole,
+                                  is_Active: e.target.value === "true",
+                                })
+                              }
                             >
+                              <option value="true">True</option>
+                              <option value="false">False</option>
+                            </select>
+                          </td>
+                          <td>
+                            <button className="btn success" onClick={handleSaveEdit}>
                               Save
                             </button>
-                            <button onClick={() => setEditingRole(null)}>
+                            <button className="btn secondary" onClick={() => setEditingRole(null)}>
                               Cancel
                             </button>
                           </td>
                         </tr>
                       ) : (
-                        <tr
-                          key={role.name}
-                          style={{ borderBottom: "1px solid #f1f1f1" }}
-                        >
+                        <tr key={role.name}>
                           <td>{role.name}</td>
                           <td>{role.description}</td>
+                          <td>{role.is_Active}</td>
                           <td>
-                            <button
-                              onClick={() => setEditingRole(role)}
-                              style={{
-                                marginRight: 8,
-                                background: "#2563eb",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: 6,
-                                padding: "4px 12px",
-                                cursor: "pointer",
-                              }}
-                            >
+                            <button className="btn primary" onClick={() => setEditingRole(role)}>
                               Edit
                             </button>
-                            <button
-                              onClick={() => handleDelete(role.name)}
-                              style={{
-                                color: "#dc2626",
-                                background: "#fff1f2",
-                                border: "1px solid #dc2626",
-                                borderRadius: 6,
-                                padding: "4px 12px",
-                                cursor: "pointer",
-                              }}
-                            >
+                            <button className="btn danger" onClick={() => handleDelete(role.id)}>
                               Delete
                             </button>
                           </td>
@@ -255,7 +205,7 @@ export default function Roles() {
                     )
                   ) : (
                     <tr>
-                      <td colSpan="3" style={{ textAlign: "center", padding: 24 }}>
+                      <td colSpan="3" className="no-data">
                         No roles found
                       </td>
                     </tr>

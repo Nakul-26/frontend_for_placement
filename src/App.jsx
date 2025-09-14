@@ -8,6 +8,7 @@ import Users from "./pages/Users";
 import Roles from "./pages/Roles";
 import Permissions from "./pages/Permissions";
 import Register from "./pages/Register";
+import RolePermissions from "./pages/RolePermissions";
 
 const MainLayout = ({ children }) => {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/roles" element={<MainLayout><Roles /></MainLayout>} />
             <Route path="/permissions" element={<MainLayout><Permissions /></MainLayout>} />
             <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
+            <Route path="/role-permission" element={<MainLayout><RolePermissions /></MainLayout>} />
           </Route>
 
           {/* Catch-all route */}
