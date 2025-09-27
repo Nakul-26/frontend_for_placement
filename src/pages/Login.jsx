@@ -1,92 +1,100 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useNavigate, Link } from 'react-router-dom';
+import './Login.css';
 
 export default function Login() {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-
+    setError('');
     if (!email || !password) {
-      setError("Email and password are required.");
+      setError('Email and password are required.');
       return;
     }
-
     try {
       setLoading(true);
-      const res = await login(email, password); // your AuthContext should return a response
-      setSuccess("Login successful!");
-      console.log("Login response:", res); // debug / inspect response
-      navigate("/dashboard"); // redirect after login
+      await login(email, password);
+      navigate('/dashboard');
     } catch (err) {
-      setError(err?.message || "Login failed. Please try again.");
-      console.error("Login error:", err); // debug request error
+      setError(err?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = 'http://localhost:3000/auth/google';
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2 className="auth-title">Sign in to your account</h2>
+    <div className="login-container">
+      <div className="login-paper">
+        <h1 className="login-title">Welcome Back</h1>
+        <p className="login-subtitle">Sign in to continue to your dashboard</p>
 
-        {error && <div className="alert alert-error">{error}</div>}
-        {success && <div className="alert alert-success">{success}</div>}
-
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="form-row">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              required
-            />
+        {error && (
+          <div className="login-alert" role="alert">
+            {error}
           </div>
+        )}
 
-          <div className="form-row">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
-          </div>
+        <form className="login-form" onSubmit={handleSubmit} noValidate>
+          <input
+            id='email'
+            className="login-input"
+            type="email"
+            placeholder="Email Address"
+            required
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            id='password'
+            className="login-input"
+            type="password"
+            placeholder="Password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          <div className="form-actions">
-            <button className="btn primary btn-wide" type="submit" disabled={loading}>
-              {loading ? "Logging in..." : "Sign in"}
-            </button>
-          </div>
-        </form>
-
-        <div className="divider" />
-
-        <div className="social-login">
-          <button className="btn outline btn-wide" onClick={handleGoogleLogin} disabled={loading}>
-            {loading ? "Redirecting..." : "Sign in with Google"}
+          <button
+            type="submit"
+            className="login-button"
+            disabled={loading}
+          >
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
-        </div>
+
+          <button
+            type="button"
+            className="login-google-button"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+          >
+            {loading ? 'Redirecting...' : 'Sign in with Google'}
+          </button>
+
+          {/* <hr className="login-divider" /> */}
+          {/* <hr /> */}
+          <br />
+
+          {/* <p className="login-signup-text">
+            Don&apos;t have an account?{' '}
+            <Link to="/register" className="login-signup-link">
+              Sign Up
+            </Link>
+          </p> */}
+        </form>
       </div>
     </div>
   );

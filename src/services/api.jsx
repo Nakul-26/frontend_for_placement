@@ -5,4 +5,16 @@ const api = axios.create({
   withCredentials: true, // send cookies for session auth
 });
 
+// Notifications
+export const addNotification = (notification) => api.post('/notifications', notification);
+export const editNotification = (id, notification) => api.put(`/notifications/${id}`, notification);
+export const deleteNotification = (id) => api.delete(`/notifications/${id}`);
+export const getNotifications = () => api.get('/notifications');
+
+// Job Offerings
+export const addJobOffering = (jobOffering) => api.post('/job-offerings', jobOffering);
+export const editJobOffering = (id, jobOffering) => api.put(`/job-offerings/${id}`, jobOffering);
+export const deleteJobOffering = (id) => api.delete(`/job-offerings/${id}`);
+export const getJobOfferings = () => api.get('/job-offerings');
+
 export default api;

@@ -1,15 +1,12 @@
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
 import { Navigate, Outlet } from "react-router-dom";
 
-export default function ProtectedRoute({children}) {
+export default function ProtectedRoute() {
   const { user, loading } = useAuth();
-  console.log("ProtectedRoute - User:", user);
-  console.log("ProtectedRoute - Loading:", loading);
 
-  if (loading) { // <-- This check might not be hit when it needs to be
-    console.log("ProtectedRoute - Waiting for authentication check...");
-    return <div>Loading...</div>;
+  if (loading) {
+    return <div>Loading...</div>; // Or a spinner component
   }
 
-  return user ? <Outlet/> : <Navigate to="/login" />;
+  return user ? <Outlet /> : <Navigate to="/login" />;
 };

@@ -1,46 +1,46 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Users from "./pages/Users";
-import Roles from "./pages/Roles";
-import Permissions from "./pages/Permissions";
-import Register from "./pages/Register";
-import RolePermissions from "./pages/RolePermissions";
-
-const MainLayout = ({ children }) => {
-  return (
-    <div>
-      <Navbar />
-      <main>{children}</main>
-    </div>
-  );
-};
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Login from './pages/Login.jsx';
+import Landing from './pages/Landing.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import Users from './pages/Users.jsx';
+import Roles from './pages/Roles.jsx';
+import Permissions from './pages/Permissions.jsx';
+import Register from './pages/Register.jsx';
+import RolePermissions from './pages/RolePermissions.jsx';
+import Layout from './components/Layout.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
+import ManageJobOfferings from './pages/ManageJobOfferings.jsx';
+import ManageNotifications from './pages/ManageNotifications.jsx';
+import './index.css';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/dash" element={<Dashboard />} /> {/* This route bypasses protection */}
+        <ErrorBoundary>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* This route uses a nested structure for the protected routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<MainLayout><Dashboard /></MainLayout>} />
-            <Route path="/users" element={<MainLayout><Users /></MainLayout>} />
-            <Route path="/roles" element={<MainLayout><Roles /></MainLayout>} />
-            <Route path="/permissions" element={<MainLayout><Permissions /></MainLayout>} />
-            <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
-            <Route path="/role-permission" element={<MainLayout><RolePermissions /></MainLayout>} />
-          </Route>
+            {/* This route uses a nested structure for the protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+              <Route path="/users" element={<Layout><Users /></Layout>} />
+              <Route path="/roles" element={<Layout><Roles /></Layout>} />
+              <Route path="/permissions" element={<Layout><Permissions /></Layout>} />
+              <Route path="/role-permission" element={<Layout><RolePermissions /></Layout>} />
+              <Route path="/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
+              <Route path="/manage-notifications" element={<Layout><ManageNotifications /></Layout>} />
+            </Route>
 
-          {/* Catch-all route */}
-          <Route path="*" element={<Login />} />
-        </Routes>
+            {/* Catch-all route */}
+            <Route path="*" element={<Landing />} />
+          </Routes>
+        </ErrorBoundary>
       </BrowserRouter>
     </AuthProvider>
   );

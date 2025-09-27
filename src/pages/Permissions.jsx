@@ -1,18 +1,50 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
-import Sidebar from "../components/Sidebar";
+import { useEffect, useState } from 'react';
+import api from '../services/api.jsx';
+import '../styles/styles.css';
+
+const AddIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19"></line>
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+  </svg>
+);
+
+const EditIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+  </svg>
+);
+
+const DeleteIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6"></polyline>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    <line x1="10" y1="11" x2="10" y2="17"></line>
+    <line x1="14" y1="11" x2="14" y2="17"></line>
+  </svg>
+);
 
 export default function Permissions() {
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
-  // Form states
-  const [newPermission, setNewPermission] = useState({ name: "", description: "" });
-  const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({ name: "", description: "" });
+  const [newPermission, setNewPermission] = useState(null);
+  const [editingPermission, setEditingPermission] = useState(null);
 
-  // Fetch permissions
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setNewPermission(null);
+    setEditingPermission(null);
+  };
+
   const fetchPermissions = async () => {
     const query = `
       query {
@@ -28,198 +60,148 @@ export default function Permissions() {
       setLoading(true);
 
       const res = await api.post(
-        "/graphql",
+        '/graphql',
         { query },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         }
       );
-
-      console.log("permission response:", res.data);
 
       setPermissions(
         Array.isArray(res.data?.data?.permissions)
           ? res.data.data.permissions
           : []
       );
-      setError("");
+      setError('');
     } catch (err) {
-      console.error("fetchPermissions error:", err);
-      setError("Failed to load permissions");
+      console.error('fetchPermissions error:', err);
+      setError('Failed to load permissions');
       setPermissions([]);
     } finally {
       setLoading(false);
     }
   };
 
-
   useEffect(() => {
     fetchPermissions();
   }, []);
 
-  // === CRUD Handlers ===
-
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    if (!newPermission.name.trim()) return alert("Name is required");
+  const handleSaveNew = async () => {
+    if (!newPermission.name.trim()) return alert('Name is required');
 
     try {
-      const res = await api.post("/api/permissions", newPermission, { withCredentials: true });
-      setPermissions([...permissions, res.data]); // backend should return the created permission
-      setNewPermission({ name: "", description: "" });
+      const res = await api.post('/api/permissions', newPermission, { withCredentials: true });
+      setPermissions([...permissions, res.data]);
+      handleClose();
     } catch (err) {
-      alert("Failed to add permission");
+      alert('Failed to add permission');
     }
   };
 
-  const handleEditStart = (perm) => {
-    setEditingId(perm.id);
-    setEditData({ name: perm.name, description: perm.description || "" });
-  };
-
-  const handleEditSave = async (id) => {
+  const handleSaveEdit = async () => {
     try {
-      const res = await api.put(`/api/permissions/${id}`, editData, { withCredentials: true });
-      setPermissions(permissions.map(p => (p.id === id ? res.data : p))); // backend should return updated permission
-      setEditingId(null);
+      const res = await api.put(`/api/permissions/${editingPermission.id}`, editingPermission, { withCredentials: true });
+      setPermissions(permissions.map(p => (p.id === editingPermission.id ? res.data : p)));
+      handleClose();
     } catch (err) {
-      alert("Failed to update permission");
+      alert('Failed to update permission');
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this permission?")) return;
+    if (!window.confirm('Are you sure you want to delete this permission?')) return;
     try {
       await api.delete(`/api/permissions/${id}`, { withCredentials: true });
       setPermissions(permissions.filter(p => p.id !== id));
     } catch (err) {
-      alert("Failed to delete permission");
+      alert('Failed to delete permission');
     }
   };
 
   return (
-    <div className="app-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="page-header">
-          <h2>Permission Management</h2>
+    <div className="page-container">
+      <h1 className="page-title">Permissions</h1>
+      <div className="form-container">
+        <button
+          className="button"
+          onClick={() => {
+            setNewPermission({ name: '', description: '' });
+            handleClickOpen();
+          }}
+        >
+          <AddIcon />
+          Add Permission
+        </button>
+      </div>
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th className="permissions-table-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {permissions.map((perm) => (
+              <tr key={perm.id}>
+                <td>{perm.id}</td>
+                <td>{perm.name}</td>
+                <td>{perm.description || '-'}</td>
+                <td className="permissions-table-actions">
+                  <button className="button" onClick={() => {
+                    setEditingPermission(perm);
+                    handleClickOpen();
+                  }}><EditIcon />Edit</button>
+                  <button className="button" onClick={() => handleDelete(perm.id)}><DeleteIcon />Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {open && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3 className="modal-title">{newPermission ? 'Add Permission' : 'Edit Permission'}</h3>
+            <div className="modal-content">
+              <input
+                autoFocus
+                className="form-input"
+                placeholder="Name"
+                type="text"
+                value={newPermission?.name || editingPermission?.name || ''}
+                onChange={(e) => {
+                  if (newPermission) {
+                    setNewPermission({ ...newPermission, name: e.target.value });
+                  } else {
+                    setEditingPermission({ ...editingPermission, name: e.target.value });
+                  }
+                }}
+              />
+              <input
+                className="form-input"
+                placeholder="Description"
+                type="text"
+                value={newPermission?.description || editingPermission?.description || ''}
+                onChange={(e) => {
+                  if (newPermission) {
+                    setNewPermission({ ...newPermission, description: e.target.value });
+                  } else {
+                    setEditingPermission({ ...editingPermission, description: e.target.value });
+                  }
+                }}
+              />
+            </div>
+            <div className="modal-actions">
+              <button className="button" onClick={handleClose}>Cancel</button>
+              <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit}>{newPermission ? 'Add' : 'Save'}</button>
+            </div>
+          </div>
         </div>
-
-        {/* Add New Permission Form */}
-        <section className="card" style={{ marginBottom: 20 }}>
-          <h3>Add Permission</h3>
-          <form onSubmit={handleAdd} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <input
-              type="text"
-              placeholder="Permission name"
-              value={newPermission.name}
-              onChange={(e) => setNewPermission({ ...newPermission, name: e.target.value })}
-              style={{ flex: "1 1 200px", padding: 6 }}
-            />
-            <input
-              type="text"
-              placeholder="Description (optional)"
-              value={newPermission.description}
-              onChange={(e) => setNewPermission({ ...newPermission, description: e.target.value })}
-              style={{ flex: "1 1 200px", padding: 6 }}
-            />
-            <button type="submit" style={{ padding: "6px 12px", background: "#2563eb", color: "#fff", border: "none", borderRadius: 6 }}>
-              Add
-            </button>
-          </form>
-        </section>
-
-        {/* Permissions Table */}
-        <section className="card">
-          {loading ? (
-            <div>Loading...</div>
-          ) : error ? (
-            <div className="alert alert-error">{error}</div>
-          ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ background: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
-                  <th style={{ padding: "8px 12px", textAlign: "left" }}>ID</th>
-                  <th style={{ padding: "8px 12px", textAlign: "left" }}>Name</th>
-                  <th style={{ padding: "8px 12px", textAlign: "left" }}>Description</th>
-                  <th style={{ padding: "8px 12px", textAlign: "left" }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {permissions.length > 0 ? (
-                  permissions.map((perm) => (
-                    <tr key={perm.id} style={{ borderBottom: "1px solid #f1f1f1" }}>
-                      <td style={{ padding: "8px 12px" }}>{perm.id}</td>
-                      <td style={{ padding: "8px 12px" }}>
-                        {editingId === perm.id ? (
-                          <input
-                            type="text"
-                            value={editData.name}
-                            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                          />
-                        ) : (
-                          perm.name
-                        )}
-                      </td>
-                      <td style={{ padding: "8px 12px" }}>
-                        {editingId === perm.id ? (
-                          <input
-                            type="text"
-                            value={editData.description}
-                            onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                          />
-                        ) : (
-                          perm.description || "-"
-                        )}
-                      </td>
-                      <td style={{ padding: "8px 12px" }}>
-                        {editingId === perm.id ? (
-                          <>
-                            <button
-                              onClick={() => handleEditSave(perm.id)}
-                              style={{ marginRight: 8, background: "#16a34a", color: "#fff", border: "none", borderRadius: 6, padding: "4px 10px" }}
-                            >
-                              Save
-                            </button>
-                            <button
-                              onClick={() => setEditingId(null)}
-                              style={{ background: "#f3f4f6", border: "1px solid #d1d5db", borderRadius: 6, padding: "4px 10px" }}
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              onClick={() => handleEditStart(perm)}
-                              style={{ marginRight: 8, background: "#2563eb", color: "#fff", border: "none", borderRadius: 6, padding: "4px 10px" }}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(perm.id)}
-                              style={{ color: "#dc2626", background: "#fff1f2", border: "1px solid #dc2626", borderRadius: 6, padding: "4px 10px" }}
-                            >
-                              Delete
-                            </button>
-                          </>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" style={{ textAlign: "center", padding: 20 }}>
-                      No permissions found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          )}
-        </section>
-      </main>
+      )}
     </div>
   );
 }

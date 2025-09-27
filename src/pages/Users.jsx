@@ -1,19 +1,53 @@
-import React from "react";
-import Sidebar from "../components/Sidebar";
-import api from "../services/api";
-// import "./Users.css"; // new CSS file
+import React from 'react';
+import api from '../services/api.jsx';
+import '../styles/styles.css';
+
+const AddIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19"></line>
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+  </svg>
+);
+
+const EditIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+  </svg>
+);
+
+const DeleteIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6"></polyline>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    <line x1="10" y1="11" x2="10" y2="17"></line>
+    <line x1="14" y1="11" x2="14" y2="17"></line>
+  </svg>
+);
 
 export default function Users() {
   const [users, setUsers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState("");
-  const [search, setSearch] = React.useState("");
-  const [searchField, setSearchField] = React.useState("email");
+  const [error, setError] = React.useState('');
+  const [search, setSearch] = React.useState('');
+  const [searchField, setSearchField] = React.useState('email');
 
   const [editingUser, setEditingUser] = React.useState(null);
   const [newUser, setNewUser] = React.useState(null);
 
-  const fetchUsers = async (searchValue = "") => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setNewUser(null);
+    setEditingUser(null);
+  };
+
+  const fetchUsers = async (searchValue = '') => {
     const query = `
       query FindUsers($by: usersearch) {
         searchUsers(by: $by) {
@@ -27,14 +61,13 @@ export default function Users() {
       const res = await api.post(
         `/graphql`,
         { query, variables: { by } },
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
       );
-      console.log("response to get users:",res);
       setUsers(res.data.data?.searchUsers || []);
-      setError("");
+      setError('');
     } catch (err) {
       console.error(err);
-      setError("Failed to load users");
+      setError('Failed to load users');
       setUsers([]);
     } finally {
       setLoading(false);
@@ -54,14 +87,13 @@ export default function Users() {
       const res = await api.post(
         `/graphql`,
         { query },
-        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+        { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
       );
-      console.log("response to get all users 2 : ",res);
       setUsers(res.data.data?.users || []);
-      setError("");
+      setError('');
     } catch (err) {
       console.error(err);
-      setError("Failed to load users");
+      setError('Failed to load users');
       setUsers([]);
     } finally {
       setLoading(false);
@@ -69,13 +101,12 @@ export default function Users() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
       setLoading(true);
-      const res = await api.delete(`/api/users/${id}`, {
-        credentials: "include",
+      await api.delete(`/api/users/${id}`, {
+        credentials: 'include',
       });
-      if (!res.ok) throw new Error("Failed to delete user");
       await fetchUsers2();
     } catch (err) {
       alert(err.message);
@@ -90,25 +121,20 @@ export default function Users() {
         name: editingUser.name,
         email: editingUser.email,
         password: editingUser.password,
-        role_id: editingUser.role_id, // must match API expectation
+        role_id: editingUser.role_id,
       };
 
-      const res = await api.put(`/api/users/${editingUser.id}`, payload, {
-        headers: { "Content-Type": "application/json" },
+      await api.put(`/api/users/${editingUser.id}`, payload, {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
 
-      if (res.status !== 200) {
-        throw new Error("Failed to update user");
-      }
-
-      setEditingUser(null);
+      handleClose();
       await fetchUsers2();
     } catch (err) {
       alert(err.message);
     }
   };
-
 
   const handleSaveNew = async () => {
     try {
@@ -116,209 +142,162 @@ export default function Users() {
         name: newUser.name,
         email: newUser.email,
         password: newUser.password,
-        role_id: newUser.role_id, // must match API requirement
+        role_id: newUser.role_id,
       };
 
-      const res = await api.post(`/api/register`, payload, {
-        headers: { "Content-Type": "application/json" },
+      await api.post(`/api/register`, payload, {
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
 
-      // If you're using axios, res.ok does NOT exist — check res.status instead
-      if (res.status !== 200 && res.status !== 201) {
-        throw new Error("Failed to create user");
-      }
-
-      setNewUser(null);
+      handleClose();
       await fetchUsers2();
     } catch (err) {
       alert(err.message);
     }
   };
 
-
   React.useEffect(() => {
     fetchUsers2();
   }, []);
 
   React.useEffect(() => {
-    if (search === "") return;
+    if (search === '') return;
     const timeout = setTimeout(() => fetchUsers(search), 300);
     return () => clearTimeout(timeout);
   }, [search, searchField]);
 
   return (
-    <div className="app-layout">
-      <Sidebar />
-      <main className="main-content">
-        <div className="page-header">
-          <h2>👥 Users Management</h2>
-          <p className="muted">Manage users, roles, and permissions</p>
-        </div>
-
-        {/* Search Controls */}
-        <div className="search-controls">
+    <div className="page-container">
+      <h1 className="page-title">Users</h1>
+      <div className="form-container">
+        <div className="users-search-container">
           <input
             type="text"
+            className="form-input"
             placeholder={`Search by ${searchField}...`}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <select value={searchField} onChange={(e) => setSearchField(e.target.value)}>
+          <select
+            className="form-select"
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+          >
             <option value="email">Email</option>
             <option value="name">Name</option>
             <option value="id">ID</option>
           </select>
-          <button className="btn outline small" onClick={() => { setSearch(""); fetchUsers2(); }}>
+          <button className="button" onClick={() => { setSearch(''); fetchUsers2(); }}>
             Reset
           </button>
+          <button
+            className="button"
+            onClick={() => {
+              setNewUser({ name: '', email: '', password: '', role_id: '' });
+              handleClickOpen();
+            }}
+          >
+            <AddIcon />
+            Add User
+          </button>
         </div>
-
-        {/* Users Table */}
-        <section className="card users-card">
-          <div className="table-header">
-            <strong>Users ({users.length})</strong>
-            <button
-              className="btn primary small"
-              onClick={() =>
-                setNewUser({ name: "", email: "", password: "", role_id: "" })
-              }
-            >
-              ➕ Add User
-            </button>
+      </div>
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th className="users-table-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u, i) => (
+              <tr key={u.id}>
+                <td>{i + 1}</td>
+                <td>{u.name}</td>
+                <td>{u.email}</td>
+                <td>{u.role?.name}</td>
+                <td className="users-table-actions">
+                  <button className="button" onClick={() => {
+                    setEditingUser(u);
+                    handleClickOpen();
+                  }}><EditIcon />Edit</button>
+                  <button className="button" onClick={() => handleDelete(u.id)}><DeleteIcon />Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {open && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3 className="modal-title">{newUser ? 'Add User' : 'Edit User'}</h3>
+            <div className="modal-content">
+              <input
+                autoFocus
+                className="form-input"
+                placeholder="Name"
+                type="text"
+                value={newUser?.name || editingUser?.name || ''}
+                onChange={(e) => {
+                  if (newUser) {
+                    setNewUser({ ...newUser, name: e.target.value });
+                  } else {
+                    setEditingUser({ ...editingUser, name: e.target.value });
+                  }
+                }}
+              />
+              <input
+                className="form-input"
+                placeholder="Email"
+                type="email"
+                value={newUser?.email || editingUser?.email || ''}
+                onChange={(e) => {
+                  if (newUser) {
+                    setNewUser({ ...newUser, email: e.target.value });
+                  } else {
+                    setEditingUser({ ...editingUser, email: e.target.value });
+                  }
+                }}
+              />
+              <input
+                className="form-input"
+                placeholder="Password"
+                type="password"
+                onChange={(e) => {
+                  if (newUser) {
+                    setNewUser({ ...newUser, password: e.target.value });
+                  } else {
+                    setEditingUser({ ...editingUser, password: e.target.value });
+                  }
+                }}
+              />
+              <input
+                className="form-input"
+                placeholder="Role ID"
+                type="number"
+                value={newUser?.role_id || editingUser?.role_id || ''}
+                onChange={(e) => {
+                  if (newUser) {
+                    setNewUser({ ...newUser, role_id: e.target.value });
+                  } else {
+                    setEditingUser({ ...editingUser, role_id: e.target.value });
+                  }
+                }}
+              />
+            </div>
+            <div className="modal-actions">
+              <button className="button" onClick={handleClose}>Cancel</button>
+              <button className="button" onClick={newUser ? handleSaveNew : handleSaveEdit}>{newUser ? 'Add' : 'Save'}</button>
+            </div>
           </div>
-
-          <div className="table-wrapper">
-            <table className="styled-table">
-              <thead>
-                <tr>
-                  <th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Password</th><th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {newUser && (
-                  <tr className="new-row">
-                    <td>New</td>
-                    <td>
-                      <input
-                        value={newUser.name}
-                        onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        value={newUser.email}
-                        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        value={newUser.role_id}
-                        onChange={(e) =>
-                          setNewUser({ ...newUser, role_id: e.target.value })
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="password"
-                        value={newUser.password}
-                        onChange={(e) =>
-                          setNewUser({ ...newUser, password: e.target.value })
-                        }
-                      />
-                    </td>
-                    <td>
-                      <button className="btn primary small" onClick={handleSaveNew}>
-                        Save
-                      </button>
-                      <button
-                        className="btn outline small"
-                        onClick={() => setNewUser(null)}
-                      >
-                        Cancel
-                      </button>
-                    </td>
-                  </tr>
-                )}
-
-                {loading ? (
-                  <tr><td colSpan={6} className="loading">Loading...</td></tr>
-                ) : error ? (
-                  <tr><td colSpan={6} className="error">{error}</td></tr>
-                ) : users.length === 0 ? (
-                  <tr><td colSpan={6} className="no-data">No users found</td></tr>
-                ) : (
-                  users.map((u, i) =>
-                    editingUser?.id === u.id ? (
-                      <tr key={u.id} className="edit-row">
-                        <td>#{i + 1}</td>
-                        <td>
-                          <input
-                            value={editingUser.name}
-                            onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            value={editingUser.email}
-                            onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            value={editingUser.role_id}
-                            onChange={(e) =>
-                              setEditingUser({ ...editingUser, role_id: e.target.value })
-                            }
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="password"
-                            value={editingUser.password || ""}
-                            onChange={(e) =>
-                              setEditingUser({ ...editingUser, password: e.target.value })
-                            }
-                          />
-                        </td>
-                        <td>
-                          <button className="btn primary small" onClick={handleSaveEdit}>
-                            Save
-                          </button>
-                          <button
-                            className="btn outline small"
-                            onClick={() => setEditingUser(null)}
-                          >
-                            Cancel
-                          </button>
-                        </td>
-                      </tr>
-                    ) : (
-                      <tr key={u.id}>
-                        <td>{i + 1}</td>
-                        <td>{u.name}</td>
-                        <td>{u.email}</td>
-                        <td>{u.role?.name}</td>
-                        <td>{"********"}</td>
-                        {/* <td>{u.created_at ? new Date(u.created_at).toLocaleDateString() : "-"}</td> */}
-                        <td>
-                          <div className="actions">
-                            <button className="btn small" onClick={() => setEditingUser(u)}>✏️ Edit</button>
-                            <button className="btn danger small" onClick={() => handleDelete(u.id)}>🗑️ Delete</button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  )
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
+        </div>
+      )}
     </div>
   );
 }

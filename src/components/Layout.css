@@ -1,0 +1,88 @@
+.layout-container {
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+  margin-top: 65px;
+}
+
+.sidebar {
+  width: 240px;
+  background: #fbfbff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  border-right: 0.1px solid rgb(196, 210, 255);
+} 
+
+.sidebar.collapsed {
+  width: 40px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0d47a1;
+  margin: 0;
+}
+
+.sidebar.collapsed .sidebar-title {
+  display: none;
+}
+
+.sidebar-toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link .sidebar-link-text {
+  margin-left: 10px;
+}
+
+.sidebar.collapsed .sidebar-link-text {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-link {
+  padding: 10px !important;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: #e0efff;
+  color: #1976d2;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
