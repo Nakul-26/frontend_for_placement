@@ -86,9 +86,24 @@
   background: #edf2ff;
   border-radius: 8px;
   padding: 5px;
+  align-items: center;
+  justify-content: center;
 }
 
 .notification-link:hover {
   color: #0d47a1;
   background: #b9cdff;
+}
+
+
+@media screen and (min-width: 600px) {
+  .notification-card {
+    max-width: 300px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .notification-card {
+    max-width: 400px;
+  }
 }
