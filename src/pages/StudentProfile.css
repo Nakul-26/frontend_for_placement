@@ -1,0 +1,133 @@
+/* StudentProfile.css */
+
+.profile-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.profile-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.edit-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1976d2;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: #1565c0;
+}
+
+.profile-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #1976d2;
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+.details-grid,
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.details-grid p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.details-grid p strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-grid input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.skill-tag {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.skills-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.resume-section p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.save-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: #27ae60;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background-color: #229954;
+}

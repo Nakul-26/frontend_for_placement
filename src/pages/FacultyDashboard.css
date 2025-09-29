@@ -1,0 +1,38 @@
+/* FacultyDashboard.css */
+
+.dashboard-container {
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-card h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.dashboard-card p {
+  font-size: 1rem;
+  color: #666;
+}

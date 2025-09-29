@@ -6,129 +6,129 @@ export default function Notifications() {
     <div className="notifications-container">
       {/* <h2 className="notifications-title">Notifications</h2> */}
       <div className="notifications-list">
-        <div class="notification-card important">
-          <div class="notification-header">
-            <span class="notification-badge">Important</span>
-            <span class="notification-time">2h ago</span>
+        <div className="notification-card important">
+          <div className="notification-header">
+            <span className="notification-badge">Important</span>
+            <span className="notification-time">2h ago</span>
           </div>
 
-          <div class="notification-body">
-            <h5 class="notification-title">Campus Recruitment Drive</h5>
-            <h6 class="notification-subtitle">From: Placement Cell</h6>
-            <p class="notification-text">
+          <div className="notification-body">
+            <h5 className="notification-title">Campus Recruitment Drive</h5>
+            <h6 className="notification-subtitle">From: Placement Cell</h6>
+            <p className="notification-text">
               Infosys is conducting an on-campus recruitment drive for final-year students.
               Please register before <strong>Oct 1, 2025</strong>.
             </p>
           </div>
 
-          <div class="notification-footer">
-            <a href="#" class="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" class="notification-link">Contact Placement Officer</a>
+          <div className="notification-footer">
+            <a href="#" className="notification-link">View Details</a>
+            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
           </div>
         </div>
 
-        <div class="notification-card important">
-          <div class="notification-header">
-            <span class="notification-badge">Important</span>
-            <span class="notification-time">2h ago</span>
+        <div className="notification-card important">
+          <div className="notification-header">
+            <span className="notification-badge">Important</span>
+            <span className="notification-time">2h ago</span>
           </div>
 
-          <div class="notification-body">
-            <h5 class="notification-title">Campus Recruitment Drive</h5>
-            <h6 class="notification-subtitle">From: Placement Cell</h6>
-            <p class="notification-text">
+          <div className="notification-body">
+            <h5 className="notification-title">Campus Recruitment Drive</h5>
+            <h6 className="notification-subtitle">From: Placement Cell</h6>
+            <p className="notification-text">
               Infosys is conducting an on-campus recruitment drive for final-year students.
               Please register before <strong>Oct 1, 2025</strong>.
             </p>
           </div>
 
-          <div class="notification-footer">
-            <a href="#" class="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" class="notification-link">Contact Placement Officer</a>
+          <div className="notification-footer">
+            <a href="#" className="notification-link">View Details</a>
+            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
           </div>
         </div>
 
-        <div class="notification-card important">
-          <div class="notification-header">
-            <span class="notification-badge">Important</span>
-            <span class="notification-time">2h ago</span>
+        <div className="notification-card important">
+          <div className="notification-header">
+            <span className="notification-badge">Important</span>
+            <span className="notification-time">2h ago</span>
           </div>
 
-          <div class="notification-body">
-            <h5 class="notification-title">Campus Recruitment Drive</h5>
-            <h6 class="notification-subtitle">From: Placement Cell</h6>
-            <p class="notification-text">
+          <div className="notification-body">
+            <h5 className="notification-title">Campus Recruitment Drive</h5>
+            <h6 className="notification-subtitle">From: Placement Cell</h6>
+            <p className="notification-text">
               Infosys is conducting an on-campus recruitment drive for final-year students.
               Please register before <strong>Oct 1, 2025</strong>.
             </p>
           </div>
 
-          <div class="notification-footer">
-            <a href="#" class="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" class="notification-link">Contact Placement Officer</a>
+          <div className="notification-footer">
+            <a href="#" className="notification-link">View Details</a>
+            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
           </div>
         </div>
 
-        <div class="notification-card important">
-          <div class="notification-header">
-            <span class="notification-badge">Important</span>
-            <span class="notification-time">2h ago</span>
+        <div className="notification-card important">
+          <div className="notification-header">
+            <span className="notification-badge">Important</span>
+            <span className="notification-time">2h ago</span>
           </div>
 
-          <div class="notification-body">
-            <h5 class="notification-title">Campus Recruitment Drive</h5>
-            <h6 class="notification-subtitle">From: Placement Cell</h6>
-            <p class="notification-text">
+          <div className="notification-body">
+            <h5 className="notification-title">Campus Recruitment Drive</h5>
+            <h6 className="notification-subtitle">From: Placement Cell</h6>
+            <p className="notification-text">
               Infosys is conducting an on-campus recruitment drive for final-year students.
               Please register before <strong>Oct 1, 2025</strong>.
             </p>
           </div>
 
-          <div class="notification-footer">
-            <a href="#" class="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" class="notification-link">Contact Placement Officer</a>
+          <div className="notification-footer">
+            <a href="#" className="notification-link">View Details</a>
+            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
           </div>
         </div>
 
-        <div class="notification-card important">
-          <div class="notification-header">
-            <span class="notification-badge">Important</span>
-            <span class="notification-time">2h ago</span>
+        <div className="notification-card important">
+          <div className="notification-header">
+            <span className="notification-badge">Important</span>
+            <span className="notification-time">2h ago</span>
           </div>
 
-          <div class="notification-body">
-            <h5 class="notification-title">Campus Recruitment Drive</h5>
-            <h6 class="notification-subtitle">From: Placement Cell</h6>
-            <p class="notification-text">
+          <div className="notification-body">
+            <h5 className="notification-title">Campus Recruitment Drive</h5>
+            <h6 className="notification-subtitle">From: Placement Cell</h6>
+            <p className="notification-text">
               Infosys is conducting an on-campus recruitment drive for final-year students.
               Please register before <strong>Oct 1, 2025</strong>.
             </p>
           </div>
 
-          <div class="notification-footer">
-            <a href="#" class="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" class="notification-link">Contact Placement Officer</a>
+          <div className="notification-footer">
+            <a href="#" className="notification-link">View Details</a>
+            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
           </div>
         </div>
 
-        <div class="notification-card important">
-          <div class="notification-header">
-            <span class="notification-badge">Important</span>
-            <span class="notification-time">2h ago</span>
+        <div className="notification-card important">
+          <div className="notification-header">
+            <span className="notification-badge">Important</span>
+            <span className="notification-time">2h ago</span>
           </div>
 
-          <div class="notification-body">
-            <h5 class="notification-title">Campus Recruitment Drive</h5>
-            <h6 class="notification-subtitle">From: Placement Cell</h6>
-            <p class="notification-text">
+          <div className="notification-body">
+            <h5 className="notification-title">Campus Recruitment Drive</h5>
+            <h6 className="notification-subtitle">From: Placement Cell</h6>
+            <p className="notification-text">
               Infosys is conducting an on-campus recruitment drive for final-year students.
               Please register before <strong>Oct 1, 2025</strong>.
             </p>
           </div>
 
-          <div class="notification-footer">
-            <a href="#" class="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" class="notification-link">Contact Placement Officer</a>
+          <div className="notification-footer">
+            <a href="#" className="notification-link">View Details</a>
+            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
           </div>
         </div>
 

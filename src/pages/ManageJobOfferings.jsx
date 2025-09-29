@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getJobOfferings, addJobOffering, editJobOffering, deleteJobOffering } from '../services/api';
-import '../styles/styles.css';
+import './ManageJobOfferings.css';
 
 export default function ManageJobOfferings() {
   const [jobOfferings, setJobOfferings] = useState([]);
@@ -52,7 +52,7 @@ export default function ManageJobOfferings() {
   return (
     <div className="page-container">
       <h1 className="page-title">Manage Job Offerings</h1>
-      <div className="form-container">
+      <div className="form-container card">
         <input
           type="text"
           className="form-input"
@@ -75,7 +75,7 @@ export default function ManageJobOfferings() {
         ></textarea>
         <button className="button" onClick={handleAddJobOffering}>Add Job Offering</button>
       </div>
-      <div className="table-container">
+      <div className="table-container card">
         <table className="table">
           <thead>
             <tr>
@@ -91,9 +91,9 @@ export default function ManageJobOfferings() {
                 <td>{jobOffering.title}</td>
                 <td>{jobOffering.company}</td>
                 <td>{jobOffering.description}</td>
-                <td>
+                <td className="action-buttons">
                   <button className="button" onClick={() => setEditingJobOffering(jobOffering)}>Edit</button>
-                  <button className="button" onClick={() => handleDeleteJobOffering(jobOffering.id)}>Delete</button>
+                  <button className="button danger" onClick={() => handleDeleteJobOffering(jobOffering.id)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -102,7 +102,7 @@ export default function ManageJobOfferings() {
       </div>
       {editingJobOffering && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal card">
             <h3 className="modal-title">Edit Job Offering</h3>
             <input
               type="text"
@@ -121,8 +121,10 @@ export default function ManageJobOfferings() {
               value={editingJobOffering.description}
               onChange={(e) => setEditingJobOffering({ ...editingJobOffering, description: e.target.value })}
             ></textarea>
-            <button className="button" onClick={handleEditJobOffering}>Save</button>
-            <button className="button" onClick={() => setEditingJobOffering(null)}>Cancel</button>
+            <div className="modal-actions">
+                <button className="button" onClick={handleEditJobOffering}>Save</button>
+                <button className="button secondary" onClick={() => setEditingJobOffering(null)}>Cancel</button>
+            </div>
           </div>
         </div>
       )}

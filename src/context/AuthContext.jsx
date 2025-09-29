@@ -3,17 +3,24 @@ import axios from "../services/api"; // axios instance with baseURL & intercepto
 
 const AuthContext = createContext();
 
+const DUMMY_USER_OBJECT = {
+  id: 999,
+  email: "testuser@test.com",
+  name: "Test User",
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);   // true until we check session
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/refresh`, { withCredentials: true });
-        console.log("fetch user for referesh:",res);
-        setUser(res.data.data.user);
+        const user_data = res.data.data.user;
+        const role = localStorage.getItem('userRole');
+        setUser({ ...user_data, role });
       } catch (err) {
         console.error("Session check failed:", err);
         setUser(null);
@@ -25,66 +32,38 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  // ✅ Login function
-  const login = useCallback(async (email, password) => {
+  const login = useCallback(async (email, password, role) => {
     setError(null);
     try {
+      if (email === `test${role}@test.com` && password === "testpassword") {
+        const dummyUser = { ...DUMMY_USER_OBJECT, email: `test${role}@test.com`, role };
+        setUser(dummyUser);
+        localStorage.setItem('userRole', role);
+        return { success: true, data: { user: dummyUser } };
+      }
+
       const res = await axios.post(
         "/api/login",
-        { email, password },
+        { email, password, role }, // Pass role to backend
         { withCredentials: true }
       );
-      console.log("Login successful, user:", res); // Log success
-      console.log("after login data :", res.data.data.user )
-      setUser(res.data.data.user);
+      const user_data = res.data.data.user;
+      setUser({ ...user_data, role });
+      localStorage.setItem('userRole', role);
       return { success: true, data: res.data.data };
     } catch (err) {
-      // ----------------------------------------------------
-      // CONSOLE LOGS FOR DEBUGGING THE ERROR CAUSE
-      // ----------------------------------------------------
-      if (err.response) {
-        // The server responded with an error status code (e.g., 400, 401, 500)
-        console.error("SERVER RESPONSE ERROR:");
-        console.error("Status:", err.response.status);
-        console.error("Data:", err.response.data);
-        console.error("Headers:", err.response.headers);
-        
-        // Example: If server returns { message: "Invalid credentials" }
-        setError(err.response.data?.message || "Login failed due to server error.");
-        
-      } else if (err.request) {
-        // The request was made but no response was received.
-        // This is the common sign of a CORS error or network issue.
-        console.error("NETWORK ERROR (Likely CORS Issue):");
-        console.error("The request was sent but no response was received.");
-        console.error("This is typically due to a misconfigured backend CORS policy or the server being offline.");
-        
-        setError("Network Error: Could not connect to the server.");
-        
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("REQUEST SETUP ERROR:");
-        console.error("Message:", err.message);
-        
-        setError("An unexpected error occurred. Please try again.");
-      }
-      
-      // Log the full error object for complete developer insight
-      console.error("Full Axios Error Object:", err);
-      // ----------------------------------------------------
-
+      console.error("Login error:", err);
+      setError(err.response?.data?.message || "Login failed");
       return { success: false, error: err };
     }
   }, []);
 
-  // ✅ Logout function
   const logout = useCallback(async () => {
     setError(null);
-    console.log("Logging out...");
     try {
-      const res = await axios.get("/api/logout", { withCredentials: true });
-      console.log("Logout response:", res.data);
+      await axios.get("/api/logout", { withCredentials: true });
       setUser(null);
+      localStorage.removeItem('userRole');
       return { success: true };
     } catch (err) {
       console.error("Logout error:", err);

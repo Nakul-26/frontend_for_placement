@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api.jsx';
-import '../styles/styles.css';
+import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -56,14 +56,14 @@ const Register = () => {
   };
 
   return (
-    <div className="page-container">
-      <div className="form-container">
-        <h1 className="page-title">Sign up</h1>
+    <div className="register-container">
+      <div className="register-paper">
+        <h1 className="register-title">Create an Account</h1>
         {error && <div className="alert error">{error}</div>}
         {success && <div className="alert success">{success}</div>}
-        <form noValidate onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit} className="register-form">
           <input
-            className="form-input"
+            className="register-input"
             type="text"
             id="name"
             placeholder="Name"
@@ -74,7 +74,7 @@ const Register = () => {
             onChange={handleChange}
           />
           <input
-            className="form-input"
+            className="register-input"
             type="email"
             id="email"
             placeholder="Email Address"
@@ -84,7 +84,7 @@ const Register = () => {
             onChange={handleChange}
           />
           <input
-            className="form-input"
+            className="register-input"
             type="password"
             id="password"
             placeholder="Password"
@@ -94,7 +94,7 @@ const Register = () => {
             onChange={handleChange}
           />
           <select
-            className="form-select"
+            className="register-select"
             id="role_id"
             name="role_id"
             value={form.role_id}
@@ -106,12 +106,12 @@ const Register = () => {
           </select>
           <button
             type="submit"
-            className="button"
+            className="register-button"
             disabled={loading}
           >
             {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
-          <div className="form-link">
+          <div className="register-link">
             <Link to="/login">{"Already have an account? Sign In"}</Link>
           </div>
         </form>

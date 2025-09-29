@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api.jsx';
-import '../styles/styles.css';
+import './Roles.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -58,7 +58,7 @@ export default function Roles() {
     try {
       setLoading(true);
       const res = await api.post(
-        '/graphql',
+        '/rbac/graphql',
         { query },
         { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
       );
@@ -73,7 +73,7 @@ export default function Roles() {
 
   const handleSaveNew = async () => {
     try {
-      await api.post('/api/roles', newRole, { withCredentials: true });
+      await api.post('/rbac/api/roles', newRole, { withCredentials: true });
       handleClose();
       fetchRoles();
     } catch (err) {
@@ -83,7 +83,7 @@ export default function Roles() {
 
   const handleSaveEdit = async () => {
     try {
-      await api.put(`/api/roles/${editingRole.id}`, editingRole, {
+      await api.put(`/rbac/api/roles/${editingRole.id}`, editingRole, {
         withCredentials: true,
       });
       handleClose();
@@ -96,7 +96,7 @@ export default function Roles() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this role?')) return;
     try {
-      await api.delete(`/api/roles/${id}`, { withCredentials: true });
+      await api.delete(`/rbac/api/roles/${id}`, { withCredentials: true });
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);

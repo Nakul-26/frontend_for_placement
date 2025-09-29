@@ -1,21 +1,55 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Layout.css';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 
-const menuItems = [
-  { text: 'Dashboard', path: '/dashboard', icon: '🏠' },
-  { text: 'Users', path: '/users', icon: '👥' },
-  { text: 'Roles', path: '/roles', icon: '🔒' },
-  { text: 'Permissions', path: '/permissions', icon: '🔑' },
-  { text: 'Role-Permission', path: '/role-permission', icon: '🔗' },
-  { text: 'Manage Jobs', path: '/manage-jobs', icon: '💼' },
-  { text: 'Manage Notifications', path: '/manage-notifications', icon: '🔔' },
+const adminMenuItems = [
+  { text: 'Dashboard', path: '/admin/dashboard', icon: '🏠' },
+  { text: 'Users', path: '/admin/users', icon: '👥' },
+  { text: 'Roles', path: '/admin/roles', icon: '🔒' },
+  { text: 'Permissions', path: '/admin/permissions', icon: '🔑' },
+  { text: 'Role-Permission', path: '/admin/role-permission', icon: '🔗' },
+  { text: 'Manage Jobs', path: '/admin/manage-jobs', icon: '💼' },
+  { text: 'Notifications', path: '/notifications', icon: '🔔' },
+  { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
+const facultyMenuItems = [
+  { text: 'Dashboard', path: '/faculty/dashboard', icon: '🏠' },
+  { text: 'Analytics', path: '/faculty/analytics', icon: '📊' },
+  { text: 'Notifications', path: '/notifications', icon: '🔔' },
+  { text: 'Chat', path: '/chat', icon: '💬' },
+];
+
+const studentMenuItems = [
+  { text: 'Dashboard', path: '/student/dashboard', icon: '🏠' },
+  { text: 'Skill Development', path: '/student/skill-development', icon: '📚' },
+  { text: 'Assessments', path: '/student/assessments', icon: '📝' },
+  { text: 'My Profile', path: '/student/profile', icon: '🧑‍🎓' },
+  { text: 'Notifications', path: '/notifications', icon: '🔔' },
+  { text: 'Chat', path: '/chat', icon: '💬' },
+];
+
+const getMenuItems = (role) => {
+  switch (role) {
+    case 'admin':
+      return adminMenuItems;
+    case 'faculty':
+      return facultyMenuItems;
+    case 'student':
+      return studentMenuItems;
+    default:
+      return [];
+  }
+};
+
 export default function Layout({ children }) {
+  const { user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const menuItems = getMenuItems(user?.role);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -37,8 +71,9 @@ export default function Layout({ children }) {
               <NavLink
                 key={item.text}
                 to={item.path}
-                className="sidebar-link"
-                activeClassName="active"
+                className={({ isActive }) =>
+                  "sidebar-link" + (isActive ? " active" : "")
+                }
               >
                 <span className="sidebar-link-icon">{item.icon}</span>
                 <span className="sidebar-link-text">{item.text}</span>

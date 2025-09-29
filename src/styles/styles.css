@@ -1,22 +1,14 @@
-.page-container {
+/* .page-container {
   padding: 20px;
-  background: #ffffff;
-  font-family: 'Inter', sans-serif;
 }
 
 .page-title {
   font-size: 2rem;
-  font-weight: 600;
-  color: #0d47a1;
   margin-bottom: 20px;
 }
 
 .table-container {
   overflow-x: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .table {
@@ -26,21 +18,11 @@
 
 .table th,
 .table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.table th {
-  font-weight: 500;
-  color: #555;
+  padding: 8px;
+  border: 1px solid #ddd;
 }
 
 .form-container {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -48,26 +30,13 @@
 .form-textarea,
 .form-select {
   width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 8px;
   margin-bottom: 10px;
 }
 
 .button {
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
-  background: linear-gradient(135deg, #1976d2, #1565c0);
-  color: white;
-  font-weight: 500;
+  padding: 8px 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.button:hover {
-  background: linear-gradient(135deg, #2196f3, #1976d2);
-  transform: translateY(-1px);
 }
 
 .modal-overlay {
@@ -84,15 +53,11 @@
 
 .modal {
   background-color: white;
-  padding: 24px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 5px;
+  width: 500px;
 }
 
 .modal-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  margin-bottom: 16px;
-}
+  margin-top: 0;
+} */

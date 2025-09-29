@@ -1,4 +1,4 @@
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext";
 import './Dashboard.css';
 
 const EmailIcon = () => (
@@ -14,12 +14,12 @@ const KeyIcon = () => (
   </svg>
 );
 
-export default function Dashboard() {
+export default function AdminDashboard() {
   const { user } = useAuth();
 
   return (
     <div className="page-container">
-      <h1 className="page-title">Placement Dashboard</h1>
+      <h1 className="page-title">Admin Dashboard</h1>
       <p className="page-subtitle">
         Manage users, roles, and placement activities all in one place.
       </p>

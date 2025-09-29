@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api.jsx';
-import '../styles/styles.css';
+import './RolePermissions.css';
 
 export default function RolePermissions() {
   const [roles, setRoles] = useState([]);
@@ -119,14 +119,15 @@ export default function RolePermissions() {
   return (
     <div className="page-container">
       <h1 className="page-title">Role Permissions</h1>
-      <div className="table-container">
+      <div className="card">
         <div className="role-permissions-grid">
-          <div>
-            <ul className="role-permissions-roles-list">
+          <div className="roles-list-container">
+            <h2 className="sub-title">Roles</h2>
+            <ul className="roles-list">
               {roles.map((role) => (
                 <li
                   key={role.id}
-                  className={`role-permissions-role-item ${selectedRole?.id === role.id ? 'selected' : ''}`}
+                  className={`role-item ${selectedRole?.id === role.id ? 'selected' : ''}`}
                   onClick={() => handleSelectRole(role)}
                 >
                   {role.name}
@@ -134,12 +135,13 @@ export default function RolePermissions() {
               ))}
             </ul>
           </div>
-          <div>
+          <div className="permissions-list-container">
             {selectedRole ? (
               <div>
-                <ul className="role-permissions-permissions-list">
+                <h2 className="sub-title">Permissions for {selectedRole.name}</h2>
+                <ul className="permissions-list">
                   {permissions.map((perm) => (
-                    <li key={perm.id} className="role-permissions-permission-item" onClick={() => togglePermission(perm.id)}>
+                    <li key={perm.id} className="permission-item" onClick={() => togglePermission(perm.id)}>
                       <input
                         type="checkbox"
                         checked={rolePermissions.includes(perm.id)}
@@ -149,17 +151,17 @@ export default function RolePermissions() {
                     </li>
                   ))}
                 </ul>
-                <div className="role-permissions-buttons">
+                <div className="action-buttons">
                   <button className="button" onClick={handleSave} disabled={saving}>
                     {saving ? 'Saving...' : 'Save'}
                   </button>
-                  <button className="button" onClick={() => setSelectedRole(null)}>
+                  <button className="button secondary" onClick={() => setSelectedRole(null)}>
                     Cancel
                   </button>
                 </div>
               </div>
             ) : (
-              <p>Select a role to manage its permissions.</p>
+              <p className="placeholder-text">Select a role to manage its permissions.</p>
             )}
           </div>
         </div>

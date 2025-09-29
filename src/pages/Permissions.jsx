@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api.jsx';
-import '../styles/styles.css';
+import './Permissions.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -122,7 +122,7 @@ export default function Permissions() {
   return (
     <div className="page-container">
       <h1 className="page-title">Permissions</h1>
-      <div className="form-container">
+      <div className="form-container card">
         <button
           className="button"
           onClick={() => {
@@ -134,14 +134,14 @@ export default function Permissions() {
           Add Permission
         </button>
       </div>
-      <div className="table-container">
+      <div className="table-container card">
         <table className="table">
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Description</th>
-              <th className="permissions-table-actions">Actions</th>
+              <th className="action-buttons">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -150,12 +150,12 @@ export default function Permissions() {
                 <td>{perm.id}</td>
                 <td>{perm.name}</td>
                 <td>{perm.description || '-'}</td>
-                <td className="permissions-table-actions">
+                <td className="action-buttons">
                   <button className="button" onClick={() => {
                     setEditingPermission(perm);
                     handleClickOpen();
                   }}><EditIcon />Edit</button>
-                  <button className="button" onClick={() => handleDelete(perm.id)}><DeleteIcon />Delete</button>
+                  <button className="button danger" onClick={() => handleDelete(perm.id)}><DeleteIcon />Delete</button>
                 </td>
               </tr>
             ))}
@@ -164,7 +164,7 @@ export default function Permissions() {
       </div>
       {open && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal card">
             <h3 className="modal-title">{newPermission ? 'Add Permission' : 'Edit Permission'}</h3>
             <div className="modal-content">
               <input
@@ -196,7 +196,7 @@ export default function Permissions() {
               />
             </div>
             <div className="modal-actions">
-              <button className="button" onClick={handleClose}>Cancel</button>
+              <button className="button secondary" onClick={handleClose}>Cancel</button>
               <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit}>{newPermission ? 'Add' : 'Save'}</button>
             </div>
           </div>

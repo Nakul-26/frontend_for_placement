@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getNotifications, addNotification, editNotification, deleteNotification } from '../services/api';
-import '../styles/styles.css';
+import './ManageNotifications.css';
 
-export default function ManageNotifications() {
+const ManageNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [newNotification, setNewNotification] = useState('');
   const [editingNotification, setEditingNotification] = useState(null);
@@ -50,54 +50,54 @@ export default function ManageNotifications() {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Manage Notifications</h1>
-      <div className="form-container">
+    <div className="notifications-container">
+      <div className="header-section">
+        <h1>Manage Notifications</h1>
+        <p>Create, edit, and delete notifications for all users.</p>
+      </div>
+
+      <div className="form-card card">
         <input
           type="text"
           className="form-input"
           value={newNotification}
           onChange={(e) => setNewNotification(e.target.value)}
-          placeholder="Enter notification message"
+          placeholder="Enter a new notification message..."
         />
-        <button className="button" onClick={handleAddNotification}>Add Notification</button>
+        <button className="button primary" onClick={handleAddNotification}>Add Notification</button>
       </div>
-      <div className="table-container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Message</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {notifications.map((notification) => (
-              <tr key={notification.id}>
-                <td>{notification.message}</td>
-                <td>
-                  <button className="button" onClick={() => setEditingNotification(notification)}>Edit</button>
-                  <button className="button" onClick={() => handleDeleteNotification(notification.id)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="notifications-list card">
+        <h2 className="card-title">Existing Notifications</h2>
+        {notifications.map((notification) => (
+          <div key={notification.id} className="notification-item">
+            <p className="notification-message">{notification.message}</p>
+            <div className="action-buttons">
+              <button className="button" onClick={() => setEditingNotification(notification)}>Edit</button>
+              <button className="button danger" onClick={() => handleDeleteNotification(notification.id)}>Delete</button>
+            </div>
+          </div>
+        ))}
       </div>
+
       {editingNotification && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal card">
             <h3 className="modal-title">Edit Notification</h3>
-            <input
-              type="text"
-              className="form-input"
+            <textarea
+              className="form-textarea"
               value={editingNotification.message}
               onChange={(e) => setEditingNotification({ ...editingNotification, message: e.target.value })}
-            />
-            <button className="button" onClick={handleEditNotification}>Save</button>
-            <button className="button" onClick={() => setEditingNotification(null)}>Cancel</button>
+            ></textarea>
+            <div className="modal-actions">
+              <button className="button primary" onClick={handleEditNotification}>Save Changes</button>
+              <button className="button secondary" onClick={() => setEditingNotification(null)}>Cancel</button>
+            </div>
           </div>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default ManageNotifications;
