@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+if (!backendUrl) {
+  throw new Error("VITE_BACKEND_URL is not defined. Please check your .env file and restart the development server.");
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL, // backend URL
+  baseURL: backendUrl, // backend URL
   withCredentials: true, // send cookies for session auth
 });
 

@@ -9,6 +9,10 @@ import Landing from './pages/Landing.jsx';
 import Register from './pages/Register.jsx';
 import Layout from './components/Layout.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
+import About from './pages/About.jsx';
+import Contact from './pages/Contact.jsx';
+import PublicJobListing from './pages/PublicJobListing.jsx';
+import JobDetail from './pages/JobDetail.jsx';
 
 // Dashboards
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -41,6 +45,11 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Landing />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/jobs" element={<PublicJobListing />} />
+            <Route path="/jobs/:id" element={<JobDetail />} />
+            <Route path="/skill-development-public" element={<SkillDevelopment />} />
             <Route path="/login" element={<Login />} />
             <Route path="/login/student" element={<StudentLogin />} />
             <Route path="/login/faculty" element={<FacultyLogin />} />

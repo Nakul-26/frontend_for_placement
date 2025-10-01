@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import api from '../services/api.jsx';
 import './Roles.css';
 
@@ -34,6 +34,7 @@ export default function Roles() {
   const [editingRole, setEditingRole] = useState(null);
 
   const [open, setOpen] = useState(false);
+  const [token, setToken] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -45,23 +46,40 @@ export default function Roles() {
     setEditingRole(null);
   };
 
-  const fetchRoles = async () => {
-    const query = `
-      query {
-        roles {
-          id
-          name
-          description
-        }
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        // console.log('api: ',  api);
+        setLoading(true);
+        const res = await api.get('/cookies', { withCredentials: true });
+        // console.log('res: ', res.data.cookies);
+        setToken(res.data.cookies);
+        setError(null);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch token');
+        setLoading(false);
+        return;
       }
-    `;
+    };
+    fetchToken();
+  }, []);
+
+  const fetchRoles = async () => {
     try {
+      console.log('fetching roles ...');
+      console.log('token: ', token);
+      console.log('fetching roles ... & api: ',  api);
       setLoading(true);
-      const res = await api.post(
-        '/rbac/graphql',
-        { query },
-        { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
-      );
+      const config = {
+          // Keep withCredentials if you expect a cookie, otherwise remove it
+          withCredentials: true, 
+          headers: { 
+              'Authorization': `Bearer ${token}`
+              // Content-Type is optional for GET
+          }
+      }
+      const res = await api.get('/rbac/roles', config);
+      console.log('res: ', res);
       setRoles(res.data.data.roles || []);
       setError(null);
     } catch (err) {
@@ -73,7 +91,7 @@ export default function Roles() {
 
   const handleSaveNew = async () => {
     try {
-      await api.post('/rbac/api/roles', newRole, { withCredentials: true });
+      await api.post('/rbac/roles', newRole, { withCredentials: true });
       handleClose();
       fetchRoles();
     } catch (err) {
@@ -83,7 +101,7 @@ export default function Roles() {
 
   const handleSaveEdit = async () => {
     try {
-      await api.put(`/rbac/api/roles/${editingRole.id}`, editingRole, {
+      await api.put(`/rbac/roles/${editingRole.id}`, editingRole, {
         withCredentials: true,
       });
       handleClose();
@@ -105,7 +123,7 @@ export default function Roles() {
 
   useEffect(() => {
     fetchRoles();
-  }, []);
+  }, [token]);
 
   return (
     <div className="page-container">
