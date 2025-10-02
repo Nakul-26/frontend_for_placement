@@ -46,41 +46,17 @@ export default function Roles() {
     setEditingRole(null);
   };
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        // console.log('api: ',  api);
-        setLoading(true);
-        const res = await api.get('/cookies', { withCredentials: true });
-        // console.log('res: ', res.data.cookies);
-        setToken(res.data.cookies);
-        setError(null);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch token');
-        setLoading(false);
-        return;
-      }
-    };
-    fetchToken();
-  }, []);
-
   const fetchRoles = async () => {
     try {
       console.log('fetching roles ...');
-      console.log('token: ', token);
       console.log('fetching roles ... & api: ',  api);
       setLoading(true);
       const config = {
-          // Keep withCredentials if you expect a cookie, otherwise remove it
           withCredentials: true, 
-          headers: { 
-              'Authorization': `Bearer ${token}`
-              // Content-Type is optional for GET
-          }
       }
       const res = await api.get('/rbac/roles', config);
-      console.log('res: ', res);
-      setRoles(res.data.data.roles || []);
+      console.log('roles res: ', res.data.data);
+      setRoles(res.data.data || []);
       setError(null);
     } catch (err) {
       setError(err.message || 'Failed to fetch roles');
@@ -91,11 +67,15 @@ export default function Roles() {
 
   const handleSaveNew = async () => {
     try {
+      console.log('newRole: ', newRole);
+      setLoading(true);
       await api.post('/rbac/roles', newRole, { withCredentials: true });
       handleClose();
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,7 +94,7 @@ export default function Roles() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this role?')) return;
     try {
-      await api.delete(`/rbac/api/roles/${id}`, { withCredentials: true });
+      await api.delete(`/rbac/roles/${id}`, { withCredentials: true });
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
@@ -122,8 +102,8 @@ export default function Roles() {
   };
 
   useEffect(() => {
-    fetchRoles();
-  }, [token]);
+      fetchRoles();
+  }, []);
 
   return (
     <div className="page-container">
@@ -155,7 +135,7 @@ export default function Roles() {
               <tr key={role.id}>
                 <td>{role.name}</td>
                 <td>{role.description}</td>
-                <td>{role.is_Active ? 'Active' : 'Inactive'}</td>
+                <td>{role.is_active ? 'Active' : 'Inactive'}</td>
                 <td className="roles-table-actions">
                   <button className="button" onClick={() => {
                     setEditingRole(role);
@@ -202,7 +182,7 @@ export default function Roles() {
               />
               <select
                 className="form-select"
-                value={newRole?.is_Active || editingRole?.is_Active || true}
+                value={newRole ? newRole.is_Active : editingRole?.is_Active}
                 onChange={(e) => {
                   if (newRole) {
                     setNewRole({ ...newRole, is_Active: e.target.value === 'true' });

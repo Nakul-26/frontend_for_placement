@@ -12,14 +12,15 @@ const adminMenuItems = [
   { text: 'Permissions', path: '/admin/permissions', icon: '🔑' },
   { text: 'Role-Permission', path: '/admin/role-permission', icon: '🔗' },
   { text: 'Manage Jobs', path: '/admin/manage-jobs', icon: '💼' },
-  { text: 'Notifications', path: '/notifications', icon: '🔔' },
+  { text: 'Notifications', path: '/admin/notifications', icon: '🔔' },
+  { text: 'Manage Notifications', path: '/admin/manage-notifications', icon: '⚙️' },
   { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
 const facultyMenuItems = [
   { text: 'Dashboard', path: '/faculty/dashboard', icon: '🏠' },
   { text: 'Analytics', path: '/faculty/analytics', icon: '📊' },
-  { text: 'Notifications', path: '/notifications', icon: '🔔' },
+  { text: 'Notifications', path: '/faculty/notifications', icon: '🔔' },
   { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
@@ -28,7 +29,7 @@ const studentMenuItems = [
   { text: 'Skill Development', path: '/student/skill-development', icon: '📚' },
   { text: 'Assessments', path: '/student/assessments', icon: '📝' },
   { text: 'My Profile', path: '/student/profile', icon: '🧑‍🎓' },
-  { text: 'Notifications', path: '/notifications', icon: '🔔' },
+  { text: 'Notifications', path: '/student/notifications', icon: '🔔' },
   { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 

@@ -17,7 +17,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/refresh`, { withCredentials: true });
+        const res = await axios.get(`/api/refresh`, { withCredentials: true });
+        console.log("Session check response:", res.data);
         const user_data = res.data.data.user;
         const role = localStorage.getItem('userRole');
         setUser({ ...user_data, role });

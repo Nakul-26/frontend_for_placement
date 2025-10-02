@@ -47,49 +47,15 @@ export default function Users() {
     setEditingUser(null);
   };
 
-  const fetchUsers = async (searchValue = '') => {
-    const query = `
-      query FindUsers($by: usersearch) {
-        searchUsers(by: $by) {
-          id name email created_at role { name description }
-        }
-      }
-    `;
+  const fetchUsers2 = async (searchValue = '') => {
     const by = searchValue ? { [searchField]: searchValue } : {};
     try {
       setLoading(true);
       const res = await api.post(
-        `/graphql`,
-        { query, variables: { by } },
-        { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+        `/rbac/users`,
+        { withCredentials: true }, 
       );
       setUsers(res.data.data?.searchUsers || []);
-      setError('');
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load users');
-      setUsers([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchUsers2 = async () => {
-    const query = `
-      query {
-        users {
-          id name email created_at role { name description }
-        }
-      }
-    `;
-    try {
-      setLoading(true);
-      const res = await api.post(
-        `/graphql`,
-        { query },
-        { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
-      );
-      setUsers(res.data.data?.users || []);
       setError('');
     } catch (err) {
       console.error(err);
@@ -160,12 +126,6 @@ export default function Users() {
   React.useEffect(() => {
     fetchUsers2();
   }, []);
-
-  React.useEffect(() => {
-    if (search === '') return;
-    const timeout = setTimeout(() => fetchUsers(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search, searchField]);
 
   return (
     <div className="page-container">

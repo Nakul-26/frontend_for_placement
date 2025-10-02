@@ -28,7 +28,7 @@ const StudentDashboard = () => {
           <div className="card-icon">💼</div>
           <h2>Recommended Jobs</h2>
           <p>We have found 10 jobs that match your profile.</p>
-          <a href="#" className="card-link">View Jobs</a>
+          <a href="#" className-="card-link">View Jobs</a>
         </div>
         <div className="dashboard-card">
           <div className="card-icon">📚</div>

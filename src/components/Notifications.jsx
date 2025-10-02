@@ -1,145 +1,59 @@
 import React from 'react';
 import './Notifications.css';
+import api from '../services/api';
+import { useEffect } from 'react';
 
 export default function Notifications() {
+  const [notifications, setNotifications] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        setLoading(true);
+        const config = {
+            withCredentials: true,
+        }
+        const res = await api.get('https://notification-31at.onrender.com/alldata', config);
+        console.log('notifications res: ', res);
+        setNotifications(res.data.details || []);
+        setError(null);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch notifications');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotifications();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="notifications-container">
-      {/* <h2 className="notifications-title">Notifications</h2> */}
       <div className="notifications-list">
-        <div className="notification-card important">
-          <div className="notification-header">
-            <span className="notification-badge">Important</span>
-            <span className="notification-time">2h ago</span>
-          </div>
+        {!notifications && notifications.map((notification) => (
+          <div className="notification-card important" key={notification.value.id}>
+            {console.log('notification: ', notification)}
+            <div className="notification-header">
+              <span className="notification-badge">{notification.value.type}</span>
+              <span className="notification-time">{new Date(notification.value.created_at).toLocaleString()}</span>
+            </div>
 
-          <div className="notification-body">
-            <h5 className="notification-title">Campus Recruitment Drive</h5>
-            <h6 className="notification-subtitle">From: Placement Cell</h6>
-            <p className="notification-text">
-              Infosys is conducting an on-campus recruitment drive for final-year students.
-              Please register before <strong>Oct 1, 2025</strong>.
-            </p>
+            <div className="notification-body">
+              <h6 className="notification-subtitle">From: {notification.value.author}</h6>
+              <p className="notification-text">{notification.value.content}</p>
+            </div>
           </div>
-
-          <div className="notification-footer">
-            <a href="#" className="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
-          </div>
-        </div>
-
-        <div className="notification-card important">
-          <div className="notification-header">
-            <span className="notification-badge">Important</span>
-            <span className="notification-time">2h ago</span>
-          </div>
-
-          <div className="notification-body">
-            <h5 className="notification-title">Campus Recruitment Drive</h5>
-            <h6 className="notification-subtitle">From: Placement Cell</h6>
-            <p className="notification-text">
-              Infosys is conducting an on-campus recruitment drive for final-year students.
-              Please register before <strong>Oct 1, 2025</strong>.
-            </p>
-          </div>
-
-          <div className="notification-footer">
-            <a href="#" className="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
-          </div>
-        </div>
-
-        <div className="notification-card important">
-          <div className="notification-header">
-            <span className="notification-badge">Important</span>
-            <span className="notification-time">2h ago</span>
-          </div>
-
-          <div className="notification-body">
-            <h5 className="notification-title">Campus Recruitment Drive</h5>
-            <h6 className="notification-subtitle">From: Placement Cell</h6>
-            <p className="notification-text">
-              Infosys is conducting an on-campus recruitment drive for final-year students.
-              Please register before <strong>Oct 1, 2025</strong>.
-            </p>
-          </div>
-
-          <div className="notification-footer">
-            <a href="#" className="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
-          </div>
-        </div>
-
-        <div className="notification-card important">
-          <div className="notification-header">
-            <span className="notification-badge">Important</span>
-            <span className="notification-time">2h ago</span>
-          </div>
-
-          <div className="notification-body">
-            <h5 className="notification-title">Campus Recruitment Drive</h5>
-            <h6 className="notification-subtitle">From: Placement Cell</h6>
-            <p className="notification-text">
-              Infosys is conducting an on-campus recruitment drive for final-year students.
-              Please register before <strong>Oct 1, 2025</strong>.
-            </p>
-          </div>
-
-          <div className="notification-footer">
-            <a href="#" className="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
-          </div>
-        </div>
-
-        <div className="notification-card important">
-          <div className="notification-header">
-            <span className="notification-badge">Important</span>
-            <span className="notification-time">2h ago</span>
-          </div>
-
-          <div className="notification-body">
-            <h5 className="notification-title">Campus Recruitment Drive</h5>
-            <h6 className="notification-subtitle">From: Placement Cell</h6>
-            <p className="notification-text">
-              Infosys is conducting an on-campus recruitment drive for final-year students.
-              Please register before <strong>Oct 1, 2025</strong>.
-            </p>
-          </div>
-
-          <div className="notification-footer">
-            <a href="#" className="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
-          </div>
-        </div>
-
-        <div className="notification-card important">
-          <div className="notification-header">
-            <span className="notification-badge">Important</span>
-            <span className="notification-time">2h ago</span>
-          </div>
-
-          <div className="notification-body">
-            <h5 className="notification-title">Campus Recruitment Drive</h5>
-            <h6 className="notification-subtitle">From: Placement Cell</h6>
-            <p className="notification-text">
-              Infosys is conducting an on-campus recruitment drive for final-year students.
-              Please register before <strong>Oct 1, 2025</strong>.
-            </p>
-          </div>
-
-          <div className="notification-footer">
-            <a href="#" className="notification-link">View Details</a>
-            <a href="mailto:placement@college.edu" className="notification-link">Contact Placement Officer</a>
-          </div>
-        </div>
-
-        {/* <div className='notifications-card'>
-          <h1>this is another notification</h1>
-          <p>this is the content of the new notification</p>
-        </div>
-        <div className='notifications-card'>
-          <h1>this is a third notification</h1>
-          <p>this is the content of the third notification</p>
-        </div> */}
+        ))}
+        {!notifications && <div>No notifications available.</div>}
       </div>
     </div>
   );

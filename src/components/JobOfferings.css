@@ -1,8 +1,109 @@
 .job-offerings-container {
-  padding: 16px;
+  padding: 24px;
+  margin: 0 auto;
+  background-color: #f9fafb;
 }
 
 .job-offerings-title {
-  font-size: 1.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #111827;
+}
+
+.job-listings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.job-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.job-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.company-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-right: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.job-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.company-name {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.job-card-body p {
+  font-size: 1rem;
+  color: #374151;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.skills-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.skills-list li {
+  background-color: #e5e7eb;
+  color: #374151;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
   font-weight: 500;
+}
+
+.job-card-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.view-details-btn {
+    background-color: #2563eb;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+    background-color: #1d4ed8;
 }

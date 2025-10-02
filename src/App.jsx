@@ -34,6 +34,7 @@ import Chat from './pages/Chat.jsx';
 import Analytics from './pages/Analytics.jsx';
 import StudentProfile from './pages/StudentProfile.jsx';
 import CompanyProfile from './pages/CompanyProfile.jsx';
+import NotificationsPage from './pages/NotificationsPage.jsx';
 
 // import './index.css';
 
@@ -64,12 +65,15 @@ function App() {
               <Route path="/admin/permissions" element={<Layout><Permissions /></Layout>} />
               <Route path="/admin/role-permission" element={<Layout><RolePermissions /></Layout>} />
               <Route path="/admin/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
+              <Route path="/admin/manage-notifications" element={<Layout><ManageNotifications /></Layout>} />
+              <Route path="/admin/notifications" element={<Layout><NotificationsPage /></Layout>} />
             </Route>
 
             {/* Faculty Routes */}
             <Route element={<ProtectedRoute roles={['faculty']} />}>
               <Route path="/faculty/dashboard" element={<Layout><FacultyDashboard /></Layout>} />
               <Route path="/faculty/analytics" element={<Layout><Analytics /></Layout>} />
+              <Route path="/faculty/notifications" element={<Layout><NotificationsPage /></Layout>} />
             </Route>
 
             {/* Student Routes */}
@@ -78,11 +82,11 @@ function App() {
               <Route path="/student/skill-development" element={<Layout><SkillDevelopment /></Layout>} />
               <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} />
               <Route path="/student/profile" element={<Layout><StudentProfile /></Layout>} />
+              <Route path="/student/notifications" element={<Layout><NotificationsPage /></Layout>} />
             </Route>
 
             {/* Shared Routes for authenticated users */}
             <Route element={<ProtectedRoute roles={['admin', 'faculty', 'student']} />}>
-                <Route path="/notifications" element={<Layout><ManageNotifications /></Layout>} />
                 <Route path="/chat" element={<Layout><Chat /></Layout>} />
             </Route>
 
