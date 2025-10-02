@@ -4,24 +4,20 @@ import './Users.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19"></line>
-    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <path d="M12 5v14M5 12h14" />
   </svg>
 );
 
 const EditIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
 );
 
 const DeleteIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="3 6 5 6 21 6"></polyline>
-    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-    <line x1="10" y1="11" x2="10" y2="17"></line>
-    <line x1="14" y1="11" x2="14" y2="17"></line>
+    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />
   </svg>
 );
 
@@ -47,14 +43,17 @@ export default function Users() {
     setEditingUser(null);
   };
 
-  const fetchUsers2 = async (searchValue = '') => {
-    const by = searchValue ? { [searchField]: searchValue } : {};
+  const fetchUsers2 = async () => {
     try {
       setLoading(true);
-      const res = await api.post(
+      const config = {
+          withCredentials: true, 
+      }
+      const res = await api.get(
         `/rbac/users`,
-        { withCredentials: true }, 
+        config
       );
+      console.log('users res: ', res);
       setUsers(res.data.data?.searchUsers || []);
       setError('');
     } catch (err) {
@@ -111,7 +110,7 @@ export default function Users() {
         role_id: newUser.role_id,
       };
 
-      await api.post(`/api/register`, payload, {
+      await api.post(`/api/users`, payload, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
@@ -128,71 +127,65 @@ export default function Users() {
   }, []);
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Users</h1>
-      <div className="form-container">
-        <div className="users-search-container">
-          <input
-            type="text"
-            className="form-input"
-            placeholder={`Search by ${searchField}...`}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <select
-            className="form-select"
-            value={searchField}
-            onChange={(e) => setSearchField(e.target.value)}
-          >
-            <option value="email">Email</option>
-            <option value="name">Name</option>
-            <option value="id">ID</option>
-          </select>
-          <button className="button" onClick={() => { setSearch(''); fetchUsers2(); }}>
-            Reset
-          </button>
-          <button
-            className="button"
-            onClick={() => {
-              setNewUser({ name: '', email: '', password: '', role_id: '' });
-              handleClickOpen();
-            }}
-          >
-            <AddIcon />
-            Add User
-          </button>
-        </div>
+    <div className="users-container">
+      <div className="users-header">
+        <h1 className="users-title">Users</h1>
+        <p className="users-subtitle">Manage all users in the system.</p>
       </div>
-      <div className="table-container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th className="users-table-actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u, i) => (
-              <tr key={u.id}>
-                <td>{i + 1}</td>
-                <td>{u.name}</td>
-                <td>{u.email}</td>
-                <td>{u.role?.name}</td>
-                <td className="users-table-actions">
-                  <button className="button" onClick={() => {
-                    setEditingUser(u);
-                    handleClickOpen();
-                  }}><EditIcon />Edit</button>
-                  <button className="button" onClick={() => handleDelete(u.id)}><DeleteIcon />Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="users-search-container">
+        <input
+          type="text"
+          className="form-input"
+          placeholder={`Search by ${searchField}...`}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <select
+          className="form-select"
+          value={searchField}
+          onChange={(e) => setSearchField(e.target.value)}
+        >
+          <option value="email">Email</option>
+          <option value="name">Name</option>
+          <option value="id">ID</option>
+        </select>
+        <button className="button" onClick={() => { setSearch(''); fetchUsers2(); }}>
+          Reset
+        </button>
+        <button
+          className="button"
+          onClick={() => {
+            setNewUser({ name: '', email: '', password: '', role_id: '' });
+            handleClickOpen();
+          }}
+        >
+          <AddIcon />
+          Add User
+        </button>
       </div>
+
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+
+      <div className="users-grid">
+        {users.map((u) => (
+          <div key={u.id} className="user-card">
+            <div className="user-card-header">
+              <h2 className="user-card-title">{u.name}</h2>
+              <div className="user-card-actions">
+                <button className="button" onClick={() => { setEditingUser(u); handleClickOpen(); }}><EditIcon /></button>
+                <button className="button" onClick={() => handleDelete(u.id)}><DeleteIcon /></button>
+              </div>
+            </div>
+            <div className="user-card-body">
+              <p><strong>Email:</strong> {u.email}</p>
+              <p><strong>Role:</strong> {u.role?.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {open && (
         <div className="modal-overlay">
           <div className="modal">

@@ -46,22 +46,11 @@ export default function Permissions() {
   };
 
   const fetchPermissions = async () => {
-    const query = `
-      query {
-        permissions {
-          id
-          name
-          description
-        }
-      }
-    `;
-
     try {
       setLoading(true);
 
-      const res = await api.post(
-        '/graphql',
-        { query },
+      const res = await api.get(
+        '/api/permissions',
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,

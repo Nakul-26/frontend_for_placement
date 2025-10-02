@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
@@ -7,6 +7,9 @@ const Login = () => {
 
   return (
     <div className="login-container role-selection-container">
+      <Link to="/">
+        <button className="back-button">Back</button>
+      </Link>
       <div className="login-paper role-selection-paper">
         <h1 className="login-title">Choose Your Role</h1>
         <p className="login-subtitle">Select your role to sign in</p>
