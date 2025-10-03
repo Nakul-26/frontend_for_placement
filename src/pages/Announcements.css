@@ -1,0 +1,107 @@
+.announcements-container {
+  padding: 24px;
+  background-color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.announcements-header {
+  margin-bottom: 24px;
+}
+
+.announcements-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.announcements-subtitle {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.announcements-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+}
+
+.create-announcement {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 24px;
+}
+
+.create-announcement h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.add-announcement-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.add-announcement-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.announcement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.announcement-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 24px;
+}
+
+.announcement-card-header {
+  margin-bottom: 16px;
+}
+
+.announcement-card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.announcement-card-author {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.announcement-card-body p {
+  font-size: 1rem;
+  color: #374151;
+  margin: 8px 0;
+  line-height: 1.5;
+}

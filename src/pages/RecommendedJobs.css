@@ -1,31 +1,39 @@
-.student-dashboard-container {
+.recommended-jobs-container {
   padding: 24px;
   background-color: #ffffff;
   font-family: 'Inter', sans-serif;
 }
 
-.dashboard-header {
+.recommended-jobs-header {
   margin-bottom: 24px;
 }
 
-.dashboard-header h1 {
+.recommended-jobs-title {
   font-size: 2.2rem;
   font-weight: 700;
   color: #111827;
 }
 
-.dashboard-header p {
+.recommended-jobs-subtitle {
   font-size: 1rem;
   color: #4b5563;
 }
 
-.dashboard-grid {
+.recommended-jobs-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.job-listings {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
+  width: 100%;
 }
 
-.dashboard-card {
+.job-card {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -36,38 +44,51 @@
   flex-direction: column;
 }
 
-.dashboard-card:hover {
+.job-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-.card-icon {
-  font-size: 2rem;
+.job-card-header {
   margin-bottom: 16px;
 }
 
-.dashboard-card h2 {
+.job-card-title {
   font-size: 1.4rem;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 8px;
 }
 
-.dashboard-card p {
+.job-card-company {
   font-size: 1rem;
   color: #4b5563;
-  margin-bottom: 16px;
-  flex-grow: 1;
 }
 
-.card-link {
+.job-card-body p {
   font-size: 1rem;
-  font-weight: 500;
-  color: #2563eb;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  color: #374151;
+  margin: 8px 0;
+  line-height: 1.5;
 }
 
-.card-link:hover {
-  color: #1d4ed8;
+.job-card-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-details-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #1d4ed8;
 }

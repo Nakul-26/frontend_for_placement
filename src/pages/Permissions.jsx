@@ -50,16 +50,18 @@ export default function Permissions() {
       setLoading(true);
 
       const res = await api.get(
-        '/api/permissions',
+        '/rbac/permissions',
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         }
       );
 
+      console.log('fetchPermissions response:', Array.isArray(res.data.data) ? 'true' : 'false');
+
       setPermissions(
-        Array.isArray(res.data?.data?.permissions)
-          ? res.data.data.permissions
+        Array.isArray(res.data.data)
+          ? res.data.data
           : []
       );
       setError('');
@@ -80,33 +82,49 @@ export default function Permissions() {
     if (!newPermission.name.trim()) return alert('Name is required');
 
     try {
-      const res = await api.post('/api/permissions', newPermission, { withCredentials: true });
+      const res = await api.post('/rbac/permissions', newPermission, { withCredentials: true });
       setPermissions([...permissions, res.data]);
       handleClose();
+
+      await fetchPermissions();
+      toast.success('Permission added successfully!');
     } catch (err) {
       alert('Failed to add permission');
+      toast.error(err.response?.data?.message || 'Failed to add permission');
     }
   };
 
   const handleSaveEdit = async () => {
     try {
-      const res = await api.put(`/api/permissions/${editingPermission.id}`, editingPermission, { withCredentials: true });
+      const res = await api.put(`/rbac/permissions/${editingPermission.id}`, editingPermission, { withCredentials: true });
       setPermissions(permissions.map(p => (p.id === editingPermission.id ? res.data : p)));
       handleClose();
+
+      await fetchPermissions();
+      toast.success('Permission updated successfully!');
     } catch (err) {
       alert('Failed to update permission');
+      toast.error(err.response?.data?.message || 'Failed to update permission');
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this permission?')) return;
     try {
-      await api.delete(`/api/permissions/${id}`, { withCredentials: true });
-      setPermissions(permissions.filter(p => p.id !== id));
+      setSaving(true);
+      await api.delete(`/rbac/permissions/${id}`, { withCredentials: true });
+      setPermissions((prev) => prev.filter((perm) => perm.id !== id));
+      setError(null);
+      toast.success('Permission deleted successfully!');
     } catch (err) {
-      alert('Failed to delete permission');
+      console.error('Error deleting permission:', err);
+      setError(err.message || 'Failed to delete permission');
+      toast.error(err.response?.data?.message || 'Failed to delete permission');
+    } finally {
+      setSaving(false);
     }
   };
+  
 
   return (
     <div className="page-container">
@@ -193,4 +211,4 @@ export default function Permissions() {
       )}
     </div>
   );
-}
+};

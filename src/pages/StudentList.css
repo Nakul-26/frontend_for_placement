@@ -1,0 +1,95 @@
+.student-list-container {
+  padding: 24px;
+  background-color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.student-list-header {
+  margin-bottom: 24px;
+}
+
+.student-list-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.student-list-subtitle {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.student-list-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.student-list-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+.student-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 5px solid #ccc;
+}
+
+.student-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.student-card.eligible {
+  border-left-color: #10b981;
+}
+
+.student-card.not-eligible {
+  border-left-color: #ef4444;
+}
+
+.student-card-header {
+  margin-bottom: 16px;
+}
+
+.student-card-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.student-card-branch {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.student-card-body p {
+  font-size: 1rem;
+  color: #374151;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.student-card-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.student-card-eligibility {
+  font-size: 1rem;
+  font-weight: 500;
+}

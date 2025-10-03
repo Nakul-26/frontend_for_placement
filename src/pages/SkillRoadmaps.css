@@ -1,31 +1,39 @@
-.student-dashboard-container {
+.skill-roadmaps-container {
   padding: 24px;
   background-color: #ffffff;
   font-family: 'Inter', sans-serif;
 }
 
-.dashboard-header {
+.skill-roadmaps-header {
   margin-bottom: 24px;
 }
 
-.dashboard-header h1 {
+.skill-roadmaps-title {
   font-size: 2.2rem;
   font-weight: 700;
   color: #111827;
 }
 
-.dashboard-header p {
+.skill-roadmaps-subtitle {
   font-size: 1rem;
   color: #4b5563;
 }
 
-.dashboard-grid {
+.skill-roadmaps-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.roadmap-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
+  width: 100%;
 }
 
-.dashboard-card {
+.roadmap-card {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -36,38 +44,46 @@
   flex-direction: column;
 }
 
-.dashboard-card:hover {
+.roadmap-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-.card-icon {
-  font-size: 2rem;
+.roadmap-card-header {
   margin-bottom: 16px;
 }
 
-.dashboard-card h2 {
+.roadmap-card-title {
   font-size: 1.4rem;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 8px;
 }
 
-.dashboard-card p {
+.roadmap-card-body p {
   font-size: 1rem;
-  color: #4b5563;
-  margin-bottom: 16px;
-  flex-grow: 1;
+  color: #374151;
+  margin: 8px 0;
+  line-height: 1.5;
 }
 
-.card-link {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #2563eb;
+.roadmap-card-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-roadmap-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
   text-decoration: none;
-  transition: color 0.2s ease;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
-.card-link:hover {
-  color: #1d4ed8;
+.view-roadmap-btn:hover {
+  background-color: #1d4ed8;
 }

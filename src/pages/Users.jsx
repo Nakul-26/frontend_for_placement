@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import api from '../services/api.jsx';
 import './Users.css';
 
@@ -22,16 +23,16 @@ const DeleteIcon = () => (
 );
 
 export default function Users() {
-  const [users, setUsers] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState('');
-  const [search, setSearch] = React.useState('');
-  const [searchField, setSearchField] = React.useState('email');
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [searchField, setSearchField] = useState('email');
 
-  const [editingUser, setEditingUser] = React.useState(null);
-  const [newUser, setNewUser] = React.useState(null);
+  const [editingUser, setEditingUser] = useState(null);
+  const [newUser, setNewUser] = useState(null);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,7 +44,7 @@ export default function Users() {
     setEditingUser(null);
   };
 
-  const fetchUsers2 = async () => {
+  const fetchUsers = async () => {
     try {
       setLoading(true);
       const config = {
@@ -54,7 +55,7 @@ export default function Users() {
         config
       );
       console.log('users res: ', res);
-      setUsers(res.data.data?.searchUsers || []);
+      setUsers(res.data.data || []);
       setError('');
     } catch (err) {
       console.error(err);
@@ -69,12 +70,14 @@ export default function Users() {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
       setLoading(true);
-      await api.delete(`/api/users/${id}`, {
+      await api.delete(`/rbac/users/${id}`, {
         credentials: 'include',
       });
-      await fetchUsers2();
+      await fetchUsers();
+      toast.success('User deleted successfully!');
     } catch (err) {
-      alert(err.message);
+      console.error('Error deleting user:', err);
+      toast.error(err.response?.data?.message || 'Failed to delete user');
     } finally {
       setLoading(false);
     }
@@ -82,6 +85,7 @@ export default function Users() {
 
   const handleSaveEdit = async () => {
     try {
+      setLoading(true);
       const payload = {
         name: editingUser.name,
         email: editingUser.email,
@@ -89,20 +93,25 @@ export default function Users() {
         role_id: editingUser.role_id,
       };
 
-      await api.put(`/api/users/${editingUser.id}`, payload, {
+      await api.put(`/rbac/users/${editingUser.id}`, payload, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
 
       handleClose();
-      await fetchUsers2();
+      await fetchUsers();
+      toast.success('User updated successfully!');
     } catch (err) {
-      alert(err.message);
+      console.error('Error updating user:', err);
+      toast.error(err.response?.data?.message || 'Failed to update user');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSaveNew = async () => {
     try {
+      setLoading(true);
       const payload = {
         name: newUser.name,
         email: newUser.email,
@@ -110,20 +119,24 @@ export default function Users() {
         role_id: newUser.role_id,
       };
 
-      await api.post(`/api/users`, payload, {
+      await api.post(`/rbac/users/register`, payload, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       });
 
       handleClose();
-      await fetchUsers2();
+      await fetchUsers();
+      toast.success('User added successfully!');
     } catch (err) {
-      alert(err.message);
+      console.error('Error adding new user:', err);
+      toast.error(err.response?.data?.message || 'Failed to add user');
+    } finally {
+      setLoading(false);
     }
   };
 
-  React.useEffect(() => {
-    fetchUsers2();
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
   return (
@@ -179,8 +192,10 @@ export default function Users() {
               </div>
             </div>
             <div className="user-card-body">
+              <p><strong>ID:</strong> {u.id}</p>
+              <p><strong>Name:</strong> {u.name}</p>
               <p><strong>Email:</strong> {u.email}</p>
-              <p><strong>Role:</strong> {u.role?.name}</p>
+              <p><strong>Role:</strong> {u.role_id}</p>
             </div>
           </div>
         ))}

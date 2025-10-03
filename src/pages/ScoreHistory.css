@@ -1,73 +1,78 @@
-.student-dashboard-container {
+.score-history-container {
   padding: 24px;
   background-color: #ffffff;
   font-family: 'Inter', sans-serif;
 }
 
-.dashboard-header {
+.score-history-header {
   margin-bottom: 24px;
 }
 
-.dashboard-header h1 {
+.score-history-title {
   font-size: 2.2rem;
   font-weight: 700;
   color: #111827;
 }
 
-.dashboard-header p {
+.score-history-subtitle {
   font-size: 1rem;
   color: #4b5563;
 }
 
-.dashboard-grid {
+.score-history-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.score-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
+  width: 100%;
 }
 
-.dashboard-card {
+.score-card {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   padding: 24px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #e5e7eb;
-  display: flex;
-  flex-direction: column;
 }
 
-.dashboard-card:hover {
+.score-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-.card-icon {
-  font-size: 2rem;
+.score-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
 }
 
-.dashboard-card h2 {
+.score-card-title {
   font-size: 1.4rem;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 8px;
 }
 
-.dashboard-card p {
+.score-card-date {
   font-size: 1rem;
   color: #4b5563;
-  margin-bottom: 16px;
-  flex-grow: 1;
 }
 
-.card-link {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #2563eb;
-  text-decoration: none;
-  transition: color 0.2s ease;
+.score-card-body {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.card-link:hover {
-  color: #1d4ed8;
+.score-card-score {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111827;
 }

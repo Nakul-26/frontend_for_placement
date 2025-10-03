@@ -36,6 +36,26 @@ import StudentProfile from './pages/StudentProfile.jsx';
 import CompanyProfile from './pages/CompanyProfile.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
 
+// Faculty Pages
+import StudentList from './pages/StudentList.jsx';
+// import JobPostingApproval from './pages/JobPostingApproval.jsx';
+import Announcements from './pages/Announcements.jsx';
+import StudentEligibility from './pages/StudentEligibility.jsx';
+import ManagePlacementDrive from './pages/ManagePlacementDrive.jsx';
+
+// Faculty Pages
+// import StudentList from './pages/StudentList.jsx';
+import JobPostingApproval from './pages/JobPostingApproval.jsx';
+
+// Student Pages
+import JobSearch from './pages/JobSearch.jsx';
+import MyApplications from './pages/MyApplications.jsx';
+import RecommendedJobs from './pages/RecommendedJobs.jsx';
+import QuizAttemptPage from './pages/QuizAttemptPage.jsx';
+import ScoreHistory from './pages/ScoreHistory.jsx';
+import SkillRoadmaps from './pages/SkillRoadmaps.jsx';
+import MySavedContent from './pages/MySavedContent.jsx';
+
 // import './index.css';
 
 function App() {
@@ -74,6 +94,11 @@ function App() {
               <Route path="/faculty/dashboard" element={<Layout><FacultyDashboard /></Layout>} />
               <Route path="/faculty/analytics" element={<Layout><Analytics /></Layout>} />
               <Route path="/faculty/notifications" element={<Layout><NotificationsPage /></Layout>} />
+              <Route path="/faculty/student-list" element={<Layout><StudentList /></Layout>} />
+              <Route path="/faculty/job-posting-approval" element={<Layout><JobPostingApproval /></Layout>} />
+              <Route path="/faculty/announcements" element={<Layout><Announcements /></Layout>} />
+              <Route path="/faculty/student-eligibility" element={<Layout><StudentEligibility /></Layout>} />
+              <Route path="/faculty/manage-placement-drive" element={<Layout><ManagePlacementDrive /></Layout>} />
             </Route>
 
             {/* Student Routes */}
@@ -83,6 +108,13 @@ function App() {
               <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} />
               <Route path="/student/profile" element={<Layout><StudentProfile /></Layout>} />
               <Route path="/student/notifications" element={<Layout><NotificationsPage /></Layout>} />
+              <Route path="/student/job-search" element={<Layout><JobSearch /></Layout>} />
+              <Route path="/student/my-applications" element={<Layout><MyApplications /></Layout>} />
+              <Route path="/student/recommended-jobs" element={<Layout><RecommendedJobs /></Layout>} />
+              <Route path="/student/quiz-attempt" element={<Layout><QuizAttemptPage /></Layout>} />
+              <Route path="/student/score-history" element={<Layout><ScoreHistory /></Layout>} />
+              <Route path="/student/skill-roadmaps" element={<Layout><SkillRoadmaps /></Layout>} />
+              <Route path="/student/my-saved-content" element={<Layout><MySavedContent /></Layout>} />
             </Route>
 
             {/* Shared Routes for authenticated users */}

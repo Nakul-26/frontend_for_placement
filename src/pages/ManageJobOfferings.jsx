@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getJobOfferings, addJobOffering, editJobOffering, deleteJobOffering } from '../services/api';
 import './ManageJobOfferings.css';
+import { toast } from 'react-toastify';
 
 export default function ManageJobOfferings() {
   const [jobOfferings, setJobOfferings] = useState([]);
@@ -17,6 +18,8 @@ export default function ManageJobOfferings() {
       setJobOfferings(response.data);
     } catch (error) {
       console.error('Error fetching job offerings:', error);
+      toast.error('Failed to fetch job offerings.');
+      setJobOfferings([]);
     }
   };
 
@@ -25,8 +28,10 @@ export default function ManageJobOfferings() {
       await addJobOffering(newJobOffering);
       setNewJobOffering({ title: '', company: '', description: '' });
       fetchJobOfferings();
+      toast.success('Job offering added successfully!');
     } catch (error) {
       console.error('Error adding job offering:', error);
+      toast.error(error.response?.data?.message || 'Failed to add job offering.');
     }
   };
 
@@ -35,8 +40,10 @@ export default function ManageJobOfferings() {
       await editJobOffering(editingJobOffering.id, editingJobOffering);
       setEditingJobOffering(null);
       fetchJobOfferings();
+      toast.success('Job offering updated successfully!');
     } catch (error) {
       console.error('Error editing job offering:', error);
+      toast.error(error.response?.data?.message || 'Failed to update job offering.');
     }
   };
 
@@ -44,8 +51,10 @@ export default function ManageJobOfferings() {
     try {
       await deleteJobOffering(id);
       fetchJobOfferings();
+      toast.success('Job offering deleted successfully!');
     } catch (error) {
       console.error('Error deleting job offering:', error);
+      toast.error(error.response?.data?.message || 'Failed to delete job offering.');
     }
   };
 
