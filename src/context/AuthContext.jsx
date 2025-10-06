@@ -51,6 +51,8 @@ export const AuthProvider = ({ children }) => {
         { email, password, role }, // Pass role to backend
         { withCredentials: true }
       );
+      console.log("Login response data:", res);
+      console.log("Login response cookies:", res.cookies);
       const user_data = res.data.data.user;
       setUser({ ...user_data, role });
       localStorage.setItem('userRole', role);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api.jsx';
 import './Users.css';
 
@@ -33,6 +34,8 @@ export default function Users() {
   const [newUser, setNewUser] = useState(null);
 
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingUserId, setDeletingUserId] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,8 +71,9 @@ export default function Users() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
+    setDeletingUserId(id);
+    setIsSubmitting(true);
     try {
-      setLoading(true);
       await api.delete(`/rbac/users/${id}`, {
         credentials: 'include',
       });
@@ -79,13 +83,14 @@ export default function Users() {
       console.error('Error deleting user:', err);
       toast.error(err.response?.data?.message || 'Failed to delete user');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
+      setDeletingUserId(null);
     }
   };
 
   const handleSaveEdit = async () => {
+    setIsSubmitting(true);
     try {
-      setLoading(true);
       const payload = {
         name: editingUser.name,
         email: editingUser.email,
@@ -105,13 +110,13 @@ export default function Users() {
       console.error('Error updating user:', err);
       toast.error(err.response?.data?.message || 'Failed to update user');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleSaveNew = async () => {
+    setIsSubmitting(true);
     try {
-      setLoading(true);
       const payload = {
         name: newUser.name,
         email: newUser.email,
@@ -131,7 +136,7 @@ export default function Users() {
       console.error('Error adding new user:', err);
       toast.error(err.response?.data?.message || 'Failed to add user');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -188,7 +193,9 @@ export default function Users() {
               <h2 className="user-card-title">{u.name}</h2>
               <div className="user-card-actions">
                 <button className="button" onClick={() => { setEditingUser(u); handleClickOpen(); }}><EditIcon /></button>
-                <button className="button" onClick={() => handleDelete(u.id)}><DeleteIcon /></button>
+                <button className="button" onClick={() => handleDelete(u.id)} disabled={isSubmitting && deletingUserId === u.id}>
+                  {isSubmitting && deletingUserId === u.id ? 'Deleting...' : <DeleteIcon />}
+                </button>
               </div>
             </div>
             <div className="user-card-body">
@@ -260,8 +267,10 @@ export default function Users() {
               />
             </div>
             <div className="modal-actions">
-              <button className="button" onClick={handleClose}>Cancel</button>
-              <button className="button" onClick={newUser ? handleSaveNew : handleSaveEdit}>{newUser ? 'Add' : 'Save'}</button>
+              <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
+              <button className="button" onClick={newUser ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : (newUser ? 'Add' : 'Save')}
+              </button>
             </div>
           </div>
         </div>

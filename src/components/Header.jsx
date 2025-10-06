@@ -33,13 +33,13 @@ export default function Header({ open, handleDrawerOpen }) {
   return (
     <header className={`header ${open ? 'open' : ''}`}>
       <div className="toolbar">
-        <button
+        {/* <button
           className={`menu-button ${open ? 'hide' : ''}`}
           aria-label="open drawer"
           onClick={handleDrawerOpen}
         >
           <MenuIcon />
-        </button>
+        </button> */}
         <div className="title">
           Placement
         </div>

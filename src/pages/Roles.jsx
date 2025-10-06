@@ -35,6 +35,8 @@ export default function Roles() {
 
   const [open, setOpen] = useState(false);
   const [token, setToken] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingRoleId, setDeletingRoleId] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -66,20 +68,21 @@ export default function Roles() {
   };
 
   const handleSaveNew = async () => {
+    setIsSubmitting(true);
     try {
       console.log('newRole: ', newRole);
-      setLoading(true);
       await api.post('/rbac/roles', newRole, { withCredentials: true });
       handleClose();
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleSaveEdit = async () => {
+    setIsSubmitting(true);
     try {
       await api.put(`/rbac/roles/${editingRole.id}`, editingRole, {
         withCredentials: true,
@@ -88,16 +91,23 @@ export default function Roles() {
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this role?')) return;
+    setDeletingRoleId(id);
+    setIsSubmitting(true);
     try {
       await api.delete(`/rbac/roles/${id}`, { withCredentials: true });
       fetchRoles();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
+    } finally {
+      setIsSubmitting(false);
+      setDeletingRoleId(null);
     }
   };
 
@@ -141,7 +151,9 @@ export default function Roles() {
                     setEditingRole(role);
                     handleClickOpen();
                   }}><EditIcon />Edit</button>
-                  <button className="button" onClick={() => handleDelete(role.id)}><DeleteIcon />Delete</button>
+                  <button className="button" onClick={() => handleDelete(role.id)} disabled={isSubmitting && deletingRoleId === role.id}>
+                    {isSubmitting && deletingRoleId === role.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -196,12 +208,15 @@ export default function Roles() {
               </select>
             </div>
             <div className="modal-actions">
-              <button className="button" onClick={handleClose}>Cancel</button>
-              <button className="button" onClick={newRole ? handleSaveNew : handleSaveEdit}>{newRole ? 'Add' : 'Save'}</button>
+              <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
+              <button className="button" onClick={newRole ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : (newRole ? 'Add' : 'Save')}
+              </button>
             </div>
           </div>
         </div>
       )}
     </div>
   );
+
 }

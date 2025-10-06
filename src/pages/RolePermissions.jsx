@@ -7,7 +7,7 @@ export default function RolePermissions() {
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [saving, setSaving] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedRole, setSelectedRole] = useState(null);
   const [rolePermissions, setRolePermissions] = useState([]);
@@ -148,12 +148,12 @@ export default function RolePermissions() {
 
     if (addedPermissions.length === 0 && removedPermissions.length === 0) {
       // toast.info('No changes detected.');
-      setSaving(false);
+      setIsSubmitting(false);
       return;
     }
     setHasChanges(true);
 
-    setSaving(true);
+    setIsSubmitting(true);
 
     try {
       const addRequests = addedPermissions.map((permId) =>
@@ -184,7 +184,7 @@ export default function RolePermissions() {
       toast.error(err.response?.data?.message || 'Failed to update permissions');
     } finally {
       originalPermissionsForSave = [...rolePermissions];
-      setSaving(false);
+      setIsSubmitting(false);
       setHasChanges(false);
       setOriginalRolePermissions([...rolePermissions]);}
   };
@@ -231,8 +231,8 @@ export default function RolePermissions() {
                 {console.log('hasChanges: ', hasChanges)}
                 {hasChanges && (
                   <div className="action-buttons">
-                    <button className="button" onClick={handleSave} disabled={saving}>
-                      {saving ? 'Saving...' : 'Save'}
+                    <button className="button" onClick={handleSave} disabled={isSubmitting}>
+                      {isSubmitting ? 'Saving...' : 'Save'}
                     </button>
                     <button className="button secondary" onClick={() => {
                       // On cancel, revert rolePermissions to the state fetched by fetchData

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api.jsx';
 import './Permissions.css';
 
@@ -34,6 +35,8 @@ export default function Permissions() {
   const [editingPermission, setEditingPermission] = useState(null);
 
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingPermissionId, setDeletingPermissionId] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,6 +84,7 @@ export default function Permissions() {
   const handleSaveNew = async () => {
     if (!newPermission.name.trim()) return alert('Name is required');
 
+    setIsSubmitting(true);
     try {
       const res = await api.post('/rbac/permissions', newPermission, { withCredentials: true });
       setPermissions([...permissions, res.data]);
@@ -91,10 +95,13 @@ export default function Permissions() {
     } catch (err) {
       alert('Failed to add permission');
       toast.error(err.response?.data?.message || 'Failed to add permission');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleSaveEdit = async () => {
+    setIsSubmitting(true);
     try {
       const res = await api.put(`/rbac/permissions/${editingPermission.id}`, editingPermission, { withCredentials: true });
       setPermissions(permissions.map(p => (p.id === editingPermission.id ? res.data : p)));
@@ -105,13 +112,16 @@ export default function Permissions() {
     } catch (err) {
       alert('Failed to update permission');
       toast.error(err.response?.data?.message || 'Failed to update permission');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this permission?')) return;
+    setDeletingPermissionId(id);
+    setIsSubmitting(true);
     try {
-      setSaving(true);
       await api.delete(`/rbac/permissions/${id}`, { withCredentials: true });
       setPermissions((prev) => prev.filter((perm) => perm.id !== id));
       setError(null);
@@ -121,7 +131,8 @@ export default function Permissions() {
       setError(err.message || 'Failed to delete permission');
       toast.error(err.response?.data?.message || 'Failed to delete permission');
     } finally {
-      setSaving(false);
+      setIsSubmitting(false);
+      setDeletingPermissionId(null);
     }
   };
   
@@ -158,11 +169,13 @@ export default function Permissions() {
                 <td>{perm.name}</td>
                 <td>{perm.description || '-'}</td>
                 <td className="action-buttons">
-                  <button className="button" onClick={() => {
+                  {/* <button className="button" onClick={() => {
                     setEditingPermission(perm);
                     handleClickOpen();
-                  }}><EditIcon />Edit</button>
-                  <button className="button danger" onClick={() => handleDelete(perm.id)}><DeleteIcon />Delete</button>
+                  }}><EditIcon />Edit</button> */}
+                  <button className="button danger" onClick={() => handleDelete(perm.id)} disabled={isSubmitting && deletingPermissionId === perm.id}>
+                    {isSubmitting && deletingPermissionId === perm.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -203,8 +216,10 @@ export default function Permissions() {
               />
             </div>
             <div className="modal-actions">
-              <button className="button secondary" onClick={handleClose}>Cancel</button>
-              <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit}>{newPermission ? 'Add' : 'Save'}</button>
+              <button className="button secondary" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
+              <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : (newPermission ? 'Add' : 'Save')}
+              </button>
             </div>
           </div>
         </div>
