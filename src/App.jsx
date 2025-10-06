@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider } from './context/AuthProvider.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Login.jsx';
 import StudentLogin from './pages/StudentLogin.jsx';
@@ -38,14 +38,10 @@ import NotificationsPage from './pages/NotificationsPage.jsx';
 
 // Faculty Pages
 import StudentList from './pages/StudentList.jsx';
-// import JobPostingApproval from './pages/JobPostingApproval.jsx';
+import JobPostingApproval from './pages/JobPostingApproval.jsx';
 import Announcements from './pages/Announcements.jsx';
 import StudentEligibility from './pages/StudentEligibility.jsx';
 import ManagePlacementDrive from './pages/ManagePlacementDrive.jsx';
-
-// Faculty Pages
-// import StudentList from './pages/StudentList.jsx';
-import JobPostingApproval from './pages/JobPostingApproval.jsx';
 
 // Student Pages
 import JobSearch from './pages/JobSearch.jsx';
@@ -56,7 +52,7 @@ import ScoreHistory from './pages/ScoreHistory.jsx';
 import SkillRoadmaps from './pages/SkillRoadmaps.jsx';
 import MySavedContent from './pages/MySavedContent.jsx';
 
-// import './index.css';
+import './index.css';
 
 function App() {
   return (

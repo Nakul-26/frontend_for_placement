@@ -1,4 +1,5 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api.jsx';
 import './RolePermissions.css';
 
@@ -6,7 +7,6 @@ export default function RolePermissions() {
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -41,10 +41,8 @@ export default function RolePermissions() {
           ? res.data.data
           : []
       );
-      setError('');
     } catch (err) {
       console.error('fetchPermissions error:', err);
-      setError('Failed to load permissions');
       setPermissions([]);
     } finally {
       setLoading(false);
@@ -62,16 +60,14 @@ export default function RolePermissions() {
       const res = await api.get('/rbac/roles', config);
       console.log('roles res: ', res.data.data);
       setRoles(res.data.data || []);
-      setError(null);
     } catch (err) {
       console.error('fetchRoles error:', err);
-      setError(err.message || 'Failed to fetch roles');
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await api.get(
@@ -83,16 +79,14 @@ export default function RolePermissions() {
       const currentPermissions = data.map(rp => rp.permission_id) || [];
       setRolePermissions(currentPermissions);
       setOriginalRolePermissions(currentPermissions); // Set original permissions here
-      setError(null);
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Failed to fetch role permissions');
       setRolePermissions([]); // Clear permissions on error
       setOriginalRolePermissions([]); // Also clear original permissions
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedRole]);
 
   useEffect(() => {
     fetchRoles();
@@ -103,7 +97,7 @@ export default function RolePermissions() {
     if (selectedRole) {
       fetchData();
     }
-  }, [selectedRole]);
+  }, [selectedRole, fetchData]);
 
   const handleSelectRole = (role) => {
     setSelectedRole(role);
@@ -135,7 +129,7 @@ export default function RolePermissions() {
 
     } catch (err) {
       console.error('Failed to fetch original permissions for comparison:', err);
-      // toast.error('Failed to save changes: could not retrieve current permissions.');
+      toast.error('Failed to save changes: could not retrieve current permissions.');
       return;
     }
 
@@ -147,7 +141,7 @@ export default function RolePermissions() {
     );
 
     if (addedPermissions.length === 0 && removedPermissions.length === 0) {
-      // toast.info('No changes detected.');
+      toast.info('No changes detected.');
       setIsSubmitting(false);
       return;
     }
@@ -173,11 +167,11 @@ export default function RolePermissions() {
 
       await Promise.all([...addRequests, ...removeRequests]);
 
-      // toast.success('Permissions updated successfully!');
+      toast.success('Permissions updated successfully!');
       // Optionally, you can also refetch roles and permissions to ensure UI is in sync
 
       // After saving, re-fetch the data to ensure UI is in sync with backend
-      // await fetchData(); 
+      await fetchData(); 
 
     } catch (err) {
       console.error('Failed to update permissions:', err);

@@ -10,12 +10,7 @@ const AddIcon = () => (
   </svg>
 );
 
-const EditIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-  </svg>
-);
+
 
 const DeleteIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,8 +23,6 @@ const DeleteIcon = () => (
 
 export default function Permissions() {
   const [permissions, setPermissions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const [newPermission, setNewPermission] = useState(null);
   const [editingPermission, setEditingPermission] = useState(null);
@@ -50,8 +43,6 @@ export default function Permissions() {
 
   const fetchPermissions = async () => {
     try {
-      setLoading(true);
-
       const res = await api.get(
         '/rbac/permissions',
         {
@@ -67,13 +58,9 @@ export default function Permissions() {
           ? res.data.data
           : []
       );
-      setError('');
     } catch (err) {
       console.error('fetchPermissions error:', err);
-      setError('Failed to load permissions');
       setPermissions([]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -124,11 +111,9 @@ export default function Permissions() {
     try {
       await api.delete(`/rbac/permissions/${id}`, { withCredentials: true });
       setPermissions((prev) => prev.filter((perm) => perm.id !== id));
-      setError(null);
       toast.success('Permission deleted successfully!');
     } catch (err) {
       console.error('Error deleting permission:', err);
-      setError(err.message || 'Failed to delete permission');
       toast.error(err.response?.data?.message || 'Failed to delete permission');
     } finally {
       setIsSubmitting(false);

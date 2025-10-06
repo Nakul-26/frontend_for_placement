@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../services/api.jsx';
 import './Roles.css';
 
@@ -27,14 +27,11 @@ const DeleteIcon = () => (
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const [newRole, setNewRole] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
 
   const [open, setOpen] = useState(false);
-  const [token, setToken] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingRoleId, setDeletingRoleId] = useState(null);
 
@@ -52,18 +49,14 @@ export default function Roles() {
     try {
       console.log('fetching roles ...');
       console.log('fetching roles ... & api: ',  api);
-      setLoading(true);
       const config = {
           withCredentials: true, 
       }
       const res = await api.get('/rbac/roles', config);
       console.log('roles res: ', res.data.data);
       setRoles(res.data.data || []);
-      setError(null);
     } catch (err) {
-      setError(err.message || 'Failed to fetch roles');
-    } finally {
-      setLoading(false);
+      alert(err.message || 'Failed to fetch roles');
     }
   };
 

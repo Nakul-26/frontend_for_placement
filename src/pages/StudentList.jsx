@@ -1,42 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './StudentList.css';
 
-const students = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    branch: 'Computer Science',
-    cgpa: 8.5,
-    eligible: true,
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    branch: 'Electronics and Communication',
-    cgpa: 9.2,
-    eligible: true,
-  },
-  {
-    id: 3,
-    name: 'Peter Jones',
-    email: 'peter.jones@example.com',
-    branch: 'Mechanical Engineering',
-    cgpa: 7.8,
-    eligible: false,
-  },
-];
-
 export default function StudentList() {
-  const [studentList, setStudentList] = useState([]);
+  const [studentList] = useState([
+    {
+      id: 1,
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      branch: 'Computer Science',
+      cgpa: 8.5,
+      eligible: true,
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      branch: 'Electronics and Communication',
+      cgpa: 9.2,
+      eligible: true,
+    },
+    {
+      id: 3,
+      name: 'Peter Jones',
+      email: 'peter.jones@example.com',
+      branch: 'Mechanical Engineering',
+      cgpa: 7.8,
+      eligible: false,
+    },
+  ]);
   const [searchQuery, setSearchQuery] = useState('');
   const [branch, setBranch] = useState('all');
   const [eligibility, setEligibility] = useState('all');
-
-  useEffect(() => {
-    setStudentList(students);
-  }, []);
 
   const filteredStudents = studentList
     .filter((student) => {

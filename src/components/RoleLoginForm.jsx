@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../pages/Login.css';
 
 const RoleLoginForm = ({ role }) => {
@@ -8,6 +8,7 @@ const RoleLoginForm = ({ role }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,7 +25,8 @@ const RoleLoginForm = ({ role }) => {
       // Pass the role to the login function
       await login(email, password, role);
       // Navigate to a role-specific dashboard
-      navigate(`/${role}/dashboard`);
+      const from = location.state?.from || `/${role}/dashboard`;
+      navigate(from);
     } catch (err) {
       setError(err?.message || 'Login failed. Please try again.');
     } finally {

@@ -48,7 +48,7 @@ const Register = () => {
       } else {
         setError(res.data.message || 'Registration failed');
       }
-    } catch (err) {
+    } catch {
       setError('Server error. Please try again later.');
     } finally {
       setLoading(false);

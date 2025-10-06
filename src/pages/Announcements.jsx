@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Announcements.css';
 
-const initialAnnouncements = [
-  {
-    id: 1,
-    title: 'Campus Placement Drive 2023',
-    content: 'The campus placement drive for the academic year 2023-24 will commence from 1st November 2023. All eligible students are requested to register on the portal.',
-    author: 'Placement Cell',
-    date: '2023-10-20',
-  },
-  {
-    id: 2,
-    title: 'Pre-placement Talk by Google',
-    content: 'Google will be conducting a pre-placement talk on 25th October 2023 at 10:00 AM in the auditorium. All interested students are requested to attend.',
-    author: 'Placement Cell',
-    date: '2023-10-18',
-  },
-];
-
 export default function Announcements() {
-  const [announcements, setAnnouncements] = useState([]);
+  const [announcements, setAnnouncements] = useState([
+    {
+      id: 1,
+      title: 'Campus Placement Drive 2023',
+      content: 'The campus placement drive for the academic year 2023-24 will commence from 1st November 2023. All eligible students are requested to register on the portal.',
+      author: 'Placement Cell',
+      date: '2023-10-20',
+    },
+    {
+      id: 2,
+      title: 'Pre-placement Talk by Google',
+      content: 'Google will be conducting a pre-placement talk on 25th October 2023 at 10:00 AM in the auditorium. All interested students are requested to attend.',
+      author: 'Placement Cell',
+      date: '2023-10-18',
+    },
+  ]);
   const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
-
-  useEffect(() => {
-    setAnnouncements(initialAnnouncements);
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

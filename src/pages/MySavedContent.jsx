@@ -1,34 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './MySavedContent.css';
 
-const savedContent = [
-  {
-    id: 1,
-    title: 'React Hooks Tutorial',
-    description: 'A comprehensive guide to React Hooks.',
-    type: 'Article',
-  },
-  {
-    id: 2,
-    title: 'CSS Grid for Beginners',
-    description: 'Learn the basics of CSS Grid.',
-    type: 'Video',
-  },
-  {
-    id: 3,
-    title: 'JavaScript Algorithms',
-    description: 'A collection of common JavaScript algorithms.',
-    type: 'Code',
-  },
-];
-
 export default function MySavedContent() {
-  const [content, setContent] = useState([]);
-
-  useEffect(() => {
-    // In a real application, you would fetch this data from an API
-    setContent(savedContent);
-  }, []);
+  const [content] = useState([
+    {
+      id: 1,
+      title: 'React Hooks Tutorial',
+      description: 'A comprehensive guide to React Hooks.',
+      type: 'Article',
+    },
+    {
+      id: 2,
+      title: 'CSS Grid for Beginners',
+      description: 'Learn the basics of CSS Grid.',
+      type: 'Video',
+    },
+    {
+      id: 3,
+      title: 'JavaScript Algorithms',
+      description: 'A collection of common JavaScript algorithms.',
+      type: 'Code',
+    },
+  ]);
 
   return (
     <div className="my-saved-content-container">

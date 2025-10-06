@@ -1,46 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './MyApplications.css';
 
-const applications = [
-  {
-    id: 1,
-    jobTitle: 'Software Engineer',
-    company: 'Google',
-    status: 'Applied',
-  },
-  {
-    id: 2,
-    jobTitle: 'Product Manager',
-    company: 'Facebook',
-    status: 'Shortlisted',
-  },
-  {
-    id: 3,
-    jobTitle: 'Data Scientist',
-    company: 'Amazon',
-    status: 'Interview',
-  },
-  {
-    id: 4,
-    jobTitle: 'UX Designer',
-    company: 'Apple',
-    status: 'Rejected',
-  },
-  {
-    id: 5,
-    jobTitle: 'Software Engineer Intern',
-    company: 'Microsoft',
-    status: 'Placed',
-  },
-];
-
 export default function MyApplications() {
-  const [myApplications, setMyApplications] = useState([]);
-
-  useEffect(() => {
-    // In a real application, you would fetch this data from an API
-    setMyApplications(applications);
-  }, []);
+  const [myApplications] = useState([
+    {
+      id: 1,
+      jobTitle: 'Software Engineer',
+      company: 'Google',
+      status: 'Applied',
+    },
+    {
+      id: 2,
+      jobTitle: 'Product Manager',
+      company: 'Facebook',
+      status: 'Shortlisted',
+    },
+    {
+      id: 3,
+      jobTitle: 'Data Scientist',
+      company: 'Amazon',
+      status: 'Interview',
+    },
+    {
+      id: 4,
+      jobTitle: 'UX Designer',
+      company: 'Apple',
+      status: 'Rejected',
+    },
+    {
+      id: 5,
+      jobTitle: 'Software Engineer Intern',
+      company: 'Microsoft',
+      status: 'Placed',
+    },
+  ]);
 
   return (
     <div className="my-applications-container">

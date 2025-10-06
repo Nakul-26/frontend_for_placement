@@ -1,33 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './JobPostingApproval.css';
 
-const jobPostings = [
-  {
-    id: 1,
-    title: 'Software Engineer',
-    company: 'Google',
-    status: 'Pending',
-  },
-  {
-    id: 2,
-    title: 'Product Manager',
-    company: 'Facebook',
-    status: 'Approved',
-  },
-  {
-    id: 3,
-    title: 'Data Scientist',
-    company: 'Amazon',
-    status: 'Rejected',
-  },
-];
-
 export default function JobPostingApproval() {
-  const [postings, setPostings] = useState([]);
-
-  useEffect(() => {
-    setPostings(jobPostings);
-  }, []);
+  const [postings, setPostings] = useState([
+    {
+      id: 1,
+      title: 'Software Engineer',
+      company: 'Google',
+      status: 'Pending',
+    },
+    {
+      id: 2,
+      title: 'Product Manager',
+      company: 'Facebook',
+      status: 'Approved',
+    },
+    {
+      id: 3,
+      title: 'Data Scientist',
+      company: 'Amazon',
+      status: 'Rejected',
+    },
+  ]);
 
   const handleApprove = (id) => {
     setPostings(

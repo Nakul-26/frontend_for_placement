@@ -8,7 +8,7 @@ const StudentEligibility = () => {
     requiredSkills: 'React, Node.js',
   });
 
-  const [students, setStudents] = useState([
+  const [students] = useState([
     { id: 1, name: 'John Doe', gpa: '8.5', backlogs: '0', skills: 'React, Node.js, MongoDB', isEligible: true },
     { id: 2, name: 'Jane Smith', gpa: '7.9', backlogs: '1', skills: 'Angular, Java', isEligible: false },
     { id: 3, name: 'Peter Jones', gpa: '9.0', backlogs: '0', skills: 'React, Python, Django', isEligible: true },

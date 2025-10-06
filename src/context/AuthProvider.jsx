@@ -1,8 +1,7 @@
-import { createContext, useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "../services/api"; // axios instance with baseURL & interceptors
 import { toast } from 'react-toastify';
-
-const AuthContext = createContext();
+import { AuthContext } from './AuthContext';
 
 const DUMMY_USER_OBJECT = {
   id: 999,
@@ -98,4 +97,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+

@@ -1,50 +1,49 @@
 import React, { useState } from 'react';
 import './JobSearch.css';
 
-const jobs = [
-  {
-    id: 1,
-    title: 'Software Engineer',
-    company: 'Google',
-    location: 'Mountain View, CA',
-    description: 'Design, develop, test, deploy, maintain and improve software.',
-    type: 'Full-time',
-  },
-  {
-    id: 2,
-    title: 'Product Manager',
-    company: 'Facebook',
-    location: 'Menlo Park, CA',
-    description: 'Own the product strategy and roadmap.',
-    type: 'Full-time',
-  },
-  {
-    id: 3,
-    title: 'Data Scientist',
-    company: 'Amazon',
-    location: 'Seattle, WA',
-    description: 'Use data to drive business decisions.',
-    type: 'Full-time',
-  },
-  {
-    id: 4,
-    title: 'UX Designer',
-    company: 'Apple',
-    location: 'Cupertino, CA',
-    description: 'Create amazing user experiences.',
-    type: 'Full-time',
-  },
-  {
-    id: 5,
-    title: 'Software Engineer Intern',
-    company: 'Microsoft',
-    location: 'Redmond, WA',
-    description: 'Work on real projects and make an impact.',
-    type: 'Internship',
-  },
-];
-
 export default function JobSearch() {
+  const [jobs] = useState([
+    {
+      id: 1,
+      title: 'Software Engineer',
+      company: 'Google',
+      location: 'Mountain View, CA',
+      description: 'Design, develop, test, deploy, maintain and improve software.',
+      type: 'Full-time',
+    },
+    {
+      id: 2,
+      title: 'Product Manager',
+      company: 'Facebook',
+      location: 'Menlo Park, CA',
+      description: 'Own the product strategy and roadmap.',
+      type: 'Full-time',
+    },
+    {
+      id: 3,
+      title: 'Data Scientist',
+      company: 'Amazon',
+      location: 'Seattle, WA',
+      description: 'Use data to drive business decisions.',
+      type: 'Full-time',
+    },
+    {
+      id: 4,
+      title: 'UX Designer',
+      company: 'Apple',
+      location: 'Cupertino, CA',
+      description: 'Create amazing user experiences.',
+      type: 'Full-time',
+    },
+    {
+      id: 5,
+      title: 'Software Engineer Intern',
+      company: 'Microsoft',
+      location: 'Redmond, WA',
+      description: 'Work on real projects and make an impact.',
+      type: 'Internship',
+    },
+  ]);
   const [searchQuery, setSearchQuery] = useState('');
   const [jobType, setJobType] = useState('all');
   const [location, setLocation] = useState('');
@@ -63,7 +62,7 @@ export default function JobSearch() {
       }
       return true;
     })
-    .sort((a, b) => {
+    .sort(() => {
       if (sortBy === 'relevance') {
         return 0;
       }

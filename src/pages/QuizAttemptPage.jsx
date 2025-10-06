@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import './QuizAttemptPage.css';
 
-const quiz = {
-  title: 'Basic JavaScript Quiz',
-  questions: [
-    {
-      question: 'What is the output of `typeof null`?',
-      options: ['object', 'null', 'undefined', 'number'],
-      answer: 'object',
-    },
-    {
-      question: 'Which of the following is NOT a JavaScript data type?',
-      options: ['string', 'number', 'boolean', 'float'],
-      answer: 'float',
-    },
-    {
-      question: 'What does `2 + "2"` evaluate to?',
-      options: ['4', '"22"', '22', 'TypeError'],
-      answer: '"22"',
-    },
-  ],
-};
-
 export default function QuizAttemptPage() {
+  const [quiz] = useState({
+    title: 'Basic JavaScript Quiz',
+    questions: [
+      {
+        question: 'What is the output of `typeof null`?',
+        options: ['object', 'null', 'undefined', 'number'],
+        answer: 'object',
+      },
+      {
+        question: 'Which of the following is NOT a JavaScript data type?',
+        options: ['string', 'number', 'boolean', 'float'],
+        answer: 'float',
+      },
+      {
+        question: 'What does `2 + "2"` evaluate to?',
+        options: ['4', '"22"', '22', 'TypeError'],
+        answer: '"22"',
+      },
+    ],
+  });
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showScore, setShowScore] = useState(false);

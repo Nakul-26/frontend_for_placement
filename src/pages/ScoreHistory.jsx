@@ -1,34 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './ScoreHistory.css';
 
-const scoreHistory = [
-  {
-    id: 1,
-    quizTitle: 'Basic JavaScript Quiz',
-    score: '2/3',
-    date: '2023-10-27',
-  },
-  {
-    id: 2,
-    quizTitle: 'Advanced React Quiz',
-    score: '8/10',
-    date: '2023-10-20',
-  },
-  {
-    id: 3,
-    quizTitle: 'CSS Fundamentals Quiz',
-    score: '5/5',
-    date: '2023-10-15',
-  },
-];
-
 export default function ScoreHistory() {
-  const [scores, setScores] = useState([]);
-
-  useEffect(() => {
-    // In a real application, you would fetch this data from an API
-    setScores(scoreHistory);
-  }, []);
+  const [scores] = useState([
+    {
+      id: 1,
+      quizTitle: 'Basic JavaScript Quiz',
+      score: '2/3',
+      date: '2023-10-27',
+    },
+    {
+      id: 2,
+      quizTitle: 'Advanced React Quiz',
+      score: '8/10',
+      date: '2023-10-20',
+    },
+    {
+      id: 3,
+      quizTitle: 'CSS Fundamentals Quiz',
+      score: '5/5',
+      date: '2023-10-15',
+    },
+  ]);
 
   return (
     <div className="score-history-container">

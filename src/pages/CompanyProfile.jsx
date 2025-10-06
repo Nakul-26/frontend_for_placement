@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import './CompanyProfile.css';
 
-const initialProfile = {
-  name: 'Tech Solutions Inc.',
-  website: 'www.techsolutions.com',
-  industry: 'Information Technology',
-  description: 'A leading provider of innovative tech solutions.',
-};
-
-const jobPostings = [
-  { id: 1, title: 'Frontend Developer', applications: 45, status: 'Open' },
-  { id: 2, title: 'Backend Developer', applications: 32, status: 'Open' },
-  { id: 3, title: 'Data Analyst', applications: 50, status: 'Closed' },
-];
-
 const CompanyProfile = () => {
-  const [profile, setProfile] = useState(initialProfile);
+  const [profile, setProfile] = useState({
+    name: 'Tech Solutions Inc.',
+    website: 'www.techsolutions.com',
+    industry: 'Information Technology',
+    description: 'A leading provider of innovative tech solutions.',
+  });
+  const [jobPostings] = useState([
+    { id: 1, title: 'Frontend Developer', applications: 45, status: 'Open' },
+    { id: 2, title: 'Backend Developer', applications: 32, status: 'Open' },
+    { id: 3, title: 'Data Analyst', applications: 50, status: 'Closed' },
+  ]);
   const [isEditing, setIsEditing] = useState(false);
 
   const handleInputChange = (e) => {

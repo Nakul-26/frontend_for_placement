@@ -1,60 +1,59 @@
 import React, { useState } from 'react';
 import './SkillDevelopment.css';
 
-const resources = [
-  {
-    id: 1,
-    title: 'React for Beginners',
-    category: 'Web Development',
-    type: 'Tutorial',
-    description: 'A comprehensive tutorial for getting started with React.',
-    link: '#',
-  },
-  {
-    id: 2,
-    title: 'Data Science Roadmap',
-    category: 'Data Science',
-    type: 'Roadmap',
-    description: 'A step-by-step guide to becoming a data scientist.',
-    link: '#',
-  },
-  {
-    id: 3,
-    title: 'Advanced CSS Techniques',
-    category: 'Web Development',
-    type: 'Article',
-    description: 'Learn about modern CSS features like Grid and Flexbox.',
-    link: '#',
-  },
-  {
-    id: 4,
-    title: 'Introduction to Machine Learning',
-    category: 'AI/ML',
-    type: 'Course',
-    description: 'A beginner-friendly course on the fundamentals of machine learning.',
-    link: '#',
-  },
-  {
-    id: 5,
-    title: 'DevOps Fundamentals',
-    category: 'DevOps',
-    type: 'Roadmap',
-    description: 'Understand the core concepts and tools in DevOps.',
-    link: '#',
-  },
-  {
-    id: 6,
-    title: 'Python for Data Analysis',
-    category: 'Data Science',
-    type: 'Tutorial',
-    description: 'Learn how to use Python libraries like Pandas and NumPy for data analysis.',
-    link: '#',
-  },
-];
-
 const categories = ['All', 'Web Development', 'Data Science', 'AI/ML', 'DevOps'];
 
 const SkillDevelopment = () => {
+  const [resources] = useState([
+    {
+      id: 1,
+      title: 'React for Beginners',
+      category: 'Web Development',
+      type: 'Tutorial',
+      description: 'A comprehensive tutorial for getting started with React.',
+      link: '#',
+    },
+    {
+      id: 2,
+      title: 'Data Science Roadmap',
+      category: 'Data Science',
+      type: 'Roadmap',
+      description: 'A step-by-step guide to becoming a data scientist.',
+      link: '#',
+    },
+    {
+      id: 3,
+      title: 'Advanced CSS Techniques',
+      category: 'Web Development',
+      type: 'Article',
+      description: 'Learn about modern CSS features like Grid and Flexbox.',
+      link: '#',
+    },
+    {
+      id: 4,
+      title: 'Introduction to Machine Learning',
+      category: 'AI/ML',
+      type: 'Course',
+      description: 'A beginner-friendly course on the fundamentals of machine learning.',
+      link: '#',
+    },
+    {
+      id: 5,
+      title: 'DevOps Fundamentals',
+      category: 'DevOps',
+      type: 'Roadmap',
+      description: 'Understand the core concepts and tools in DevOps.',
+      link: '#',
+    },
+    {
+      id: 6,
+      title: 'Python for Data Analysis',
+      category: 'Data Science',
+      type: 'Tutorial',
+      description: 'Learn how to use Python libraries like Pandas and NumPy for data analysis.',
+      link: '#',
+    },
+  ]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 

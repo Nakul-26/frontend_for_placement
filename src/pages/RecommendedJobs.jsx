@@ -1,40 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './RecommendedJobs.css';
 
-const recommendedJobs = [
-  {
-    id: 1,
-    title: 'Software Engineer',
-    company: 'Google',
-    location: 'Mountain View, CA',
-    description: 'Design, develop, test, deploy, maintain and improve software.',
-    match: 98,
-  },
-  {
-    id: 2,
-    title: 'Product Manager',
-    company: 'Facebook',
-    location: 'Menlo Park, CA',
-    description: 'Own the product strategy and roadmap.',
-    match: 95,
-  },
-  {
-    id: 3,
-    title: 'Data Scientist',
-    company: 'Amazon',
-    location: 'Seattle, WA',
-    description: 'Use data to drive business decisions.',
-    match: 92,
-  },
-];
-
 export default function RecommendedJobs() {
-  const [jobs, setJobs] = useState([]);
-
-  useEffect(() => {
-    // In a real application, you would fetch this data from an API
-    setJobs(recommendedJobs);
-  }, []);
+  const [jobs] = useState([
+    {
+      id: 1,
+      title: 'Software Engineer',
+      company: 'Google',
+      location: 'Mountain View, CA',
+      description: 'Design, develop, test, deploy, maintain and improve software.',
+      match: 98,
+    },
+    {
+      id: 2,
+      title: 'Product Manager',
+      company: 'Facebook',
+      location: 'Menlo Park, CA',
+      description: 'Own the product strategy and roadmap.',
+      match: 95,
+    },
+    {
+      id: 3,
+      title: 'Data Scientist',
+      company: 'Amazon',
+      location: 'Seattle, WA',
+      description: 'Use data to drive business decisions.',
+      match: 92,
+    },
+  ]);
 
   return (
     <div className="recommended-jobs-container">

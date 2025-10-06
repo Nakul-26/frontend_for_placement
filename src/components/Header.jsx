@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext.jsx';
+import { useAuth } from '../context/useAuth';
 import { Link } from 'react-router-dom';
 import './Header.css';
 
@@ -27,19 +27,13 @@ const LoginIcon = () => (
   </svg>
 );
 
-export default function Header({ open, handleDrawerOpen }) {
+export default function Header({ open }) {
   const { user, logout } = useAuth();
 
   return (
     <header className={`header ${open ? 'open' : ''}`}>
       <div className="toolbar">
-        {/* <button
-          className={`menu-button ${open ? 'hide' : ''}`}
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-        >
-          <MenuIcon />
-        </button> */}
+
         <div className="title">
           Placement
         </div>

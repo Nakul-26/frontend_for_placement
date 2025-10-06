@@ -168,7 +168,7 @@ export default function Users() {
           <option value="name">Name</option>
           <option value="id">ID</option>
         </select>
-        <button className="button" onClick={() => { setSearch(''); fetchUsers2(); }}>
+        <button className="button" onClick={() => { setSearch(''); fetchUsers(); }}>
           Reset
         </button>
         <button

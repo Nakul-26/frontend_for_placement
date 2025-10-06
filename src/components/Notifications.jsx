@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 export default function Notifications() {
   const [notifications, setNotifications] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -19,10 +18,8 @@ export default function Notifications() {
         const res = await api.get('https://notification-31at.onrender.com/alldata', config);
         console.log('notifications res: ', res);
         setNotifications(res.data.details ? res.data.details.map(item => item.value) : []);
-        setError(null);
       } catch (err) {
         console.error('fetchNotifications error:', err);
-        setError(err.message || 'Failed to fetch notifications');
         toast.error(err.response?.data?.message || 'Failed to fetch notifications');
         setNotifications([]); // Clear notifications on error
       } finally {
@@ -39,7 +36,7 @@ export default function Notifications() {
   return (
     <div className="notifications-container">
       <div className="notifications-list">
-        {!notifications && notifications.length > 0 ? (
+        {notifications && notifications.length > 0 ? (
           notifications.map((notification) => (
             <div className="notification-card important" key={notification.id}>
               <div className="notification-header">
