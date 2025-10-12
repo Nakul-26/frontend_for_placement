@@ -30,6 +30,22 @@
   padding: 10px;
 }
 
+.landing-brand-container {
+  display: flex;
+  align-items: center;
+}
+
+.landing-logo-container {
+  margin-right: 15px; /* Space between logo and title */
+  display: flex;
+  align-items: center;
+}
+
+.landing-logo {
+  height: 40px; /* Adjust as needed */
+  width: auto;
+}
+
 /* Header elements */
 .landing-title {
   font-size: 2rem;

@@ -139,7 +139,7 @@ export default function Permissions() {
       </div>
       <div className="table-container card">
         <table className="table">
-          <thead>
+          <thead className='head'>
             <tr>
               <th>ID</th>
               <th>Name</th>

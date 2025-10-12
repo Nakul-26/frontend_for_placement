@@ -1,0 +1,171 @@
+.admin-notifications-container {
+  padding: 24px;
+  background-color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-notifications-header {
+  margin-bottom: 24px;
+}
+
+.admin-notifications-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-notifications-subtitle {
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.admin-notifications-form-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-notifications-form-card .form-input,
+.admin-notifications-form-card .form-textarea,
+.admin-notifications-form-card .form-select {
+  width: 100%;
+  margin-bottom: 16px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+}
+
+.admin-notifications-form-card .form-textarea {
+  min-height: 80px;
+  padding: 10px;
+}
+
+.admin-notifications-form-card label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.admin-notifications-form-card input[type="checkbox"] {
+  margin-right: 8px;
+  width: auto;
+  height: auto;
+}
+
+.admin-notifications-form-card .button {
+  width: auto;
+  margin-top: 8px;
+}
+
+.admin-notifications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.admin-notification-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.admin-notification-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.admin-notification-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.admin-notification-card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.admin-notification-card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-notification-card-body {
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.button {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: none;
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.button:hover {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+  transform: translateY(-1px);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}

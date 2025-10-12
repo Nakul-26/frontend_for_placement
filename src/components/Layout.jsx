@@ -13,35 +13,35 @@ const adminMenuItems = [
   { text: 'Role-Permission', path: '/admin/role-permission', icon: '🔗' },
   { text: 'Manage Jobs', path: '/admin/manage-jobs', icon: '💼' },
   { text: 'Notifications', path: '/admin/notifications', icon: '🔔' },
-  { text: 'Manage Notifications', path: '/admin/manage-notifications', icon: '⚙️' },
-  { text: 'Chat', path: '/chat', icon: '💬' },
+  // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
 const facultyMenuItems = [
   { text: 'Dashboard', path: '/faculty/dashboard', icon: '🏠' },
-  { text: 'Student List', path: '/faculty/student-list', icon: '👥' },
-  { text: 'Job Posting Approval', path: '/faculty/job-posting-approval', icon: '💼' },
-  { text: 'Student Eligibility', path: '/faculty/student-eligibility', icon: '✅' },
-  { text: 'Manage Placement Drive', path: '/faculty/manage-placement-drive', icon: '🚀' },
-  { text: 'Announcements', path: '/faculty/announcements', icon: '📢' },
-  { text: 'Analytics', path: '/faculty/analytics', icon: '📊' },
+  // { text: 'Student List', path: '/faculty/student-list', icon: '👥' },
+  // { text: 'Job Posting Approval', path: '/faculty/job-posting-approval', icon: '💼' },
+  // { text: 'Student Eligibility', path: '/faculty/student-eligibility', icon: '✅' },
+  // { text: 'Manage Placement Drive', path: '/faculty/manage-placement-drive', icon: '🚀' },
+  // { text: 'Announcements', path: '/faculty/announcements', icon: '📢' },
+  // { text: 'Analytics', path: '/faculty/analytics', icon: '📊' },
   { text: 'Notifications', path: '/faculty/notifications', icon: '🔔' },
-  { text: 'Chat', path: '/chat', icon: '💬' },
+  { text: 'Job offerings', path: '/faculty/job-offerings', icon: '📝' },
+  // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
 const studentMenuItems = [
   { text: 'Dashboard', path: '/student/dashboard', icon: '🏠' },
-  { text: 'My Profile', path: '/student/profile', icon: '🧑‍🎓' },
-  { text: 'Job Search', path: '/student/job-search', icon: '🔍' },
-  { text: 'My Applications', path: '/student/my-applications', icon: '📄' },
+  // { text: 'My Profile', path: '/student/profile', icon: '🧑‍🎓' },
+  // { text: 'Job Search', path: '/student/job-search', icon: '🔍' },
+  // { text: 'My Applications', path: '/student/my-applications', icon: '📄' },
   { text: 'Recommended Jobs', path: '/student/recommended-jobs', icon: '💼' },
-  { text: 'Assessments', path: '/student/assessments', icon: '📝' },
-  { text: 'Score History', path: '/student/score-history', icon: '📈' },
-  { text: 'Skill Development', path: '/student/skill-development', icon: '📚' },
-  { text: 'Skill Roadmaps', path: '/student/skill-roadmaps', icon: '🗺️' },
-  { text: 'My Saved Content', path: '/student/my-saved-content', icon: '🔖' },
+  // { text: 'Assessments', path: '/student/assessments', icon: '📝' },
+  // { text: 'Score History', path: '/student/score-history', icon: '📈' },
+  // { text: 'Skill Development', path: '/student/skill-development', icon: '📚' },
+  // { text: 'Skill Roadmaps', path: '/student/skill-roadmaps', icon: '🗺️' },
+  // { text: 'My Saved Content', path: '/student/my-saved-content', icon: '🔖' },
   { text: 'Notifications', path: '/student/notifications', icon: '🔔' },
-  { text: 'Chat', path: '/chat', icon: '💬' },
+  // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
 const getMenuItems = (role) => {

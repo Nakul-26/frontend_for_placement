@@ -1,17 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../pages/Login.css';
 
 const RoleLoginForm = ({ role }) => {
-  const { login } = useAuth();
+  const { login, refresh, isAuthenticated } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const attemptRefresh = async () => {
+      if (isAuthenticated) {
+        const from = location.state?.from || `/${role}/dashboard`;
+        navigate(from);
+        return;
+      }
+      try {
+        setLoading(true);
+        const { success } = await refresh();
+        if (success) {
+          const from = location.state?.from || `/${role}/dashboard`;
+          navigate(from);
+        }
+      } catch (err) {
+        // a toast is already shown in the refresh function
+      } finally {
+        setLoading(false);
+      }
+    };
+    attemptRefresh();
+  }, [isAuthenticated, refresh, navigate, location.state, role]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,15 +86,23 @@ const RoleLoginForm = ({ role }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            id='password'
-            className="login-input"
-            type="password"
-            placeholder="Password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div style={{ position: 'relative', width: '100%' }}>
+            <input
+              id='password'
+              className="login-input"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              className="password-toggle"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? '👁️' : '👁️‍🗨️'}
+            </button>
+          </div>
 
           <button
             type="submit"

@@ -1,6 +1,7 @@
 .notifications-container {
   padding: 16px;
   margin: 0 auto; /* centers content on large screens */
+  background-color: #ffffff !important;
 }
 
 .notifications-title {

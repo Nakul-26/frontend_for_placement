@@ -125,7 +125,7 @@ export default function Roles() {
       </div>
       <div className="table-container">
         <table className="table">
-          <thead>
+          <thead className='head'>
             <tr>
               <th>Name</th>
               <th>Description</th>

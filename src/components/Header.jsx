@@ -1,3 +1,4 @@
+import logo from '../assets/logo.png';
 import React from 'react';
 import { useAuth } from '../context/useAuth';
 import { Link } from 'react-router-dom';
@@ -33,7 +34,9 @@ export default function Header({ open }) {
   return (
     <header className={`header ${open ? 'open' : ''}`}>
       <div className="toolbar">
-
+        <Link to="/" className="logo-container">
+          <img src={logo} alt="Placement Website Logo" className="logo" />
+        </Link>
         <div className="title">
           Placement
         </div>

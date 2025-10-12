@@ -177,3 +177,15 @@
   color: #111;
 }
 
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 34%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

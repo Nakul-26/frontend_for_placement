@@ -15,7 +15,7 @@ export default function Notifications() {
         const config = {
             withCredentials: true,
         }
-        const res = await api.get('https://notification-31at.onrender.com/alldata', config);
+        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alldata`, config);
         console.log('notifications res: ', res);
         setNotifications(res.data.details ? res.data.details.map(item => item.value) : []);
       } catch (err) {
@@ -41,12 +41,14 @@ export default function Notifications() {
             <div className="notification-card important" key={notification.id}>
               <div className="notification-header">
                 <span className="notification-badge">{notification.type}</span>
-                <span className="notification-time">{new Date(notification.created_at).toLocaleString()}</span>
+                <span className="notification-time">{notification.created_at ? new Date(notification.created_at).toLocaleString() : ''}</span>
               </div>
 
               <div className="notification-body">
-                <h6 className="notification-subtitle">From: {notification.author}</h6>
+                <h6 className="notification-subtitle">From: {notification.author} (ID: {notification.author_id || 'N/A'})</h6>
                 <p className="notification-text">{notification.content}</p>
+                <p className="notification-text">Public: {notification.is_public ? 'Yes' : 'No'}</p>
+                {/* <p className="notification-text">Expires: {notification.expires_at ? new Date(notification.expires_at).toLocaleString() : 'Never'}</p> */}
               </div>
             </div>
           ))

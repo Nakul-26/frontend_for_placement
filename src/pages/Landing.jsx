@@ -6,6 +6,7 @@ import About from './About.jsx';
 import Contact from './Contact.jsx';
 import PublicJobListing from './PublicJobListing.jsx';
 import SkillDevelopment from './SkillDevelopment.jsx';
+import logo from '../assets/logo.png'; // Import the logo
 import './Landing.css';
 
 function TabPanel({ children, value, index }) {
@@ -27,7 +28,12 @@ export default function Landing() {
     <div className="landing-container">
       {/* Header Section */}
       <header className="landing-header">
-        <h1 className="landing-title">Placement Portal</h1>
+        <div className="landing-brand-container"> {/* New container */}
+          <Link to="/" className="landing-logo-container">
+            <img src={logo} alt="Placement Website Logo" className="landing-logo" />
+          </Link>
+          <h1 className="landing-title">Placement Portal</h1>
+        </div>
         <Link to="/login">
           <button className="landing-login-button">Login</button>
         </Link>
@@ -53,7 +59,7 @@ export default function Landing() {
               Job Offerings
             </button>
 
-            <button
+            {/* <button
               className={`landing-tab ${tabValue === 2 ? 'active' : ''}`}
               onClick={() => handleTabChange(2)}
               aria-selected={tabValue === 2}
@@ -83,7 +89,7 @@ export default function Landing() {
               aria-selected={tabValue === 5}
             >
               Skill Development
-            </button>
+            </button> */}
           </div>
         </div>
 

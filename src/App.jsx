@@ -24,17 +24,19 @@ import Users from './pages/Users.jsx';
 import Roles from './pages/Roles.jsx';
 import Permissions from './pages/Permissions.jsx';
 import RolePermissions from './pages/RolePermissions.jsx';
+import AdminNotifications from './pages/AdminNotifications.jsx'; // New import
+import Notifications from './components/Notifications.jsx'; // Add this import
 
 // Shared Pages
 import ManageJobOfferings from './pages/ManageJobOfferings.jsx';
-import ManageNotifications from './pages/ManageNotifications.jsx';
+// import ManageNotifications from './pages/ManageNotifications.jsx'; // Removed import
 import SkillDevelopment from './pages/SkillDevelopment.jsx';
 import Assessments from './pages/Assessments.jsx';
 import Chat from './pages/Chat.jsx';
 import Analytics from './pages/Analytics.jsx';
 import StudentProfile from './pages/StudentProfile.jsx';
 import CompanyProfile from './pages/CompanyProfile.jsx';
-import NotificationsPage from './pages/NotificationsPage.jsx';
+// import NotificationsPage from './pages/NotificationsPage.jsx';
 
 // Faculty Pages
 import StudentList from './pages/StudentList.jsx';
@@ -42,6 +44,7 @@ import JobPostingApproval from './pages/JobPostingApproval.jsx';
 import Announcements from './pages/Announcements.jsx';
 import StudentEligibility from './pages/StudentEligibility.jsx';
 import ManagePlacementDrive from './pages/ManagePlacementDrive.jsx';
+import FacultyJobOfferings from './pages/FacultyJobOfferings.jsx'; // Add this import
 
 // Student Pages
 import JobSearch from './pages/JobSearch.jsx';
@@ -81,20 +84,21 @@ function App() {
               <Route path="/admin/permissions" element={<Layout><Permissions /></Layout>} />
               <Route path="/admin/role-permission" element={<Layout><RolePermissions /></Layout>} />
               <Route path="/admin/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
-              <Route path="/admin/manage-notifications" element={<Layout><ManageNotifications /></Layout>} />
-              <Route path="/admin/notifications" element={<Layout><NotificationsPage /></Layout>} />
+              <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} /> {/* Updated route */}
             </Route>
 
             {/* Faculty Routes */}
             <Route element={<ProtectedRoute roles={['faculty']} />}>
               <Route path="/faculty/dashboard" element={<Layout><FacultyDashboard /></Layout>} />
               <Route path="/faculty/analytics" element={<Layout><Analytics /></Layout>} />
-              <Route path="/faculty/notifications" element={<Layout><NotificationsPage /></Layout>} />
+              <Route path="/faculty/notifications" element={<Layout><Notifications /></Layout>} />
               <Route path="/faculty/student-list" element={<Layout><StudentList /></Layout>} />
               <Route path="/faculty/job-posting-approval" element={<Layout><JobPostingApproval /></Layout>} />
               <Route path="/faculty/announcements" element={<Layout><Announcements /></Layout>} />
               <Route path="/faculty/student-eligibility" element={<Layout><StudentEligibility /></Layout>} />
               <Route path="/faculty/manage-placement-drive" element={<Layout><ManagePlacementDrive /></Layout>} />
+              <Route path="/faculty/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
+              <Route path="/faculty/job-offerings" element={<Layout><FacultyJobOfferings /></Layout>} /> {/* New route for faculty job offerings */}
             </Route>
 
             {/* Student Routes */}
@@ -103,7 +107,7 @@ function App() {
               <Route path="/student/skill-development" element={<Layout><SkillDevelopment /></Layout>} />
               <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} />
               <Route path="/student/profile" element={<Layout><StudentProfile /></Layout>} />
-              <Route path="/student/notifications" element={<Layout><NotificationsPage /></Layout>} />
+              <Route path="/student/notifications" element={<Layout><Notifications /></Layout>} />
               <Route path="/student/job-search" element={<Layout><JobSearch /></Layout>} />
               <Route path="/student/my-applications" element={<Layout><MyApplications /></Layout>} />
               <Route path="/student/recommended-jobs" element={<Layout><RecommendedJobs /></Layout>} />

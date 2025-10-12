@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './RecommendedJobs.css';
+import './RecommendedJobs.css'; // Reusing the CSS for now
 import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
 
-export default function RecommendedJobs() {
+export default function FacultyJobOfferings() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,8 +33,8 @@ export default function RecommendedJobs() {
   if (loading) {
     return (
       <div className="recommended-jobs-container">
-        <h1 className="recommended-jobs-title">Jobs</h1>
-        <p>Loading jobs...</p>
+        <h1 className="recommended-jobs-title">Job Offerings</h1>
+        <p>Loading job offerings...</p>
       </div>
     );
   }
@@ -42,8 +42,7 @@ export default function RecommendedJobs() {
   return (
     <div className="recommended-jobs-container">
       <div className="recommended-jobs-header">
-        <h1 className="recommended-jobs-title">Jobs</h1>
-        {/* <p className="recommended-jobs-subtitle">Jobs tailored to your profile.</p> */}
+        <h1 className="recommended-jobs-title">Job Offerings</h1>
       </div>
       <div className="recommended-jobs-content">
         <div className="job-listings">
@@ -70,13 +69,10 @@ export default function RecommendedJobs() {
                   <p><strong>Applications Opens from:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
                   <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 </div>
-                {/* <div className="job-card-footer">
-                  <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a>
-                </div> */}
               </div>
             ))
           ) : (
-            <p>No recommended jobs available.</p>
+            <p>No job offerings available.</p>
           )}
         </div>
       </div>

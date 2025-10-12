@@ -13,7 +13,6 @@ export default function ProtectedRoute({ roles }) {
   }
 
   if (roles && !roles.includes(user.role)) {
-    // Redirect to an unauthorized page or home page
     return <Navigate to="/" />;
   }
 
