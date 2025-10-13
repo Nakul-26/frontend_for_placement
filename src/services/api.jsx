@@ -58,9 +58,9 @@ export const deleteNotification = (id) => NotificationsApi.delete(`/notification
 export const getNotifications = () => NotificationsApi.get(`/notifications`);
 
 // Job Offerings
-export const addJobOffering = (jobOffering) => NotificationsApi.post(`/job-offerings`, { jobOffering });
-export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/job-offerings/${id}`, { jobOffering });
-export const deleteJobOffering = (id) => NotificationsApi.delete(`/job-offerings/${id}`);
-export const getJobOfferings = () => NotificationsApi.get(`/job-offerings`);
+export const addJobOffering = (jobOffering) => NotificationsApi.post(`/jobs`, { jobOffering });
+export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/jobs/${id}`, { jobOffering });
+export const deleteJobOffering = (id) => NotificationsApi.delete(`/jobs/${id}`);
+export const getJobOfferings = () => NotificationsApi.get(`/jobs`);
 
 export { api, NotificationsApi };

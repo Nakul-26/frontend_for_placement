@@ -34,7 +34,7 @@ const studentMenuItems = [
   // { text: 'My Profile', path: '/student/profile', icon: '🧑‍🎓' },
   // { text: 'Job Search', path: '/student/job-search', icon: '🔍' },
   // { text: 'My Applications', path: '/student/my-applications', icon: '📄' },
-  { text: 'Recommended Jobs', path: '/student/recommended-jobs', icon: '💼' },
+  { text: 'Jobs', path: '/student/recommended-jobs', icon: '💼' },
   // { text: 'Assessments', path: '/student/assessments', icon: '📝' },
   // { text: 'Score History', path: '/student/score-history', icon: '📈' },
   // { text: 'Skill Development', path: '/student/skill-development', icon: '📚' },
@@ -44,10 +44,18 @@ const studentMenuItems = [
   // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
+const managerMenuItems = [
+  { text: 'Dashboard', path: '/manager/dashboard', icon: '🏠' },
+  { text: 'Manage Jobs', path: '/manager/job-offerings', icon: '💼' },
+  { text: 'Notifications', path: '/manager/notifications', icon: '🔔' },
+];
+
 const getMenuItems = (role) => {
   switch (role) {
     case 'admin':
       return adminMenuItems;
+    case 'manager':
+      return managerMenuItems;
     case 'faculty':
       return facultyMenuItems;
     case 'student':

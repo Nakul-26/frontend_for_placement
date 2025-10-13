@@ -18,6 +18,7 @@ import JobDetail from './pages/JobDetail.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import FacultyDashboard from './pages/FacultyDashboard.jsx';
 import StudentDashboard from './pages/StudentDashboard.jsx';
+import ManagerDashboard from './pages/ManagerDashboard.jsx';
 
 // Admin Pages
 import Users from './pages/Users.jsx';
@@ -84,37 +85,44 @@ function App() {
               <Route path="/admin/permissions" element={<Layout><Permissions /></Layout>} />
               <Route path="/admin/role-permission" element={<Layout><RolePermissions /></Layout>} />
               <Route path="/admin/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
-              <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} /> {/* Updated route */}
+              <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} />
+            </Route>
+
+            {/* Manager Routes */}
+            <Route element={<ProtectedRoute roles={['manager']} />}>
+              <Route path="/manager/dashboard" element={<Layout><ManagerDashboard /></Layout>} />
+              <Route path="/manager/notifications" element={<Layout><AdminNotifications /></Layout>} />
+              <Route path="/manager/job-offerings" element={<Layout><ManageJobOfferings /></Layout>} />
             </Route>
 
             {/* Faculty Routes */}
             <Route element={<ProtectedRoute roles={['faculty']} />}>
               <Route path="/faculty/dashboard" element={<Layout><FacultyDashboard /></Layout>} />
-              <Route path="/faculty/analytics" element={<Layout><Analytics /></Layout>} />
+              {/* <Route path="/faculty/analytics" element={<Layout><Analytics /></Layout>} /> */}
               <Route path="/faculty/notifications" element={<Layout><Notifications /></Layout>} />
-              <Route path="/faculty/student-list" element={<Layout><StudentList /></Layout>} />
-              <Route path="/faculty/job-posting-approval" element={<Layout><JobPostingApproval /></Layout>} />
-              <Route path="/faculty/announcements" element={<Layout><Announcements /></Layout>} />
-              <Route path="/faculty/student-eligibility" element={<Layout><StudentEligibility /></Layout>} />
-              <Route path="/faculty/manage-placement-drive" element={<Layout><ManagePlacementDrive /></Layout>} />
-              <Route path="/faculty/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
+              {/* <Route path="/faculty/student-list" element={<Layout><StudentList /></Layout>} /> */}
+              {/* <Route path="/faculty/job-posting-approval" element={<Layout><JobPostingApproval /></Layout>} /> */}
+              {/* <Route path="/faculty/announcements" element={<Layout><Announcements /></Layout>} /> */}
+              {/* <Route path="/faculty/student-eligibility" element={<Layout><StudentEligibility /></Layout>} /> */}
+              {/* <Route path="/faculty/manage-placement-drive" element={<Layout><ManagePlacementDrive /></Layout>} /> */}
+              {/* <Route path="/faculty/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} /> */}
               <Route path="/faculty/job-offerings" element={<Layout><FacultyJobOfferings /></Layout>} /> {/* New route for faculty job offerings */}
             </Route>
 
             {/* Student Routes */}
             <Route element={<ProtectedRoute roles={['student']} />}>
               <Route path="/student/dashboard" element={<Layout><StudentDashboard /></Layout>} />
-              <Route path="/student/skill-development" element={<Layout><SkillDevelopment /></Layout>} />
-              <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} />
-              <Route path="/student/profile" element={<Layout><StudentProfile /></Layout>} />
+              {/* <Route path="/student/skill-development" element={<Layout><SkillDevelopment /></Layout>} /> */}
+              {/* <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} /> */}
+              {/* <Route path="/student/profile" element={<Layout><StudentProfile /></Layout>} /> */}
               <Route path="/student/notifications" element={<Layout><Notifications /></Layout>} />
-              <Route path="/student/job-search" element={<Layout><JobSearch /></Layout>} />
-              <Route path="/student/my-applications" element={<Layout><MyApplications /></Layout>} />
+              {/* <Route path="/student/job-search" element={<Layout><JobSearch /></Layout>} /> */}
+              {/* <Route path="/student/my-applications" element={<Layout><MyApplications /></Layout>} /> */}
               <Route path="/student/recommended-jobs" element={<Layout><RecommendedJobs /></Layout>} />
-              <Route path="/student/quiz-attempt" element={<Layout><QuizAttemptPage /></Layout>} />
-              <Route path="/student/score-history" element={<Layout><ScoreHistory /></Layout>} />
-              <Route path="/student/skill-roadmaps" element={<Layout><SkillRoadmaps /></Layout>} />
-              <Route path="/student/my-saved-content" element={<Layout><MySavedContent /></Layout>} />
+              {/* <Route path="/student/quiz-attempt" element={<Layout><QuizAttemptPage /></Layout>} /> */}
+              {/* <Route path="/student/score-history" element={<Layout><ScoreHistory /></Layout>} /> */}
+              {/* <Route path="/student/skill-roadmaps" element={<Layout><SkillRoadmaps /></Layout>} /> */}
+              {/* <Route path="/student/my-saved-content" element={<Layout><MySavedContent /></Layout>} /> */}
             </Route>
 
             {/* Shared Routes for authenticated users */}

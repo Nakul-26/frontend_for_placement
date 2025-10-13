@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { use, useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, refresh } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('student');
@@ -13,6 +13,27 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    // If already authenticated, redirect to role dashboard
+    const checkAuth = async () => {
+      try {
+        setLoading(true);
+        const { success } = await refresh();
+        if (success) {
+          // First check location state, then fallback to role dashboard
+          const from = location.state?.from || `/${role}/dashboard`;
+          navigate(from);
+          return;
+        }
+      } catch {
+        // Not authenticated, no action needed
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
+  }, [refresh, navigate, location.state, role]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,6 +118,7 @@ const Login = () => {
               <option value="student">Student</option>
               <option value="faculty">Faculty</option>
               <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
             </select>
           </div>
           <button
