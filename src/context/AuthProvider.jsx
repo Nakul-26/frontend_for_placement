@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { api } from "../services/api";
+import { api, NotificationsApi } from "../services/api";
 import { toast } from 'react-toastify';
 import { AuthContext } from './AuthContext';
 
@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const axios = api;
 
   // Expose loadUser so any component can restore user state from /api/me
   const loadUser = useCallback(async () => {
