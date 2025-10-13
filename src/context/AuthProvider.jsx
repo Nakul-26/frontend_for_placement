@@ -8,6 +8,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Expose loadUser so any component can restore user state from /api/me
+  const loadUser = useCallback(async () => {
+    try {
+      const res = await axios.get('/api/me', { withCredentials: true });
+      let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
+      if (newUser && newUser.role_id) {
+        if (newUser.role_id === 1) newUser.role = 'admin';
+        else if (newUser.role_id === 2) newUser.role = 'faculty';
+        else if (newUser.role_id === 3) newUser.role = 'student';
+      }
+      setUser(newUser ?? null);
+      return newUser;
+    } catch (error) {
+      setUser(null);
+      console.debug('Not logged in:', error);
+      return null;
+    }
+  }, []);
+
   useEffect(() => {
     const initialAuthCheck = async () => {
       const storedDummyUser = localStorage.getItem('dummyUser');
@@ -18,21 +37,11 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      try {
-        // Server will use cookies (httpOnly) for auth. Expect the refresh endpoint
-        // to return the current user object in the response body (e.g. { user: {...} }).
-        const res = await axios.get('/api/refresh', { withCredentials: true });
-        const newUser = res.data?.user ?? res.data;
-        setUser(newUser ?? null);
-      } catch (error) {
-        // User is not logged in or refresh failed
-        setUser(null);
-      }
+      await loadUser();
       setLoading(false);
     };
-
     initialAuthCheck();
-  }, []);
+  }, [loadUser]);
 
   const login = useCallback(async (email, password, role) => {
     setError(null);
@@ -128,6 +137,7 @@ export const AuthProvider = ({ children }) => {
     login,
     refresh,
     logout,
+    loadUser,
     isAuthenticated: !!user,
   };
 

@@ -16,6 +16,32 @@ const api = axios.create({
   withCredentials: true, // send cookies for session auth
 });
 
+// Handle expired tokens with automatic refresh
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Only attempt refresh if the error is "access token not defined" and we haven't retried yet
+    if (
+      error.response?.data?.message === "access token not defined" && 
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        // Attempt to refresh the token
+        await api.get("/api/refresh");
+        // Retry the original request with the new token (cookies will be sent automatically)
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        // Let the error propagate - AuthProvider will handle clearing user state if needed
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 
 // Notifications
