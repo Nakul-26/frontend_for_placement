@@ -151,6 +151,7 @@
 }
 
 .modal-title {
+  padding-left: 15px;
   font-size: 1.8rem;
   font-weight: 600;
   color: #111827;
@@ -159,6 +160,8 @@
 
 .modal-content {
   display: flex;
+  width: 95%;
+  padding-left: 15px;
   flex-direction: column;
   gap: 16px;
 }
@@ -169,3 +172,4 @@
   gap: 10px;
   margin-top: 24px;
 }
+

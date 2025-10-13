@@ -59,7 +59,11 @@ const AdminNotifications = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await getNotifications();
+      const config = {
+        withCredentials: true,
+      };
+      const response = await NotificationsApi.get('/notifications', config);
+      console.log('Fetched notifications:', response.data);
       if (Array.isArray(response.data.notifications)) {
         setNotifications(response.data.notifications);
       } else {
@@ -101,7 +105,18 @@ const AdminNotifications = () => {
   const handleEditNotification = async () => {
     setIsSubmitting(true);
     try {
-      await editNotification(editingNotification.id, editingNotification);
+      const config = {
+        withCredentials: true,
+      };
+      const response = await NotificationsApi.put(`/notifications/${editingNotification.id}`, {
+        author_id: editingNotification.author_id,
+        author: editingNotification.author,
+        content: editingNotification.content,
+        type: editingNotification.type,
+        is_public: editingNotification.is_public,
+        expires_at: editingNotification.expires_at,
+      }, config);
+      console.log('Notification edited successfully:', response.data);
       handleClose();
       fetchNotifications();
     } catch (error) {
@@ -116,7 +131,12 @@ const AdminNotifications = () => {
     setDeletingNotificationId(id);
     setIsSubmitting(true);
     try {
-      await deleteNotification(id);
+      const config = {
+        withCredentials: true,
+      };
+      const response = await NotificationsApi.delete(`/notifications/${id}`, config);
+      console.log('Notification deleted successfully:', response.data);
+      handleClose();
       fetchNotifications();
     } catch (error) {
       console.error('Error deleting notification:', error);
