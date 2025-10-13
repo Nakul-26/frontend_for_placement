@@ -25,7 +25,7 @@ Placement Website Microservices
 
 - API Gateway Service: This is the single-entry point for all client requests. It routes requests to the appropriate backend service and handles common concerns like authentication, rate limiting, and caching.   
 
-- Auth Service: Handles user authentication, including login, logout, and token management (e.g., JWT).   
+- Auth Service: Handles user authentication via httpOnly cookies; frontend should rely on server responses for user data and not manage JWTs on the client.  
 
 - User Service: Manages user profiles for students, faculties, and companies. This service is the single source of truth for user data and permissions. 
 

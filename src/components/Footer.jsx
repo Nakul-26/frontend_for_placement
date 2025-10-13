@@ -3,7 +3,7 @@ import './Footer.css';
 
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer container">
       <p className="footer-text">
         {'Copyright © '}
         <a className="footer-link" href="https://mui.com/">

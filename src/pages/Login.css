@@ -189,3 +189,21 @@
   align-items: center;
   justify-content: center;
 }
+
+@media (max-width: 480px) {
+  .login-paper {
+    padding: 24px;
+  }
+
+  .login-title {
+    font-size: 1.8rem;
+  }
+
+  .login-subtitle {
+    font-size: 1rem;
+  }
+
+  .role-buttons-container {
+    grid-template-columns: 1fr;
+  }
+}

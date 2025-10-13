@@ -1,0 +1,88 @@
+/* General layout adjustments */
+.container {
+  width: 100%;
+  max-width: 1200px; /* Adjust as needed */
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Responsive images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Common adjustments for smaller screens */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 992px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Example: Adjust padding for smaller screens */
+  .container {
+    padding: 0 10px;
+  }
+
+  /* Example: Stack columns instead of side-by-side */
+  .row, .flex-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Example: Further adjustments for mobile */
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+  }
+}
+
+/* Header and Footer */
+@media (max-width: 768px) {
+  .header, .footer {
+    padding: 10px;
+  }
+  .header .logo {
+    font-size: 1.5rem;
+  }
+  .footer .footer-links {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Forms */
+@media (max-width: 768px) {
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-control {
+    width: 100%;
+  }
+}
+
+/* Tables */
+@media (max-width: 768px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

@@ -15,8 +15,10 @@ const RoleLoginForm = ({ role }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    let cancelled = false;
     const attemptRefresh = async () => {
       if (isAuthenticated) {
+        setLoading(true);
         const from = location.state?.from || `/${role}/dashboard`;
         navigate(from);
         return;
@@ -24,17 +26,18 @@ const RoleLoginForm = ({ role }) => {
       try {
         setLoading(true);
         const { success } = await refresh();
-        if (success) {
+        if (!cancelled && success) {
           const from = location.state?.from || `/${role}/dashboard`;
           navigate(from);
         }
       } catch (err) {
         // a toast is already shown in the refresh function
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     attemptRefresh();
+    return () => { cancelled = true; };
   }, [isAuthenticated, refresh, navigate, location.state, role]);
 
   const handleSubmit = async (e) => {
@@ -47,9 +50,22 @@ const RoleLoginForm = ({ role }) => {
     try {
       setLoading(true);
       // Pass the role to the login function
-      await login(email, password, role);
-      // Navigate to a role-specific dashboard
-      const from = location.state?.from || `/${role}/dashboard`;
+      const result = await login(email, password, role);
+      console.debug('RoleLoginForm: login result', result);
+      if (!result?.success) {
+        setError(result?.error?.response?.data?.message || 'Login failed.');
+        return;
+      }
+      // Prefer the server-provided user role to avoid mismatches
+      const loggedInUser = result?.data?.user ?? null;
+      if (loggedInUser && loggedInUser.role && loggedInUser.role.toLowerCase() !== role.toLowerCase()) {
+        setError(`Logged in user role (${loggedInUser.role}) does not match the requested role (${role}).`);
+        return;
+      }
+
+      // Navigate to the original requested location (if any), else to role dashboard
+      const requested = typeof location.state?.from === 'string' ? location.state.from : (location.state?.from ?? null);
+      const from = requested || `/${role}/dashboard`;
       navigate(from);
     } catch (err) {
       setError(err?.message || 'Login failed. Please try again.');
@@ -62,6 +78,10 @@ const RoleLoginForm = ({ role }) => {
     // Add role to the Google login URL if needed
     window.location.href = `http://localhost:3000/auth/google?role=${role}`;
   };
+
+  if (loading) {
+    return <div className="login-container"><div className="login-paper"><h1>Loading...</h1></div></div>;
+  }
 
   return (
     <div className="login-container">

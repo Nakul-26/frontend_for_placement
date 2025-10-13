@@ -1,0 +1,29 @@
+/* Global Responsive Styles */
+html {
+  box-sizing: border-box;
+  font-size: 16px; /* Base font size */
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive font sizes for different screen sizes */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px; /* Smaller base font size for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 12px; /* Even smaller base font size for mobile phones */
+  }
+}

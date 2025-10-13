@@ -35,6 +35,9 @@ export default function Notifications() {
 
   return (
     <div className="notifications-container">
+      <h1>Notifications</h1>
+      {/* <br /> */}
+      {/* <br /> */}
       <div className="notifications-list">
         {notifications && notifications.length > 0 ? (
           notifications.map((notification) => (

@@ -107,3 +107,22 @@
 .view-details-btn:hover {
     background-color: #1d4ed8;
 }
+
+@media (max-width: 768px) {
+  .job-offerings-container {
+    padding: 16px;
+  }
+
+  .job-card {
+    padding: 16px;
+  }
+
+  .job-title {
+    font-size: 1.2rem;
+  }
+
+  .view-details-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
