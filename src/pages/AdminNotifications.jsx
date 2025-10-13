@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getNotifications, addNotification, editNotification, deleteNotification } from '../services/api';
+import { api, NotificationsApi } from '../services/api';
 import './AdminNotifications.css'; // New CSS file for the combined page
 
 const AddIcon = () => (
@@ -24,10 +24,10 @@ const DeleteIcon = () => (
 const AdminNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [newNotification, setNewNotification] = useState({
-    author_id: '',
+    author_id: 0,
     author: '',
     content: '',
-    type: 'General',
+    type: 'general',
     is_public: true,
     expires_at: '',
   });
@@ -43,10 +43,10 @@ const AdminNotifications = () => {
   const handleClose = () => {
     setOpen(false);
     setNewNotification({
-      author_id: '',
+      author_id: 0,
       author: '',
       content: '',
-      type: 'General',
+      type: 'general',
       is_public: true,
       expires_at: '',
     });
@@ -74,8 +74,22 @@ const AdminNotifications = () => {
 
   const handleAddNotification = async () => {
     setIsSubmitting(true);
+
     try {
-      await addNotification(newNotification);
+      console.log('Adding notification:', newNotification);
+      const config = {
+        withCredentials: true,
+      };
+      const response = await NotificationsApi.post('/notifications', {
+        author_id: newNotification.author_id,
+        author: newNotification.author,
+        content: newNotification.content,
+        type: newNotification.type,
+        is_public: newNotification.is_public,
+        expires_at: newNotification.expires_at,
+        config,
+      });
+      console.log('Notification added successfully:', response.data);
       handleClose();
       fetchNotifications();
     } catch (error) {
@@ -140,7 +154,7 @@ const AdminNotifications = () => {
         <h2 className="card-title">Add New Notification</h2>
         <div className="modal-content">
           <input
-            type="text"
+            type="number"
             className="form-input"
             name="author_id"
             value={newNotification.author_id}
@@ -168,9 +182,12 @@ const AdminNotifications = () => {
             value={newNotification.type}
             onChange={handleNewNotificationChange}
           >
-            <option value="General">General</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="Urgent">Urgent</option>
+            <option value="general">General</option>
+            <option value="maintenance">Maintenance</option>
+            {/* <option value="Urgent">Urgent</option> */}
+            <option value="info">Info</option>
+            <option value="alert">Alert</option>
+            <option value="warning">Warning</option>
           </select>
           <label>
             <input
@@ -254,9 +271,12 @@ const AdminNotifications = () => {
                 value={editingNotification.type}
                 onChange={handleEditingNotificationChange}
               >
-                <option value="General">General</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Urgent">Urgent</option>
+                <option value="general">General</option>
+                <option value="maintenance">Maintenance</option>
+                {/* <option value="Urgent">Urgent</option> */}
+                <option value="info">Info</option>
+                <option value="alert">Alert</option>
+                <option value="warning">Warning</option>
               </select>
               <label>
                 <input

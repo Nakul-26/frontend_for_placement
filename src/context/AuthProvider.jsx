@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import axios from "../services/api"; // axios instance with baseURL & interceptors
+import { api } from "../services/api";
 import { toast } from 'react-toastify';
 import { AuthContext } from './AuthContext';
 
@@ -11,6 +11,14 @@ export const AuthProvider = ({ children }) => {
   // Expose loadUser so any component can restore user state from /api/me
   const loadUser = useCallback(async () => {
     try {
+      setError(null);
+      const storedAdminUser = localStorage.getItem('AdminUser');
+      if (storedAdminUser) {
+        setUser(JSON.parse(storedAdminUser));
+        return JSON.parse(storedAdminUser);
+      }
+
+
       const res = await axios.get('/api/me', { withCredentials: true });
       let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
       if (newUser && newUser.role_id) {
@@ -83,6 +91,7 @@ export const AuthProvider = ({ children }) => {
         else if (newUser.role_id === 2) newUser.role = 'faculty';
         else if (newUser.role_id === 3) newUser.role = 'student';
       }
+      localStorage.setItem('AdminUser', JSON.stringify(newUser));
       setUser(newUser);
       console.debug('AuthProvider: setUser after login', newUser);
       toast.success('Login successful!');

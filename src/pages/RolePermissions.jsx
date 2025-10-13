@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import api from '../services/api.jsx';
+import { api } from '../services/api';
 import './RolePermissions.css';
 
 export default function RolePermissions() {

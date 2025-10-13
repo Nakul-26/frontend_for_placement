@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getJobOfferings, addJobOffering, editJobOffering, deleteJobOffering } from '../services/api'; 
+import { getJobOfferings, addJobOffering, editJobOffering, deleteJobOffering, api } from '../services/api'; 
 import './ManageJobOfferings.css';
 import { toast } from 'react-toastify';
-import api from '../services/api';
 
 export default function ManageJobOfferings() {
   const [jobOfferings, setJobOfferings] = useState([]);

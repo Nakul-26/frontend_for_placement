@@ -60,6 +60,7 @@ const getMenuItems = (role) => {
 export default function Layout({ children }) {
   const { user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const menuItems = getMenuItems(user?.role);
 
@@ -67,11 +68,23 @@ export default function Layout({ children }) {
     setIsCollapsed(!isCollapsed);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileOpen(!isMobileOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileOpen(false);
+  };
+
   return (
     <>
       <Header />
       <div className="layout-container">
-        <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+        <button className="mobile-menu-button" onClick={toggleMobileMenu}>
+          {isMobileOpen ? '✕' : '☰'}
+        </button>
+        <div className={`sidebar-overlay ${isMobileOpen ? 'show' : ''}`} onClick={closeMobileMenu}></div>
+        <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
           <div className="sidebar-header">
             <h1 className="sidebar-title">Navigation</h1>
             <button className="sidebar-toggle-button" onClick={toggleSidebar}>
@@ -86,6 +99,11 @@ export default function Layout({ children }) {
                 className={({ isActive }) =>
                   "sidebar-link" + (isActive ? " active" : "")
                 }
+                onClick={() => {
+                  if (window.innerWidth <= 768) {
+                    closeMobileMenu();
+                  }
+                }}
               >
                 <span className="sidebar-link-icon">{item.icon}</span>
                 <span className="sidebar-link-text">{item.text}</span>
@@ -93,7 +111,7 @@ export default function Layout({ children }) {
             ))}
           </nav>
         </aside>
-        <main className="main-content">{children}</main>
+        <main className={`main-content ${isCollapsed ? 'sidebar-collapsed' : ''}`}>{children}</main>
       </div>
       <Footer />
     </>

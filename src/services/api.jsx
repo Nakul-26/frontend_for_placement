@@ -43,17 +43,24 @@ api.interceptors.response.use(
   }
 );
 
+const NotificationsApi = axios.create({
+  baseURL: notificationUrl, // backend URL
+  withCredentials: true, // send cookies for session auth
+});
 
 // Notifications
-export const addNotification = (notification) => api.post(`${notificationUrl}/notifications`, notification);
-export const editNotification = (id, notification) => api.put(`${notificationUrl}/notifications/${id}`, notification);
-export const deleteNotification = (id) => api.delete(`${notificationUrl}/notifications/${id}`);
-export const getNotifications = () => api.get(`${notificationUrl}/notifications`);
+export const addNotification = (notification) => {
+  console.log('Adding notification 2:', notification);
+  return NotificationsApi.post(`/notifications`, { notification });
+}
+export const editNotification = (id, notification) => NotificationsApi.put(`/notifications/${id}`, { notification });
+export const deleteNotification = (id) => NotificationsApi.delete(`/notifications/${id}`);
+export const getNotifications = () => NotificationsApi.get(`/notifications`);
 
 // Job Offerings
-export const addJobOffering = (jobOffering) => api.post(`${notificationUrl}/job-offerings`, jobOffering);
-export const editJobOffering = (id, jobOffering) => api.put(`${notificationUrl}/job-offerings/${id}`, jobOffering);
-export const deleteJobOffering = (id) => api.delete(`${notificationUrl}/job-offerings/${id}`);
-export const getJobOfferings = () => api.get(`${notificationUrl}/alljobdata`);
+export const addJobOffering = (jobOffering) => NotificationsApi.post(`/job-offerings`, { jobOffering });
+export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/job-offerings/${id}`, { jobOffering });
+export const deleteJobOffering = (id) => NotificationsApi.delete(`/job-offerings/${id}`);
+export const getJobOfferings = () => NotificationsApi.get(`/job-offerings`);
 
-export default api;
+export { api, NotificationsApi };

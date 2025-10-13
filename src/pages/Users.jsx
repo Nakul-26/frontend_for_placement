@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import api from '../services/api.jsx';
+import { api } from '../services/api';
 import './Users.css';
 
 const AddIcon = () => (

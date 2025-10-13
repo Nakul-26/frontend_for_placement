@@ -65,9 +65,9 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Landing />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/jobs" element={<PublicJobListing />} />
+            {/* <Route path="/about" element={<About />} /> */}
+            {/* <Route path="/contact" element={<Contact />} /> */}
+            {/* <Route path="/jobs" element={<PublicJobListing />} /> */}
             <Route path="/jobs/:id" element={<JobDetail />} />
             <Route path="/skill-development-public" element={<SkillDevelopment />} />
             <Route path="/login" element={<Login />} />
