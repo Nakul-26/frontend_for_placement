@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
         return JSON.parse(storedAdminUser);
       }
 
-
       const res = await axios.get('/api/me', { withCredentials: true });
       let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
       if (newUser && newUser.role_id) {
@@ -131,6 +130,8 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       // tokens are httpOnly; backend clears them via /api/logout
       toast.success('Logged out successfully!');
+      console.debug('AuthProvider: setUser after logout', null);
+      localStorage.removeItem('AdminUser');
       return { success: true };
     } catch (err) {
       console.error("Logout error:", err);

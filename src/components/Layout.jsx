@@ -79,7 +79,7 @@ export default function Layout({ children }) {
   return (
     <>
       <Header />
-      <div className="layout-container">
+      <div className={`layout-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
         <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           {isMobileOpen ? '✕' : '☰'}
         </button>

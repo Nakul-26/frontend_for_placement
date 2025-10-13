@@ -87,8 +87,7 @@ const AdminNotifications = () => {
         type: newNotification.type,
         is_public: newNotification.is_public,
         expires_at: newNotification.expires_at,
-        config,
-      });
+      }, config);
       console.log('Notification added successfully:', response.data);
       handleClose();
       fetchNotifications();

@@ -2,11 +2,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Login.jsx';
-import StudentLogin from './pages/StudentLogin.jsx';
-import FacultyLogin from './pages/FacultyLogin.jsx';
-import AdminLogin from './pages/AdminLogin.jsx';
+// import StudentLogin from './pages/StudentLogin.jsx';
+// import FacultyLogin from './pages/FacultyLogin.jsx';
+// import AdminLogin from './pages/AdminLogin.jsx';
 import Landing from './pages/Landing.jsx';
-import Register from './pages/Register.jsx';
+// import Register from './pages/Register.jsx';
 import Layout from './components/Layout.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 import About from './pages/About.jsx';
@@ -71,10 +71,10 @@ function App() {
             <Route path="/jobs/:id" element={<JobDetail />} />
             <Route path="/skill-development-public" element={<SkillDevelopment />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/login/student" element={<StudentLogin />} />
-            <Route path="/login/faculty" element={<FacultyLogin />} />
-            <Route path="/login/admin" element={<AdminLogin />} />
-            <Route path="/register" element={<Register />} />
+            {/* <Route path="/login/student" element={<StudentLogin />} /> */}
+            {/* <Route path="/login/faculty" element={<FacultyLogin />} /> */}
+            {/* <Route path="/login/admin" element={<AdminLogin />} /> */}
+            {/* <Route path="/register" element={<Register />} /> */}
 
             {/* Admin Routes */}
             <Route element={<ProtectedRoute roles={['admin']} />}>
