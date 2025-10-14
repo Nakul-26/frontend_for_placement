@@ -18,7 +18,7 @@ export default function JobOfferings() {
     navigate('/login', { state: { from: `/${user.role}/jobs` } });
 
   } catch(err) {
-    setError(err);
+    setError(err.message);
     console.log(" error on click:", err);
   }
   };
