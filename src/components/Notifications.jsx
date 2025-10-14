@@ -17,7 +17,7 @@ export default function Notifications() {
         }
         const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/notifications`, config);
         console.log('notifications res: ', res);
-        setNotifications(res.data.details ? res.data.details.map(item => item.value) : []);
+        setNotifications(res.data.notifications ? res.data.notifications.map(item => item.value) : []);
       } catch (err) {
         console.error('fetchNotifications error:', err);
         toast.error(err.response?.data?.message || 'Failed to fetch notifications');
