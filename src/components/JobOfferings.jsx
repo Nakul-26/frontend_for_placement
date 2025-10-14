@@ -25,6 +25,18 @@ export default function JobOfferings() {
   }
   };
 
+  const handleApply = () => {
+    try {
+      const fromPath = user?.role ? `/${user.role}/jobs`:`/jobs`;
+     // navigate('/login', { state: { from: fromPath } });
+     navigate('/login');
+  
+    } catch(err) {
+      setError2(err.message);
+      console.log(" error on click:", err);
+    }
+  };
+
   useEffect(() => {
     const fetchJobOfferings = async () => {
       try {
@@ -66,6 +78,7 @@ export default function JobOfferings() {
             </div>
             <div className="job-card-footer">
                 <button onClick={handleViewDetails} className="view-details-btn">View Details</button>
+                <button >Apply</button>
             </div>
           </div>
         ))}

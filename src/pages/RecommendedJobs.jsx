@@ -30,6 +30,8 @@ export default function RecommendedJobs() {
     fetchJobOfferings();
   }, []);
 
+  
+
   if (loading) {
     return (
       <div className="recommended-jobs-container">
@@ -70,9 +72,10 @@ export default function RecommendedJobs() {
                   <p><strong>Applications Opens from:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
                   <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 </div>
-                {/* <div className="job-card-footer">
-                  <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a>
-                </div> */}
+                <div className="job-card-footer">
+                  {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
+                  <a href={job.apply_link || '#'} target="_blank" rel="noopener noreferrer" className="apply-now-btn">Apply Now</a>
+                </div>
               </div>
             ))
           ) : (
