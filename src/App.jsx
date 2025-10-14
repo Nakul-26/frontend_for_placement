@@ -84,7 +84,7 @@ function App() {
               <Route path="/admin/roles" element={<Layout><Roles /></Layout>} />
               <Route path="/admin/permissions" element={<Layout><Permissions /></Layout>} />
               <Route path="/admin/role-permission" element={<Layout><RolePermissions /></Layout>} />
-              <Route path="/admin/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} />
+              <Route path="/admin/jobs" element={<Layout><ManageJobOfferings /></Layout>} />
               <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} />
             </Route>
 
@@ -106,7 +106,7 @@ function App() {
               {/* <Route path="/faculty/student-eligibility" element={<Layout><StudentEligibility /></Layout>} /> */}
               {/* <Route path="/faculty/manage-placement-drive" element={<Layout><ManagePlacementDrive /></Layout>} /> */}
               {/* <Route path="/faculty/manage-jobs" element={<Layout><ManageJobOfferings /></Layout>} /> */}
-              <Route path="/faculty/job-offerings" element={<Layout><FacultyJobOfferings /></Layout>} /> {/* New route for faculty job offerings */}
+              <Route path="/faculty/jobs" element={<Layout><FacultyJobOfferings /></Layout>} /> {/* New route for faculty job offerings */}
             </Route>
 
             {/* Student Routes */}
@@ -118,7 +118,7 @@ function App() {
               <Route path="/student/notifications" element={<Layout><Notifications /></Layout>} />
               {/* <Route path="/student/job-search" element={<Layout><JobSearch /></Layout>} /> */}
               {/* <Route path="/student/my-applications" element={<Layout><MyApplications /></Layout>} /> */}
-              <Route path="/student/recommended-jobs" element={<Layout><RecommendedJobs /></Layout>} />
+              <Route path="/student/jobs" element={<Layout><RecommendedJobs /></Layout>} />
               {/* <Route path="/student/quiz-attempt" element={<Layout><QuizAttemptPage /></Layout>} /> */}
               {/* <Route path="/student/score-history" element={<Layout><ScoreHistory /></Layout>} /> */}
               {/* <Route path="/student/skill-roadmaps" element={<Layout><SkillRoadmaps /></Layout>} /> */}
