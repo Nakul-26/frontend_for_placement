@@ -11,7 +11,7 @@ export default function JobOfferings() {
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [error, setError] = React.useState("");
+  const [error, setError] = React.useState();
 
   const handleViewDetails = () => {
   try {
