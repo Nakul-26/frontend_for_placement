@@ -11,9 +11,16 @@ export default function JobOfferings() {
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [error, setError] = React.useState("");
 
   const handleViewDetails = () => {
+  try {
     navigate('/login2', { state: { from: `/${user.role}/jobs` } });
+
+  } catch(err) {
+    setError(err);
+    console.log(" error on click:", err);
+  }
   };
 
   useEffect(() => {
@@ -39,6 +46,7 @@ export default function JobOfferings() {
   return (
     <div className="job-offerings-container">
       {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
       <div className="job-listings">
         {jobs.map((job) => (
           <div key={job.id} className="job-card">
