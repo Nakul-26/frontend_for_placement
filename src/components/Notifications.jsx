@@ -15,7 +15,7 @@ export default function Notifications() {
         const config = {
             withCredentials: true,
         }
-        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alldata`, config);
+        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/notifications`, config);
         console.log('notifications res: ', res);
         setNotifications(res.data.details ? res.data.details.map(item => item.value) : []);
       } catch (err) {
