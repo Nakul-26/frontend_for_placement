@@ -15,6 +15,7 @@ function StudentApplications() {
       try {
         setLoading(true);
         const response = await axios.get(API_URL);
+        console.log('Fetched applications response:', response);
         if (!response.ok) {
           throw new Error(`Error fetching applications: ${response.statusText}`);
         }
