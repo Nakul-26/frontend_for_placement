@@ -47,7 +47,7 @@ export default function JobOfferings() {
   return (
     <div className="job-offerings-container">
       {loading && <p>Loading...</p>}
-      {error && <p>{error2}</p>}
+      {error2 && <p>{error2}</p>}
       <div className="job-listings">
         {jobs.map((job) => (
           <div key={job.id} className="job-card">
