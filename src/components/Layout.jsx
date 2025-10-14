@@ -11,7 +11,7 @@ const adminMenuItems = [
   { text: 'Roles', path: '/admin/roles', icon: '🔒' },
   { text: 'Permissions', path: '/admin/permissions', icon: '🔑' },
   { text: 'Role-Permission', path: '/admin/role-permission', icon: '🔗' },
-  { text: 'Manage Jobs', path: '/admin/manage-jobs', icon: '💼' },
+  { text: 'Manage Jobs', path: '/admin/jobs', icon: '💼' },
   { text: 'Notifications', path: '/admin/notifications', icon: '🔔' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
@@ -25,7 +25,7 @@ const facultyMenuItems = [
   // { text: 'Announcements', path: '/faculty/announcements', icon: '📢' },
   // { text: 'Analytics', path: '/faculty/analytics', icon: '📊' },
   { text: 'Notifications', path: '/faculty/notifications', icon: '🔔' },
-  { text: 'Job offerings', path: '/faculty/job-offerings', icon: '📝' },
+  { text: 'Job offerings', path: '/faculty/jobs', icon: '📝' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
@@ -34,7 +34,7 @@ const studentMenuItems = [
   // { text: 'My Profile', path: '/student/profile', icon: '🧑‍🎓' },
   // { text: 'Job Search', path: '/student/job-search', icon: '🔍' },
   // { text: 'My Applications', path: '/student/my-applications', icon: '📄' },
-  { text: 'Jobs', path: '/student/recommended-jobs', icon: '💼' },
+  { text: 'Jobs', path: '/student/jobs', icon: '💼' },
   // { text: 'Assessments', path: '/student/assessments', icon: '📝' },
   // { text: 'Score History', path: '/student/score-history', icon: '📈' },
   // { text: 'Skill Development', path: '/student/skill-development', icon: '📚' },
