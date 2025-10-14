@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './RecommendedJobs.css';
 import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/useAuth';
 
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
@@ -30,7 +32,37 @@ export default function RecommendedJobs() {
     fetchJobOfferings();
   }, []);
 
-  
+  const handleApply = async (job) => {
+    if (!user) {
+      toast.error('Please login to apply for jobs.');
+      return;
+    }
+    const payload = {
+      user_name: user.name || user.user_name || user.fullName || user.username || '',
+      user_email: user.email || user.user_email || '',
+      user_id: user.id || user.user_id || '',
+      jobid: job.id || job.jobid || '',
+    };
+    try {
+      const res = await fetch('https://notification-31at.onrender.com/forms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        toast.success('Application submitted successfully!');
+        if (job.apply_link) {
+          window.open(job.apply_link, '_blank', 'noopener,noreferrer');
+        }
+      } else {
+        toast.error('Failed to submit application.');
+      }
+    } catch (err) {
+      toast.error('Error submitting application.');
+    }
+  };
 
   if (loading) {
     return (
@@ -74,7 +106,9 @@ export default function RecommendedJobs() {
                 </div>
                 <div className="job-card-footer">
                   {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
-                  <a href={job.apply_link || '#'} target="_blank" rel="noopener noreferrer" className="apply-now-btn">Apply Now</a>
+                  <button className="apply-now-btn" onClick={() => handleApply(job)}>
+                    Apply Now
+                  </button>
                 </div>
               </div>
             ))
