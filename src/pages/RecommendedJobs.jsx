@@ -51,6 +51,7 @@ export default function RecommendedJobs() {
         },
         body: JSON.stringify(payload),
       });
+      console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
       if (res.ok) {
         toast.success(result?.message || 'Your application was submitted successfully!');
