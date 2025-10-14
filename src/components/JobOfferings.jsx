@@ -13,7 +13,7 @@ export default function JobOfferings() {
   const { user } = useAuth();
 
   const handleViewDetails = () => {
-    navigate('/login', { state: { from: `/${user.role}/manage-jobs` } });
+    navigate('/login', { state: { from: `/${user.role}/jobs` } });
   };
 
   useEffect(() => {
