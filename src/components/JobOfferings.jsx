@@ -23,7 +23,7 @@ export default function JobOfferings() {
         const config = {
             withCredentials: true,
         }
-        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alljobdata`, config);
+        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/jobs`, config);
         console.log('job offerings res: ', res);
         setJobs(res.data.jobs || []);
       } catch (err) {
