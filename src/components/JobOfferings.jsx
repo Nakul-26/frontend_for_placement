@@ -16,7 +16,8 @@ export default function JobOfferings() {
   const handleViewDetails = () => {
   try {
     const fromPath = user?.role ? `/${user.role}/jobs`:`/jobs`;
-    navigate('/login', { state: { from: fromPath } });
+   // navigate('/login', { state: { from: fromPath } });
+   navigate('/login');
 
   } catch(err) {
     setError2(err.message);
