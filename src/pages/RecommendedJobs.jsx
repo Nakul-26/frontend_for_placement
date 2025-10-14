@@ -51,16 +51,17 @@ export default function RecommendedJobs() {
         },
         body: JSON.stringify(payload),
       });
+      const result = await res.json().catch(() => ({}));
       if (res.ok) {
-        toast.success('Application submitted successfully!');
+        toast.success(result?.message || 'Your application was submitted successfully!');
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
       } else {
-        toast.error('Failed to submit application.');
+        toast.error(result?.message || 'Failed to submit your application. Please try again later.');
       }
     } catch (err) {
-      toast.error('Error submitting application.');
+      toast.error('Network error: Unable to submit application.');
     }
   };
 
