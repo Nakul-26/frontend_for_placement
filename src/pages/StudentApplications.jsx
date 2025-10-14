@@ -19,7 +19,7 @@ function StudentApplications() {
         if (!response.ok) {
           throw new Error(`Error fetching applications: ${response.statusText}`);
         }
-        const data = response.data;
+        const data = response.data.data;
         if (Array.isArray(data)) {
           setApplications(data);
         } else {
