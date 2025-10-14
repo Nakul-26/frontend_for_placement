@@ -17,12 +17,6 @@ function StudentApplications() {
         const response = await axios.get(API_URL);
         console.log('Fetched applications response:', response);
         const data = response.data.data;
-        if (Array.isArray(data)) {
-          setApplications(data);
-        } else {
-          console.warn('API did not return an array for applications:', data);
-          setApplications([]);
-        }
       } catch (error) {
         console.error('Error fetching applications:', error);
         setApplications([]);
