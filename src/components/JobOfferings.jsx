@@ -4,7 +4,7 @@ import { api } from '../services/api';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAuth } form '../context/AuthProvider';
+import { useAuth } from '../context/AuthProvider';
 
 export default function JobOfferings() {
   const [jobs, setJobs] = React.useState([]);
