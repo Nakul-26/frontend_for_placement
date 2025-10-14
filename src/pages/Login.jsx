@@ -11,6 +11,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,6 +39,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     if (!email || !password || !role) {
       setError('All fields are required.');
       return;
@@ -49,16 +51,20 @@ const Login = () => {
         setError(result?.error?.response?.data?.message || 'Login failed.');
         return;
       }
+      setSuccess('Login successful! Redirecting...');
       // Prefer the server-provided user role to avoid mismatches
       const loggedInUser = result?.data?.user ?? null;
       if (loggedInUser && loggedInUser.role && loggedInUser.role.toLowerCase() !== role.toLowerCase()) {
         setError(`Logged in user role (${loggedInUser.role}) does not match the selected role (${role}).`);
+        setSuccess('');
         return;
       }
       // Navigate to the original requested location (if any), else to role dashboard
       const requested = typeof location.state?.from === 'string' ? location.state.from : (location.state?.from ?? null);
       const from = requested || `/${role}/dashboard`;
-      navigate(from);
+      setTimeout(() => {
+        navigate(from);
+      }, 1000);
     } catch (err) {
       setError(err?.message || 'Login failed. Please try again.');
     } finally {
@@ -75,6 +81,12 @@ const Login = () => {
         {error && (
           <div className="login-alert" role="alert">
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="login-success" role="alert">
+            {success}
           </div>
         )}
 

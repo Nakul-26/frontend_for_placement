@@ -7,103 +7,78 @@ export default function RolePermissions() {
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedRole, setSelectedRole] = useState(null);
   const [rolePermissions, setRolePermissions] = useState([]);
-  const [originalRolePermissions, setOriginalRolePermissions] = useState([]); // To track initial permissions for comparison
+  const [originalRolePermissions, setOriginalRolePermissions] = useState([]);
   const [hasChanges, setHasChanges] = useState(false);
+  const [rolePermissionsLoading, setRolePermissionsLoading] = useState(false);
+  const [rolePermissionsError, setRolePermissionsError] = useState(null);
 
   useEffect(() => {
-    // Compare rolePermissions with originalRolePermissions to determine if there are changes
-    const changesDetected = 
+    const changesDetected =
       rolePermissions.length !== originalRolePermissions.length ||
       ![...rolePermissions].sort().every((value, index) => value === [...originalRolePermissions].sort()[index]);
     setHasChanges(changesDetected);
   }, [rolePermissions, originalRolePermissions]);
 
-  const fetchPermissions = async () => {
+  const fetchInitialData = async () => {
     try {
       setLoading(true);
-
-      const res = await api.get(
-        '/rbac/permissions',
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
-      );
-
-      console.log('fetchPermissions response:', Array.isArray(res.data.data) ? 'true' : 'false');
-
-      setPermissions(
-        Array.isArray(res.data.data)
-          ? res.data.data
-          : []
-      );
+      setError(null);
+      const [rolesRes, permissionsRes] = await Promise.all([
+        api.get('/rbac/roles', { withCredentials: true }),
+        api.get('/rbac/permissions', { withCredentials: true }),
+      ]);
+      setRoles(rolesRes.data.data || []);
+      setPermissions(permissionsRes.data.data || []);
+      toast.success('Roles and permissions loaded successfully!');
     } catch (err) {
-      console.error('fetchPermissions error:', err);
-      setPermissions([]);
+      const errorMessage = err.message || 'Failed to load initial data';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchRoles = async () => {
+  const fetchRolePermissions = useCallback(async () => {
+    if (!selectedRole) return;
     try {
-      console.log('fetching roles ...');
-      console.log('fetching roles ... & api: ',  api);
-      setLoading(true);
-      const config = {
-          withCredentials: true, 
-      }
-      const res = await api.get('/rbac/roles', config);
-      console.log('roles res: ', res.data.data);
-      setRoles(res.data.data || []);
-    } catch (err) {
-      console.error('fetchRoles error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchData = useCallback(async () => {
-    try {
-      setLoading(true);
+      setRolePermissionsLoading(true);
+      setRolePermissionsError(null);
       const res = await api.get(
         `/rbac/role-permissions/${selectedRole.id}`,
         { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
       );
-      console.log("fetchData response:", res.data.data);
-      const data = res.data.data;
-      const currentPermissions = data.map(rp => rp.permission_id) || [];
+      const currentPermissions = res.data.data.map(rp => rp.permission_id) || [];
       setRolePermissions(currentPermissions);
-      setOriginalRolePermissions(currentPermissions); // Set original permissions here
+      setOriginalRolePermissions(currentPermissions);
     } catch (err) {
-      console.error(err);
-      setRolePermissions([]); // Clear permissions on error
-      setOriginalRolePermissions([]); // Also clear original permissions
+      const errorMessage = err.message || `Failed to fetch permissions for ${selectedRole.name}`;
+      setRolePermissionsError(errorMessage);
+      toast.error(errorMessage);
+      setRolePermissions([]);
+      setOriginalRolePermissions([]);
     } finally {
-      setLoading(false);
+      setRolePermissionsLoading(false);
     }
   }, [selectedRole]);
 
   useEffect(() => {
-    fetchRoles();
-    fetchPermissions();
-  }, []); 
+    fetchInitialData();
+  }, []);
 
   useEffect(() => {
     if (selectedRole) {
-      fetchData();
+      fetchRolePermissions();
     }
-  }, [selectedRole, fetchData]);
+  }, [selectedRole, fetchRolePermissions]);
 
   const handleSelectRole = (role) => {
     setSelectedRole(role);
-    const initialPermissions = role.permissions ? role.permissions.map((p) => p.id) : [];
-    setRolePermissions(initialPermissions);
-    setOriginalRolePermissions(initialPermissions); // Set original permissions on role select
   };
 
   const togglePermission = (permId) => {
@@ -117,8 +92,6 @@ export default function RolePermissions() {
   const handleSave = async () => {
     if (!selectedRole) return;
 
-    // Fetch the current permissions for the selected role from the backend
-    // to compare against the locally modified rolePermissions
     let originalPermissionsForSave = [];
     try {
       const res = await api.get(
@@ -168,10 +141,7 @@ export default function RolePermissions() {
       await Promise.all([...addRequests, ...removeRequests]);
 
       toast.success('Permissions updated successfully!');
-      // Optionally, you can also refetch roles and permissions to ensure UI is in sync
-
-      // After saving, re-fetch the data to ensure UI is in sync with backend
-      await fetchData(); 
+      await fetchRolePermissions(); 
 
     } catch (err) {
       console.error('Failed to update permissions:', err);
@@ -182,6 +152,14 @@ export default function RolePermissions() {
       setHasChanges(false);
       setOriginalRolePermissions([...rolePermissions]);}
   };
+
+  if (loading) {
+    return <div className="loading">Loading initial data...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">Error: {error}</div>;
+  }
 
   return (
     <div className="page-container">
@@ -206,8 +184,10 @@ export default function RolePermissions() {
             {selectedRole ? (
               <div>
                 <h2 className="sub-title">Permissions for {selectedRole.name}</h2>
-                {loading ? (
+                {rolePermissionsLoading ? (
                   <p className="placeholder-text">Loading permissions...</p>
+                ) : rolePermissionsError ? (
+                  <div className="error-message">{rolePermissionsError}</div>
                 ) : (
                   <ul className="permissions-list">
                     {permissions.map((perm) => (
@@ -222,16 +202,12 @@ export default function RolePermissions() {
                     ))}
                   </ul>
                 )}
-                {console.log('hasChanges: ', hasChanges)}
                 {hasChanges && (
                   <div className="action-buttons">
                     <button className="button" onClick={handleSave} disabled={isSubmitting}>
                       {isSubmitting ? 'Saving...' : 'Save'}
                     </button>
-                    <button className="button secondary" onClick={() => {
-                      // On cancel, revert rolePermissions to the state fetched by fetchData
-                      if (selectedRole) fetchData();
-                    }}>
+                    <button className="button secondary" onClick={fetchRolePermissions}>
                       Cancel
                     </button>
                   </div>

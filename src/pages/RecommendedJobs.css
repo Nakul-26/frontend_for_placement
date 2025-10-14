@@ -92,3 +92,56 @@
 .view-details-btn:hover {
   background-color: #1d4ed8;
 }
+
+.apply-now-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+.apply-now-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.apply-now-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.apply-now-btn:active {
+  background-color: #1d4ed8;
+}
+
+.notification {
+  margin-bottom: 16px;
+  padding: 0px 14px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+.notification-icon {
+  margin-right: 8px;
+}
+
+.notification.success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.notification.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #ef4444;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}

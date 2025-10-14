@@ -1,25 +1,25 @@
-
 import React, { useEffect, useState } from "react";
 import "./StudentApplication.css";
 import { toast } from "react-toastify";
-import axios from "axios";
-
-const API_URL = "https://notification-31at.onrender.com/forms";
+import { api } from "../services/api";
 
 function StudentApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(API_URL);
-        console.log('Fetched applications response:', response);
-        const data = response.data.data;
-        setApplications(data);
+        setError(null);
+        const response = await api.get("/forms");
+        setApplications(response.data.data);
+        toast.success("Applications fetched successfully!");
       } catch (error) {
-        console.error('Error fetching applications:', error);
+        const errorMessage = error.response?.data?.message || "Error fetching applications";
+        setError(errorMessage);
+        toast.error(errorMessage);
         setApplications([]);
       } finally {
         setLoading(false);
@@ -29,7 +29,13 @@ function StudentApplications() {
     fetchApplications();
   }, []);
 
-  if (loading) return <div className="student-applications-container">Loading...</div>;
+  if (loading) {
+    return <div className="student-applications-container loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="student-applications-container error-message">Error: {error}</div>;
+  }
 
   return (
     <div className="student-applications-container">

@@ -102,10 +102,17 @@
     text-decoration: none;
     font-weight: 500;
     transition: background-color 0.3s ease;
+    border: none;
 }
 
 .view-details-btn:hover {
     background-color: #1d4ed8;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
 }
 
 @media (max-width: 768px) {

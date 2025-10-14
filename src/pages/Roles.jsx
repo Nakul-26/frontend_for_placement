@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
+import toast from 'react-hot-toast';
 import './Roles.css';
 
 const AddIcon = () => (
@@ -27,6 +28,8 @@ const DeleteIcon = () => (
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [newRole, setNewRole] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
@@ -47,28 +50,32 @@ export default function Roles() {
 
   const fetchRoles = async () => {
     try {
-      console.log('fetching roles ...');
-      console.log('fetching roles ... & api: ',  api);
+      setLoading(true);
+      setError(null);
       const config = {
           withCredentials: true, 
       }
       const res = await api.get('/rbac/roles', config);
-      console.log('roles res: ', res.data.data);
       setRoles(res.data.data || []);
+      toast.success('Roles fetched successfully!');
     } catch (err) {
-      alert(err.message || 'Failed to fetch roles');
+      const errorMessage = err.message || 'Failed to fetch roles';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSaveNew = async () => {
     setIsSubmitting(true);
     try {
-      console.log('newRole: ', newRole);
       await api.post('/rbac/roles', newRole, { withCredentials: true });
       handleClose();
       fetchRoles();
+      toast.success('Role added successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -82,8 +89,9 @@ export default function Roles() {
       });
       handleClose();
       fetchRoles();
+      toast.success('Role updated successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -96,8 +104,9 @@ export default function Roles() {
     try {
       await api.delete(`/rbac/roles/${id}`, { withCredentials: true });
       fetchRoles();
+      toast.success('Role deleted successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
       setDeletingRoleId(null);
@@ -107,6 +116,14 @@ export default function Roles() {
   useEffect(() => {
       fetchRoles();
   }, []);
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">Error: {error}</div>;
+  }
 
   return (
     <div className="page-container">

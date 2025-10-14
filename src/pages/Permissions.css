@@ -112,3 +112,14 @@
 .head {
   background-color: rgb(229, 243, 255);
 }
+
+.loading,
+.error-message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+.error-message {
+  color: red;
+}

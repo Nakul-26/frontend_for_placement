@@ -119,6 +119,17 @@
   color: #444;
 }
 
+.loading,
+.error-message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+.error-message {
+  color: red;
+}
+
 @media (max-width: 768px) {
   .manager-dashboard {
     padding: 1rem;

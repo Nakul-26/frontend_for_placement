@@ -7,20 +7,25 @@ import { toast } from 'react-toastify';
 export default function Notifications() {
   const [notifications, setNotifications] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         setLoading(true);
+        setError(null);
         const config = {
             withCredentials: true,
         }
         const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alldata`, config);
         console.log('notifications res: ', res);
         setNotifications(res.data.details ? res.data.details.map(item => item.value) : []);
+        toast.success('Notifications fetched successfully!');
       } catch (err) {
         console.error('fetchNotifications error:', err);
-        toast.error(err.response?.data?.message || 'Failed to fetch notifications');
+        const errorMessage = err.response?.data?.message || 'Failed to fetch notifications';
+        setError(errorMessage);
+        toast.error(errorMessage);
         setNotifications([]); // Clear notifications on error
       } finally {
         setLoading(false);
@@ -31,6 +36,10 @@ export default function Notifications() {
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">Error: {error}</div>;
   }
 
   return (

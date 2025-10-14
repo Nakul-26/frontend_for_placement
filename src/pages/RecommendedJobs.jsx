@@ -8,10 +8,16 @@ export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [currentlyApplyingJobId, setCurrentlyApplyingJobId] = useState(null);
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
       try {
+        setError(null);
+        setSuccess(null);
+        setCurrentlyApplyingJobId(null);
         setLoading(true);
         const response = await getJobOfferings();
         if (Array.isArray(response.data.jobs)) {
@@ -24,6 +30,7 @@ export default function RecommendedJobs() {
         console.error('Error fetching job offerings:', error);
         toast.error(error.response?.data?.message || 'Failed to fetch job offerings');
         setJobOfferings([]);
+        setError('Failed to fetch job offerings');
       } finally {
         setLoading(false);
       }
@@ -33,6 +40,10 @@ export default function RecommendedJobs() {
   }, []);
 
   const handleApply = async (job) => {
+    setError(null);
+    setSuccess(null);
+    setCurrentlyApplyingJobId(job.id || job.jobid || null);
+    // setLoading(true);
     if (!user) {
       toast.error('Please login to apply for jobs.');
       return;
@@ -44,7 +55,7 @@ export default function RecommendedJobs() {
       jobid: job.id || job.jobid || '',
     };
     try {
-      const res = await fetch('https://notification-31at.onrender.com/forms', {
+      const res = await fetch(`${import.meta.env.VITE_NOTIFICATIONS_URL}/forms`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,16 +64,22 @@ export default function RecommendedJobs() {
       });
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
-      if (res.ok) {
+      if (res.status === 200 || res.status === 201) {
         toast.success(result?.message || 'Your application was submitted successfully!');
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
+        setSuccess('Your application was submitted successfully!');
       } else {
         toast.error(result?.message || 'Failed to submit your application. Please try again later.');
+        setError(result?.message || 'Failed to submit your application. Please try again later.');
       }
     } catch (err) {
       toast.error('Network error: Unable to submit application.');
+      console.error('Error submitting application:', err);
+      setError('Network error: Unable to submit application.');
+    } finally {
+      // setLoading(false);
     }
   };
 
@@ -106,6 +123,12 @@ export default function RecommendedJobs() {
                   <p><strong>Applications Opens from:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
                   <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 </div>
+                {(error || success) && (currentlyApplyingJobId === job.id || currentlyApplyingJobId === job.jobid) && (
+                  <div className={`notification ${error ? 'error' : 'success'}`}>
+                    {error && <p>{error}</p>}
+                    {success && <p>{success}</p>}
+                  </div>
+                )}
                 <div className="job-card-footer">
                   {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
                   <button className="apply-now-btn" onClick={() => handleApply(job)}>

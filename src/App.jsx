@@ -9,10 +9,10 @@ import Landing from './pages/Landing.jsx';
 // import Register from './pages/Register.jsx';
 import Layout from './components/Layout.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
-import About from './pages/About.jsx';
-import Contact from './pages/Contact.jsx';
-import PublicJobListing from './pages/PublicJobListing.jsx';
-import JobDetail from './pages/JobDetail.jsx';
+// import About from './pages/About.jsx';
+// import Contact from './pages/Contact.jsx';
+// import PublicJobListing from './pages/PublicJobListing.jsx';
+// import JobDetail from './pages/JobDetail.jsx';
 
 // Dashboards
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -31,30 +31,30 @@ import Notifications from './components/Notifications.jsx'; // Add this import
 // Shared Pages
 import ManageJobOfferings from './pages/ManageJobOfferings.jsx';
 // import ManageNotifications from './pages/ManageNotifications.jsx'; // Removed import
-import SkillDevelopment from './pages/SkillDevelopment.jsx';
-import Assessments from './pages/Assessments.jsx';
-import Chat from './pages/Chat.jsx';
-import Analytics from './pages/Analytics.jsx';
-import StudentProfile from './pages/StudentProfile.jsx';
-import CompanyProfile from './pages/CompanyProfile.jsx';
+// import SkillDevelopment from './pages/SkillDevelopment.jsx';
+// import Assessments from './pages/Assessments.jsx';
+// import Chat from './pages/Chat.jsx';
+// import Analytics from './pages/Analytics.jsx';
+// import StudentProfile from './pages/StudentProfile.jsx';
+// import CompanyProfile from './pages/CompanyProfile.jsx';
 // import NotificationsPage from './pages/NotificationsPage.jsx';
 
 // Faculty Pages
-import StudentList from './pages/StudentList.jsx';
-import JobPostingApproval from './pages/JobPostingApproval.jsx';
-import Announcements from './pages/Announcements.jsx';
-import StudentEligibility from './pages/StudentEligibility.jsx';
-import ManagePlacementDrive from './pages/ManagePlacementDrive.jsx';
+// import StudentList from './pages/StudentList.jsx';
+// import JobPostingApproval from './pages/JobPostingApproval.jsx';
+// import Announcements from './pages/Announcements.jsx';
+// import StudentEligibility from './pages/StudentEligibility.jsx';
+// import ManagePlacementDrive from './pages/ManagePlacementDrive.jsx';
 import FacultyJobOfferings from './pages/FacultyJobOfferings.jsx'; // Add this import
 
 // Student Pages
-import JobSearch from './pages/JobSearch.jsx';
-import MyApplications from './pages/MyApplications.jsx';
+// import JobSearch from './pages/JobSearch.jsx';
+// import MyApplications from './pages/MyApplications.jsx';
 import RecommendedJobs from './pages/RecommendedJobs.jsx';
-import QuizAttemptPage from './pages/QuizAttemptPage.jsx';
-import ScoreHistory from './pages/ScoreHistory.jsx';
-import SkillRoadmaps from './pages/SkillRoadmaps.jsx';
-import MySavedContent from './pages/MySavedContent.jsx';
+// import QuizAttemptPage from './pages/QuizAttemptPage.jsx';
+// import ScoreHistory from './pages/ScoreHistory.jsx';
+// import SkillRoadmaps from './pages/SkillRoadmaps.jsx';
+// import MySavedContent from './pages/MySavedContent.jsx';
 
 import StudentApplications from "./pages/StudentApplications";
 
@@ -71,8 +71,8 @@ function App() {
             {/* <Route path="/about" element={<About />} /> */}
             {/* <Route path="/contact" element={<Contact />} /> */}
             {/* <Route path="/jobs" element={<PublicJobListing />} /> */}
-            <Route path="/jobs/:id" element={<JobDetail />} />
-            <Route path="/skill-development-public" element={<SkillDevelopment />} />
+            {/* <Route path="/jobs/:id" element={<JobDetail />} /> */}
+            {/* <Route path="/skill-development-public" element={<SkillDevelopment />} /> */}
             <Route path="/login" element={<Login />} />
             {/* <Route path="/login/student" element={<StudentLogin />} /> */}
             {/* <Route path="/login/faculty" element={<FacultyLogin />} /> */}
@@ -129,9 +129,9 @@ function App() {
             </Route>
 
             {/* Shared Routes for authenticated users */}
-            <Route element={<ProtectedRoute roles={['admin', 'faculty', 'student']} />}>
+            {/* <Route element={<ProtectedRoute roles={['admin', 'faculty', 'student']} />}>
                 <Route path="/chat" element={<Layout><Chat /></Layout>} />
-            </Route>
+            </Route> */}
 
             {/* Catch-all route */}
             <Route path="*" element={<Landing />} />

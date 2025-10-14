@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api, NotificationsApi } from '../services/api';
+import toast from 'react-hot-toast';
 import './AdminNotifications.css'; // New CSS file for the combined page
 
 const AddIcon = () => (
@@ -23,6 +24,8 @@ const DeleteIcon = () => (
 
 const AdminNotifications = () => {
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [newNotification, setNewNotification] = useState({
     author_id: 0,
     author: '',
@@ -59,44 +62,41 @@ const AdminNotifications = () => {
 
   const fetchNotifications = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const config = {
         withCredentials: true,
       };
       const response = await NotificationsApi.get('/notifications', config);
-      console.log('Fetched notifications:', response.data);
       if (Array.isArray(response.data.notifications)) {
         setNotifications(response.data.notifications);
+        toast.success('Notifications fetched successfully!');
       } else {
-        console.warn('API did not return an array for notifications:', response.data);
-        setNotifications([]); // Default to empty array if not an array
+        setNotifications([]);
+        throw new Error('API did not return an array for notifications');
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
-      setNotifications([]); // Also set to empty array on error
+      const errorMessage = error.message || 'Error fetching notifications';
+      setError(errorMessage);
+      toast.error(errorMessage);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleAddNotification = async () => {
     setIsSubmitting(true);
-
     try {
-      console.log('Adding notification:', newNotification);
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.post('/notifications', {
-        author_id: newNotification.author_id,
-        author: newNotification.author,
-        content: newNotification.content,
-        type: newNotification.type,
-        is_public: newNotification.is_public,
-        expires_at: newNotification.expires_at,
-      }, config);
-      console.log('Notification added successfully:', response.data);
+      await NotificationsApi.post('/notifications', newNotification, config);
       handleClose();
       fetchNotifications();
+      toast.success('Notification added successfully!');
     } catch (error) {
-      console.error('Error adding notification:', error);
+      toast.error(error.response?.data?.message || 'Error adding notification');
     } finally {
       setIsSubmitting(false);
     }
@@ -108,19 +108,12 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.put(`/notifications/${editingNotification.id}`, {
-        author_id: editingNotification.author_id,
-        author: editingNotification.author,
-        content: editingNotification.content,
-        type: editingNotification.type,
-        is_public: editingNotification.is_public,
-        expires_at: editingNotification.expires_at,
-      }, config);
-      console.log('Notification edited successfully:', response.data);
+      await NotificationsApi.put(`/notifications/${editingNotification.id}`, editingNotification, config);
       handleClose();
       fetchNotifications();
+      toast.success('Notification edited successfully!');
     } catch (error) {
-      console.error('Error editing notification:', error);
+      toast.error(error.response?.data?.message || 'Error editing notification');
     } finally {
       setIsSubmitting(false);
     }
@@ -134,12 +127,12 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.delete(`/notifications/${id}`, config);
-      console.log('Notification deleted successfully:', response.data);
+      await NotificationsApi.delete(`/notifications/${id}`, config);
       handleClose();
       fetchNotifications();
+      toast.success('Notification deleted successfully!');
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      toast.error(error.response?.data?.message || 'Error deleting notification');
     } finally {
       setIsSubmitting(false);
       setDeletingNotificationId(null);
@@ -161,6 +154,14 @@ const AdminNotifications = () => {
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
+
+  if (loading) {
+    return <div className="loading">Loading notifications...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">Error: {error}</div>;
+  }
 
   return (
     <div className="admin-notifications-container">
@@ -233,8 +234,6 @@ const AdminNotifications = () => {
       </div>
 
       <div className="admin-notifications-grid">
-        {/* <h2 className="admin-notifications-grid-title">All Noti fications</h2> */}
-        {console.log(notifications)}
         {notifications && notifications.map((notification) => (
           <div key={notification.id} className="admin-notification-card">
             <div className="admin-notification-card-header">

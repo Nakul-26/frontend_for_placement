@@ -9,46 +9,36 @@ import { useAuth } from '../context/useAuth';
 export default function JobOfferings() {
   const [jobs, setJobs] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [error2, setError2] = React.useState(null);
 
   const handleViewDetails = () => {
   try {
-    const fromPath = user?.role ? `/${user.role}/jobs`:`/jobs`;
-   // navigate('/login', { state: { from: fromPath } });
    navigate('/login');
 
   } catch(err) {
-    setError2(err.message);
+    setError(err.message);
     console.log(" error on click:", err);
   }
-  };
-
-  const handleApply = () => {
-    try {
-      const fromPath = user?.role ? `/${user.role}/jobs`:`/jobs`;
-     // navigate('/login', { state: { from: fromPath } });
-     navigate('/login');
-  
-    } catch(err) {
-      setError2(err.message);
-      console.log(" error on click:", err);
-    }
   };
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
+        setError(null);
         const config = {
             withCredentials: true,
         }
         const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alljobdata`, config);
         console.log('job offerings res: ', res);
         setJobs(res.data.jobs || []);
+        toast.success('Job offerings fetched successfully!');
       } catch (err) {
-        toast.error(err.message || 'Failed to fetch job offerings');
+        const errorMessage = err.message || 'Failed to fetch job offerings';
+        setError(errorMessage);
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -57,10 +47,16 @@ export default function JobOfferings() {
   }, []);
 
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="error-message">Error: {error}</p>;
+  }
+
   return (
     <div className="job-offerings-container">
-      {loading && <p>Loading...</p>}
-      {error2 && <p>{error2}</p>}
       <div className="job-listings">
         {jobs.map((job) => (
           <div key={job.id} className="job-card">
@@ -78,7 +74,6 @@ export default function JobOfferings() {
             </div>
             <div className="job-card-footer">
                 <button onClick={handleViewDetails} className="view-details-btn">View Details</button>
-                <button >Apply</button>
             </div>
           </div>
         ))}

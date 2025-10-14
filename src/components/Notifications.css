@@ -110,6 +110,12 @@
   background: #b9cdff;
 }
 
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
+
 /* 🔥 Responsive Breakpoints */
 @media screen and (min-width: 600px) {
   .notifications-list {
