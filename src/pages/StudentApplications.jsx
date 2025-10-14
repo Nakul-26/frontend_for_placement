@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from "react";
 import "./StudentApplication.css";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const API_URL = "https://notification-31at.onrender.com/forms";
 
@@ -9,13 +11,29 @@ function StudentApplications() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        setApplications(data);
+    const fetchApplications = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(API_URL);
+        if (!response.ok) {
+          throw new Error(`Error fetching applications: ${response.statusText}`);
+        }
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setApplications(data);
+        } else {
+          console.warn('API did not return an array for applications:', data);
+          setApplications([]);
+        }
+      } catch (error) {
+        console.error('Error fetching applications:', error);
+        setApplications([]);
+      } finally {
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      }
+    };
+
+    fetchApplications();
   }, []);
 
   if (loading) return <div className="student-applications-container">Loading...</div>;
