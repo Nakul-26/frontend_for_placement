@@ -13,6 +13,7 @@ const adminMenuItems = [
   { text: 'Role-Permission', path: '/admin/role-permission', icon: '🔗' },
   { text: 'Manage Jobs', path: '/admin/jobs', icon: '💼' },
   { text: 'Notifications', path: '/admin/notifications', icon: '🔔' },
+  { text: 'Student Applications', path: '/admin/student-applications', icon: '📝' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 

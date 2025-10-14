@@ -56,6 +56,8 @@ import ScoreHistory from './pages/ScoreHistory.jsx';
 import SkillRoadmaps from './pages/SkillRoadmaps.jsx';
 import MySavedContent from './pages/MySavedContent.jsx';
 
+import StudentApplications from "./pages/StudentApplications";
+
 import './index.css';
 
 function App() {
@@ -86,6 +88,7 @@ function App() {
               <Route path="/admin/role-permission" element={<Layout><RolePermissions /></Layout>} />
               <Route path="/admin/jobs" element={<Layout><ManageJobOfferings /></Layout>} />
               <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} />
+              <Route path="/admin/student-applications" element={<Layout><StudentApplications /></Layout>} />
             </Route>
 
             {/* Manager Routes */}
