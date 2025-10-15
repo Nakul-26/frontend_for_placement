@@ -152,14 +152,14 @@ export default function Permissions() {
           Add Permission
         </button>
       </div>
-      <div className="table-container card">
-        <table className="table">
-          <thead className='head'>
+      <div className={`${styles['table-container']} ${styles.card}`}>
+        <table className={styles.table}>
+          <thead className={styles.head}>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Description</th>
-              <th className="action-buttons">Actions</th>
+              <th className={styles['action-buttons']}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -168,7 +168,7 @@ export default function Permissions() {
                 <td>{perm.id}</td>
                 <td>{perm.name}</td>
                 <td>{perm.description || '-'}</td>
-                <td className="action-buttons">
+                <td className={styles['action-buttons']}>
                   {/* <button className="button" onClick={() => {
                     setEditingPermission(perm);
                     handleClickOpen();
@@ -183,13 +183,12 @@ export default function Permissions() {
         </table>
       </div>
       {open && (
-        <div className="modal-overlay">
-          <div className="modal card">
-            <h3 className="modal-title">{newPermission ? 'Add Permission' : 'Edit Permission'}</h3>
-            <div className="modal-content">
+        <div className={styles['modal-overlay']}>
+          <div className={`${styles.modal} ${styles.card}`}>
+            <h3 className={styles['modal-title']}>{newPermission ? 'Add Permission' : 'Edit Permission'}</h3>
+            <div className={styles['modal-content']}>
               <input
-                autoFocus
-                className="form-input"
+className={styles['form-input']}
                 placeholder="Name"
                 type="text"
                 value={newPermission?.name || editingPermission?.name || ''}
@@ -202,7 +201,7 @@ export default function Permissions() {
                 }}
               />
               <input
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Description"
                 type="text"
                 value={newPermission?.description || editingPermission?.description || ''}
@@ -215,7 +214,7 @@ export default function Permissions() {
                 }}
               />
             </div>
-            <div className="modal-actions">
+            <div className={styles['modal-actions']}>
               <button className={`${styles.button} ${styles.secondary}`} onClick={handleClose} disabled={isSubmitting}>Cancel</button>
               <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : (newPermission ? 'Add' : 'Save')}
