@@ -171,7 +171,6 @@ const AdminNotifications = () => {
     return <div className={styles['error-message']}>Error: {error}</div>;
   }
 
-      <div className={styles['admin-notifications-grid']}>
   return (
     <div className={styles['admin-notifications-container']}>
       <div className={styles['admin-notifications-header']}>
@@ -242,13 +241,9 @@ const AdminNotifications = () => {
         </div>
       </div>
 
-<<<<<<< HEAD
-      <div className={styles['admin-notifications-grid']}>
-=======
       <div className="admin-notifications-grid">
         {/* <h2 className="admin-notifications-grid-title">All Noti fications</h2> */}
         {console.log(notifications)}
->>>>>>> parent of 9d586d6 (updated fetch companies in manage jobs)
         {notifications && notifications.map((notification) => (
           <div key={notification.id} className={styles['admin-notification-card']}>
             <div className={styles['admin-notification-card-header']}>
