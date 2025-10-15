@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NotificationsApi } from '../services/api.js';
+import { api, NotificationsApi } from '../services/api.js';
 import toast from 'react-hot-toast';
 import styles from './AdminNotifications.module.css';
 
@@ -24,8 +24,6 @@ const DeleteIcon = () => (
 
 const AdminNotifications = () => {
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [newNotification, setNewNotification] = useState({
     author_id: 0,
     author: '',
@@ -62,41 +60,44 @@ const AdminNotifications = () => {
 
   const fetchNotifications = async () => {
     try {
-      setLoading(true);
-      setError(null);
       const config = {
         withCredentials: true,
       };
       const response = await NotificationsApi.get('/notifications', config);
+      console.log('Fetched notifications:', response.data);
       if (Array.isArray(response.data.notifications)) {
         setNotifications(response.data.notifications);
-        toast.success('Notifications fetched successfully!');
       } else {
-        setNotifications([]);
-        throw new Error('API did not return an array for notifications');
+        console.warn('API did not return an array for notifications:', response.data);
+        setNotifications([]); // Default to empty array if not an array
       }
     } catch (error) {
-      const errorMessage = error.message || 'Error fetching notifications';
-      setError(errorMessage);
-      toast.error(errorMessage);
-      setNotifications([]);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching notifications:', error);
+      setNotifications([]); // Also set to empty array on error
     }
   };
 
   const handleAddNotification = async () => {
     setIsSubmitting(true);
+
     try {
+      console.log('Adding notification:', newNotification);
       const config = {
         withCredentials: true,
       };
-      await NotificationsApi.post('/notifications', newNotification, config);
+      const response = await NotificationsApi.post('/notifications', {
+        author_id: newNotification.author_id,
+        author: newNotification.author,
+        content: newNotification.content,
+        type: newNotification.type,
+        is_public: newNotification.is_public,
+        expires_at: newNotification.expires_at,
+      }, config);
+      console.log('Notification added successfully:', response.data);
       handleClose();
       fetchNotifications();
-      toast.success('Notification added successfully!');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error adding notification');
+      console.error('Error adding notification:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -108,12 +109,19 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      await NotificationsApi.put(`/notifications/${editingNotification.id}`, editingNotification, config);
+      const response = await NotificationsApi.put(`/notifications/${editingNotification.id}`, {
+        author_id: editingNotification.author_id,
+        author: editingNotification.author,
+        content: editingNotification.content,
+        type: editingNotification.type,
+        is_public: editingNotification.is_public,
+        expires_at: editingNotification.expires_at,
+      }, config);
+      console.log('Notification edited successfully:', response.data);
       handleClose();
       fetchNotifications();
-      toast.success('Notification edited successfully!');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error editing notification');
+      console.error('Error editing notification:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -127,12 +135,12 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      await NotificationsApi.delete(`/notifications/${id}`, config);
+      const response = await NotificationsApi.delete(`/notifications/${id}`, config);
+      console.log('Notification deleted successfully:', response.data);
       handleClose();
       fetchNotifications();
-      toast.success('Notification deleted successfully!');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error deleting notification');
+      console.error('Error deleting notification:', error);
     } finally {
       setIsSubmitting(false);
       setDeletingNotificationId(null);
@@ -163,6 +171,7 @@ const AdminNotifications = () => {
     return <div className={styles['error-message']}>Error: {error}</div>;
   }
 
+      <div className={styles['admin-notifications-grid']}>
   return (
     <div className={styles['admin-notifications-container']}>
       <div className={styles['admin-notifications-header']}>
@@ -233,7 +242,13 @@ const AdminNotifications = () => {
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className={styles['admin-notifications-grid']}>
+=======
+      <div className="admin-notifications-grid">
+        {/* <h2 className="admin-notifications-grid-title">All Noti fications</h2> */}
+        {console.log(notifications)}
+>>>>>>> parent of 9d586d6 (updated fetch companies in manage jobs)
         {notifications && notifications.map((notification) => (
           <div key={notification.id} className={styles['admin-notification-card']}>
             <div className={styles['admin-notification-card-header']}>

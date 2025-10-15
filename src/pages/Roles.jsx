@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { readRoles, createRole, updateRole, deleteRole } from '../services/api.js';
-import toast from 'react-hot-toast';
-import styles from './Roles.module.css';
+import { api } from '../services/api';
+import './Roles.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,8 +27,6 @@ const DeleteIcon = () => (
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const [newRole, setNewRole] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
@@ -50,29 +47,29 @@ export default function Roles() {
 
   const fetchRoles = async () => {
     try {
-      setLoading(true);
-      setError(null);
-      const res = await readRoles();
+      console.log('fetching roles ...');
+      console.log('fetching roles ... & api: ',  api);
+      const config = {
+          withCredentials: true, 
+      }
+      const res = await api.get('/rbac/roles', config);
+      console.log('roles res: ', res.data.data);
       setRoles(res.data.data || []);
-      toast.success('Roles fetched successfully!');
     } catch (err) {
-      const errorMessage = err.message || 'Failed to fetch roles';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+      alert(err.message || 'Failed to fetch roles');
     }
   };
 
   const handleSaveNew = async () => {
     setIsSubmitting(true);
     try {
+      console.log('newRole: ', newRole);
+      await api.post('/rbac/roles', newRole, { withCredentials: true });
       await createRole(newRole);
       handleClose();
       fetchRoles();
-      toast.success('Role added successfully!');
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      alert(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -84,9 +81,8 @@ export default function Roles() {
       await updateRole(editingRole.id, editingRole);
       handleClose();
       fetchRoles();
-      toast.success('Role updated successfully!');
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      alert(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -99,9 +95,8 @@ export default function Roles() {
     try {
       await deleteRole(id);
       fetchRoles();
-      toast.success('Role deleted successfully!');
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      alert(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
       setDeletingRoleId(null);

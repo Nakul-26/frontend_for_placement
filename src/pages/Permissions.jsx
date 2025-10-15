@@ -23,8 +23,6 @@ const DeleteIcon = () => (
 
 export default function Permissions() {
   const [permissions, setPermissions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const [newPermission, setNewPermission] = useState(null);
   const [editingPermission, setEditingPermission] = useState(null);
@@ -45,8 +43,6 @@ export default function Permissions() {
 
   const fetchPermissions = async () => {
     try {
-      setLoading(true);
-      setError(null);
       const res = await api.get(
         '/rbac/permissions',
         {
@@ -55,19 +51,16 @@ export default function Permissions() {
         }
       );
 
+      console.log('fetchPermissions response:', Array.isArray(res.data.data) ? 'true' : 'false');
+
       setPermissions(
         Array.isArray(res.data.data)
           ? res.data.data
           : []
       );
-      toast.success('Permissions fetched successfully!');
     } catch (err) {
-      const errorMessage = err.message || 'Failed to fetch permissions';
-      setError(errorMessage);
-      toast.error(errorMessage);
+      console.error('fetchPermissions error:', err);
       setPermissions([]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -76,10 +69,7 @@ export default function Permissions() {
   }, []);
 
   const handleSaveNew = async () => {
-    if (!newPermission.name.trim()) {
-        toast.error('Name is required');
-        return;
-    }
+    if (!newPermission.name.trim()) return alert('Name is required');
 
     setIsSubmitting(true);
     try {
@@ -90,6 +80,7 @@ export default function Permissions() {
       await fetchPermissions();
       toast.success('Permission added successfully!');
     } catch (err) {
+      alert('Failed to add permission');
       toast.error(err.response?.data?.message || 'Failed to add permission');
     } finally {
       setIsSubmitting(false);
@@ -106,6 +97,7 @@ export default function Permissions() {
       await fetchPermissions();
       toast.success('Permission updated successfully!');
     } catch (err) {
+      alert('Failed to update permission');
       toast.error(err.response?.data?.message || 'Failed to update permission');
     } finally {
       setIsSubmitting(false);

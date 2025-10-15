@@ -1,25 +1,25 @@
+
 import React, { useEffect, useState } from "react";
 import styles from './StudentApplication.module.css';
 import { toast } from "react-toastify";
-import { api } from "../services/api";
+import axios from "axios";
+
+const API_URL = "https://notification-31at.onrender.com/forms";
 
 function StudentApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        setError(null);
-        const response = await api.get("/forms");
-        setApplications(response.data.data);
-        toast.success("Applications fetched successfully!");
+        const response = await axios.get(API_URL);
+        console.log('Fetched applications response:', response);
+        const data = response.data.data;
+        setApplications(data);
       } catch (error) {
-        const errorMessage = error.response?.data?.message || "Error fetching applications";
-        setError(errorMessage);
-        toast.error(errorMessage);
+        console.error('Error fetching applications:', error);
         setApplications([]);
       } finally {
         setLoading(false);

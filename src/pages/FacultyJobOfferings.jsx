@@ -6,25 +6,21 @@ import { toast } from 'react-toastify';
 export default function FacultyJobOfferings() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
-        setError(null);
         const response = await getJobOfferings();
         if (Array.isArray(response.data.jobs)) {
           setJobOfferings(response.data.jobs);
-          toast.success('Job offerings fetched successfully!');
         } else {
           console.warn('API did not return an array for job offerings:', response.data);
           setJobOfferings([]);
         }
       } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Failed to fetch job offerings';
-        setError(errorMessage);
-        toast.error(errorMessage);
+        console.error('Error fetching job offerings:', error);
+        toast.error(error.response?.data?.message || 'Failed to fetch job offerings');
         setJobOfferings([]);
       } finally {
         setLoading(false);
@@ -39,15 +35,6 @@ export default function FacultyJobOfferings() {
       <div className="recommended-jobs-container">
         <h1 className="recommended-jobs-title">Job Offerings</h1>
         <p>Loading job offerings...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="recommended-jobs-container">
-        <h1 className="recommended-jobs-title">Job Offerings</h1>
-        <div className="error-message">Error: {error}</div>
       </div>
     );
   }
