@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api, NotificationsApi } from '../services/api'; 
-import './ManageJobOfferings.css';
+import styles from './ManageJobOfferings.module.css';
 import { toast } from 'react-toastify';
 
 export default function ManageJobOfferings() {
@@ -115,8 +115,8 @@ export default function ManageJobOfferings() {
 
   if (loading) {
     return (
-      <div className="job-offerings-container">
-        <h1 className="page-title">Manage Job Offerings</h1>
+      <div className={styles['job-offerings-container']}>
+        <h1 className={styles['page-title']}>Manage Job Offerings</h1>
         <p>Loading job offerings...</p>
       </div>
     );
@@ -124,18 +124,18 @@ export default function ManageJobOfferings() {
 
   if (error) {
     return (
-      <div className="job-offerings-container">
-        <h1 className="page-title">Manage Job Offerings</h1>
-        <div className="error-message">Error: {error}</div>
+      <div className={styles['job-offerings-container']}>
+        <h1 className={styles['page-title']}>Manage Job Offerings</h1>
+        <div className={styles['error-message']}>Error: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="job-offerings-container">
-      <h1 className="page-title">Manage Job Offerings</h1>
-      <div className="form-container">
-        <button className="button" onClick={() => setNewJobOffering({
+    <div className={styles['job-offerings-container']}>
+      <h1 className={styles['page-title']}>Manage Job Offerings</h1>
+      <div className={styles['form-container']}>
+        <button className={styles.button} onClick={() => setNewJobOffering({
           company_id: 6,
           title: '',
           description: '',
@@ -147,24 +147,24 @@ export default function ManageJobOfferings() {
           is_active: true
         })}>Add Job Offering</button>
       </div>
-      <div className="job-listings">
+      <div className={styles['job-listings']}>
         {jobOfferings.map((job) => (
-          <div key={job.id || job.title} className="job-card">
-            <div className="job-card-header">
-                {job.company_logo && <img src={job.company_logo} alt={`${job.company_name} logo`} className="company-logo" />}
+          <div key={job.id || job.title} className={styles['job-card']}>
+            <div className={styles['job-card-header']}>
+                {job.company_logo && <img src={job.company_logo} alt={`${job.company_name} logo`} className={styles['company-logo']} />}
                 <div>
-                    <div className="job-title">{job.title}</div>
-                    <div className="company-name">{job.company_name}</div>
+                    <div className={styles['job-title']}>{job.title}</div>
+                    <div className={styles['company-name']}>{job.company_name}</div>
                 </div>
             </div>
-            <div className="job-card-body">
+            <div className={styles['job-card-body']}>
                 <p><strong>Location:</strong> {job.location || 'N/A'}</p>
                 <p><strong>Salary:</strong> {job.salary_range || 'N/A'}</p>
                 <p><strong>Description:</strong> {job.description || 'N/A'}</p>
                 {job.company_description && <p><strong>Company:</strong> {job.company_description}</p>}
                 <div>
                     <strong>Skills:</strong>
-                    <ul className="skills-list">
+                    <ul className={styles['skills-list']}>
                       {(Array.isArray(job.req_skills) ? job.req_skills : (job.req_skills ? job.req_skills.split(',').map(s => s.trim()) : [])).map((skill, index) => <li key={index}>{skill}</li>)}
                     </ul>
                 </div>
@@ -172,21 +172,21 @@ export default function ManageJobOfferings() {
                 <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 <p><strong>Active:</strong> {job.is_active ? 'Yes' : 'No'}</p>
             </div>
-            <div className="job-card-footer">
+            <div className={styles['job-card-footer']}>
               {/* Note: The 'margin-right' class was removed in previous steps */}
-              <button className="button" onClick={() => setEditingJobOffering(job)}>Edit</button>
-              <button className="button danger" onClick={() => handleDeleteJobOffering(job.id)}>Delete</button>
+              <button className={styles.button} onClick={() => setEditingJobOffering(job)}>Edit</button>
+              <button className={`${styles.button} ${styles.danger}`} onClick={() => handleDeleteJobOffering(job.id)}>Delete</button>
             </div>
           </div>
         ))}
       </div>
       {(editingJobOffering || newJobOffering) && (
-        <div className="modal-overlay">
-          <div className="modal card form2" style={{ maxWidth: 500, margin: 'auto', padding: 24 }}>
-            <h3 className="modal-title" style={{ marginBottom: 16 }}>{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
-            <form className="job-form" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className={styles['modal-overlay']}>
+          <div className={`${styles.modal} ${styles.card} ${styles.form2}`} style={{ maxWidth: 500, margin: 'auto', padding: 24 }}>
+            <h3 className={styles['modal-title']} style={{ marginBottom: 16 }}>{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
+            <form className={styles['job-form']} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {!editingJobOffering && (
-                <div className="form-group">
+                <div className={styles['form-group']}>
                   <label htmlFor="company_id" className="form-label">Company:</label>
                   {/* <input
                     id="company_id"
@@ -206,7 +206,7 @@ export default function ManageJobOfferings() {
                   </select>
                 </div>
               )}
-              <div className="form-group">
+              <div className={styles['form-group']}>
                 <label htmlFor="title" className="form-label">Job Title:</label>
                 <input
                   id="title"

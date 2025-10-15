@@ -53,14 +53,41 @@ export const addNotification = (notification) => {
   console.log('Adding notification 2:', notification);
   return NotificationsApi.post(`/notifications`, { notification });
 }
-export const editNotification = (id, notification) => NotificationsApi.put(`/notifications/${id}`, { notification });
-export const deleteNotification = (id) => NotificationsApi.delete(`/notifications/${id}`);
-export const getNotifications = () => NotificationsApi.get(`/notifications`);
+// export const editNotification = (id, notification) => NotificationsApi.put(`/notifications/${id}`, { notification });
+// export const deleteNotification = (id) => NotificationsApi.delete(`/notifications/${id}`);
+// export const getNotifications = () => NotificationsApi.get(`/notifications`);
 
-// Job Offerings
-export const addJobOffering = (jobOffering) => NotificationsApi.post(`/jobs`, { jobOffering });
-export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/jobs/${id}`, { jobOffering });
-export const deleteJobOffering = (id) => NotificationsApi.delete(`/jobs/${id}`);
+// // Job Offerings
+// export const addJobOffering = (jobOffering) => NotificationsApi.post(`/jobs`, { jobOffering });
+// export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/jobs/${id}`, { jobOffering });
+// export const deleteJobOffering = (id) => NotificationsApi.delete(`/jobs/${id}`);
 export const getJobOfferings = () => NotificationsApi.get(`/jobs`);
+
+// // Users
+// export const getUsers = () => api.get('/users');
+// export const registerUser = (data) => api.post('/users/register', data);
+// export const getMyProfile = () => api.get('/users/me');
+// export const updateUser = (id, data) => api.put(`/users/${id}`, data);
+// export const deleteUser = (id) => api.delete(`/users/${id}`);
+
+// // Roles
+// export const getRoles = () => api.get('/roles');
+// export const getRole = (id) => api.get(`/roles/${id}`);
+// export const createRole = (data) => api.post('/roles', data);
+// export const updateRole = (id, data) => api.put(`/roles/${id}`, data);
+// export const deleteRole = (id) => api.delete(`/roles/${id}`);
+
+// // Permissions
+// export const getPermissions = () => api.get('/permissions');
+// export const getPermission = (id) => api.get(`/permissions/${id}`);
+// export const createPermission = (data) => api.post('/permissions', data);
+// export const deletePermission = (id) => api.delete(`/permissions/${id}`);
+
+// // Role-Permissions
+// export const getRolePermissions = (roleId) => api.get(`/role-permissions/${roleId}`);
+// export const assignRolePermission = (data) => api.post('/role-permissions', data);
+// export const deleteRolePermission = (data) => api.delete('/role-permissions', { data });
+// export const checkAccess = (data) => api.post('/role-permissions/check-access', data);
+
 
 export { api, NotificationsApi };

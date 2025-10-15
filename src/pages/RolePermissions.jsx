@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
-import './RolePermissions.css';
+import styles from './RolePermissions.module.css';
 
 export default function RolePermissions() {
   const [roles, setRoles] = useState([]);
@@ -154,25 +154,25 @@ export default function RolePermissions() {
   };
 
   if (loading) {
-    return <div className="loading">Loading initial data...</div>;
+    return <div className={styles.loading}>Loading initial data...</div>;
   }
 
   if (error) {
-    return <div className="error-message">Error: {error}</div>;
+    return <div className={styles.error}>{error}</div>;
   }
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Role Permissions</h1>
-      <div className="card">
-        <div className="role-permissions-grid">
-          <div className="roles-list-container">
-            <h2 className="sub-title">Roles</h2>
-            <ul className="roles-list">
+    <div className={styles['page-container']}>
+      <h1 className={styles['page-title']}>Role Permissions</h1>
+      <div className={styles.card}>
+        <div className={styles['role-permissions-grid']}>
+          <div className={styles['roles-list-container']}>
+            <h2 className={styles['sub-title']}>Roles</h2>
+            <ul className={styles['roles-list']}>
               {roles.map((role) => (
                 <li
                   key={role.id}
-                  className={`role-item ${selectedRole?.id === role.id ? 'selected' : ''}`}
+                  className={`${styles['role-item']} ${selectedRole?.id === role.id ? styles.selected : ''}`}
                   onClick={() => handleSelectRole(role)}
                 >
                   {role.name}
@@ -180,18 +180,18 @@ export default function RolePermissions() {
               ))}
             </ul>
           </div>
-          <div className="permissions-list-container">
+          <div className={styles['permissions-list-container']}>
             {selectedRole ? (
               <div>
-                <h2 className="sub-title">Permissions for {selectedRole.name}</h2>
+                <h2 className={styles['sub-title']}>Permissions for {selectedRole.name}</h2>
                 {rolePermissionsLoading ? (
-                  <p className="placeholder-text">Loading permissions...</p>
+                  <p className={styles['placeholder-text']}>Loading permissions...</p>
                 ) : rolePermissionsError ? (
-                  <div className="error-message">{rolePermissionsError}</div>
+                  <div className={styles['error-message']}>{rolePermissionsError}</div>
                 ) : (
-                  <ul className="permissions-list">
+                  <ul className={styles['permissions-list']}>
                     {permissions.map((perm) => (
-                      <li key={perm.id} className="permission-item" onClick={() => togglePermission(perm.id)}>
+                      <li key={perm.id} className={styles['permission-item']} onClick={() => togglePermission(perm.id)}>
                         <input
                           type="checkbox"
                           checked={rolePermissions.includes(perm.id)}
@@ -203,18 +203,18 @@ export default function RolePermissions() {
                   </ul>
                 )}
                 {hasChanges && (
-                  <div className="action-buttons">
-                    <button className="button" onClick={handleSave} disabled={isSubmitting}>
+                  <div className={styles['action-buttons']}>
+                    <button className={styles.button} onClick={handleSave} disabled={isSubmitting}>
                       {isSubmitting ? 'Saving...' : 'Save'}
                     </button>
-                    <button className="button secondary" onClick={fetchRolePermissions}>
+                    <button className={`${styles.button} ${styles.secondary}`} onClick={fetchRolePermissions}>
                       Cancel
                     </button>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="placeholder-text">Select a role to manage its permissions.</p>
+              <p className={styles['placeholder-text']}>Select a role to manage its permissions.</p>
             )}
           </div>
         </div>

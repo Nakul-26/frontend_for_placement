@@ -1,7 +1,7 @@
 import { use, useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import './Login.css';
+import styles from './Login.module.css';
 
 const Login = () => {
   const { login, refresh } = useAuth();
@@ -22,6 +22,7 @@ const Login = () => {
         setLoading(true);
         const { success } = await refresh();
         if (success) {
+
           // First check location state, then fallback to role dashboard
           const from = location.state?.from || `/${role}/dashboard`;
           navigate(from);
@@ -47,6 +48,7 @@ const Login = () => {
     try {
       setLoading(true);
       const result = await login(email, password, role);
+      
       if (!result?.success) {
         setError(result?.error?.response?.data?.message || 'Login failed.');
         return;
@@ -73,27 +75,26 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-paper">
-        <h1 className="login-title">Login</h1>
-        <p className="login-subtitle">Sign in to continue to your dashboard</p>
+    <div className={styles['login-container']}>
+      <div className={styles['login-paper']}>
+        <h1 className={styles['login-title']}>Login</h1>
+        <p className={styles['login-subtitle']}>Sign in to continue to your dashboard</p>
 
         {error && (
-          <div className="login-alert" role="alert">
+          <div className={styles['login-alert']} role="alert">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="login-success" role="alert">
+          <div className={styles['login-success']} role="alert">
             {success}
           </div>
         )}
 
-        <form className="login-form" onSubmit={handleSubmit} noValidate>
+        <form className={styles['login-form']} onSubmit={handleSubmit} noValidate>
           <input
-            id='email'
-            className="login-input"
+            className={styles['login-input']}
             type="email"
             placeholder="Email Address"
             required
@@ -104,7 +105,7 @@ const Login = () => {
           <div style={{ position: 'relative', width: '100%' }}>
             <input
               id='password'
-              className="login-input"
+              className={styles['login-input']}
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               required
@@ -112,17 +113,17 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
-              className="password-toggle"
+              className={styles['password-toggle']}
               type="button"
               onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? '👁️' : '👁️‍🗨️'}
             </button>
           </div>
-          <div className="role-select-container">
+          <div className={styles['role-select-container']}>
             {/* <label htmlFor="role" className="role-label">Role:</label> */}
             <select
               id="role"
-              className="role-select"
+              className={styles['role-select']}
               value={role}
               onChange={e => setRole(e.target.value)}
               required
@@ -135,7 +136,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="login-button"
+            className={styles['login-button']}
             disabled={loading}
           >
             {loading ? 'Signing In...' : 'Sign In'}

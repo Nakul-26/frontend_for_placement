@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './RecommendedJobs.css';
+import styles from './RecommendedJobs.module.css';
 import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
@@ -85,38 +85,38 @@ export default function RecommendedJobs() {
 
   if (loading) {
     return (
-      <div className="recommended-jobs-container">
-        <h1 className="recommended-jobs-title">Jobs</h1>
+      <div className={styles['recommended-jobs-container']}>
+        <h1 className={styles['recommended-jobs-title']}>Jobs</h1>
         <p>Loading jobs...</p>
       </div>
     );
   }
 
   return (
-    <div className="recommended-jobs-container">
-      <div className="recommended-jobs-header">
-        <h1 className="recommended-jobs-title">Jobs</h1>
+    <div className={styles['recommended-jobs-container']}>
+      <div className={styles['recommended-jobs-header']}>
+        <h1 className={styles['recommended-jobs-title']}>Jobs</h1>
         {/* <p className="recommended-jobs-subtitle">Jobs tailored to your profile.</p> */}
       </div>
-      <div className="recommended-jobs-content">
-        <div className="job-listings">
+      <div className={styles['recommended-jobs-content']}>
+        <div className={styles['job-listings']}>
           {jobOfferings.length > 0 ? (
             jobOfferings.map((job) => (
-              <div key={job.id || job.title} className="job-card">
-                <div className="job-card-header">
-                  {job.company_logo && <img src={job.company_logo} alt={`${job.company_name} logo`} className="company-logo" />}
+              <div key={job.id || job.title} className={styles['job-card']}>
+                <div className={styles['job-card-header']}>
+                  {job.company_logo && <img src={job.company_logo} alt={`${job.company_name} logo`} className={styles['company-logo']} />}
                   <div>
-                    <h2 className="job-card-title">{job.title}</h2>
-                    <p className="job-card-company">{job.company_name}</p>
+                    <h2 className={styles['job-card-title']}>{job.title}</h2>
+                    <p className={styles['job-card-company']}>{job.company_name}</p>
                   </div>
                 </div>
-                <div className="job-card-body">
+                <div className={styles['job-card-body']}>
                   <p>{job.description}</p>
                   <p><strong>Location:</strong> {job.location}</p>
                   <p><strong>Salary:</strong> {job.salary_range}</p>
                   <div>
                     <strong>Skills:</strong>
-                    <ul className="skills-list">
+                    <ul className={styles['skills-list']}>
                       {Array.isArray(job.req_skills) && job.req_skills.map((skill, index) => <li key={index}>{skill}</li>)}
                     </ul>
                   </div>
@@ -124,14 +124,14 @@ export default function RecommendedJobs() {
                   <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 </div>
                 {(error || success) && (currentlyApplyingJobId === job.id || currentlyApplyingJobId === job.jobid) && (
-                  <div className={`notification ${error ? 'error' : 'success'}`}>
+                  <div className={`${styles.notification} ${error ? styles.error : styles.success}`}>
                     {error && <p>{error}</p>}
                     {success && <p>{success}</p>}
                   </div>
                 )}
-                <div className="job-card-footer">
+                <div className={styles['job-card-footer']}>
                   {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
-                  <button className="apply-now-btn" onClick={() => handleApply(job)}>
+                  <button className={styles['apply-now-btn']} onClick={() => handleApply(job)}>
                     Apply Now
                   </button>
                 </div>

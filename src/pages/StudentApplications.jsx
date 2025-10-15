@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./StudentApplication.css";
+import styles from './StudentApplication.module.css';
 import { toast } from "react-toastify";
 import { api } from "../services/api";
 
@@ -30,17 +30,17 @@ function StudentApplications() {
   }, []);
 
   if (loading) {
-    return <div className="student-applications-container loading">Loading...</div>;
+    return <div className={`${styles['student-applications-container']} ${styles.loading}`}>Loading...</div>;
   }
 
   if (error) {
-    return <div className="student-applications-container error-message">Error: {error}</div>;
+    return <div className={`${styles['student-applications-container']} ${styles['error-message']}`}>Error: {error}</div>;
   }
 
   return (
-    <div className="student-applications-container">
+    <div className={styles['student-applications-container']}>
       <h2>Student Applications</h2>
-      <table className="student-applications-table">
+      <table className={styles['student-applications-table']}>
         <thead>
           <tr>
             <th>ID</th>

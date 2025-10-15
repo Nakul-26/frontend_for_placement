@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
-import './Permissions.css';
+import styles from './Permissions.module.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -130,19 +130,19 @@ export default function Permissions() {
   };
   
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (error) {
-    return <div className="error-message">Error: {error}</div>;
+    return <div className={styles['error-message']}>Error: {error}</div>;
   }
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Permissions</h1>
-      <div className="form-container card">
+    <div className={styles['page-container']}>
+      <h1 className={styles['page-title']}>Permissions</h1>
+      <div className={`${styles['form-container']} ${styles.card}`}>
         <button
-          className="button"
+          className={styles.button}
           onClick={() => {
             setNewPermission({ name: '', description: '' });
             handleClickOpen();
@@ -173,7 +173,7 @@ export default function Permissions() {
                     setEditingPermission(perm);
                     handleClickOpen();
                   }}><EditIcon />Edit</button> */}
-                  <button className="button danger" onClick={() => handleDelete(perm.id)} disabled={isSubmitting && deletingPermissionId === perm.id}>
+                  <button className={`${styles.button} ${styles.danger}`} onClick={() => handleDelete(perm.id)} disabled={isSubmitting && deletingPermissionId === perm.id}>
                     {isSubmitting && deletingPermissionId === perm.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
                   </button>
                 </td>
@@ -216,7 +216,7 @@ export default function Permissions() {
               />
             </div>
             <div className="modal-actions">
-              <button className="button secondary" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
+              <button className={`${styles.button} ${styles.secondary}`} onClick={handleClose} disabled={isSubmitting}>Cancel</button>
               <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : (newPermission ? 'Add' : 'Save')}
               </button>

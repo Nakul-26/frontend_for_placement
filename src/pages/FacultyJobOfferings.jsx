@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './RecommendedJobs.css'; // Reusing the CSS for now
+// import './RecommendedJobs.css'; // Reusing the CSS for now
 import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
 
