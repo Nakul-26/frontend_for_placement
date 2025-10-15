@@ -1,8 +1,8 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { api } from '../services/api';
-import './Users.css';
+import { readUsers, createUser, updateUser, deleteUser } from '../services/api.js';
+import styles from './Users.module.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -50,13 +50,7 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const config = {
-          withCredentials: true, 
-      }
-      const res = await api.get(
-        `/rbac/users`,
-        config
-      );
+      const res = await readUsers();
       console.log('users res: ', res);
       setUsers(res.data.data || []);
       setError('');
@@ -74,9 +68,7 @@ export default function Users() {
     setDeletingUserId(id);
     setIsSubmitting(true);
     try {
-      await api.delete(`/rbac/users/${id}`, {
-        credentials: 'include',
-      });
+      await deleteUser(id);
       await fetchUsers();
       toast.success('User deleted successfully!');
     } catch (err) {
@@ -98,10 +90,7 @@ export default function Users() {
         role_id: editingUser.role_id,
       };
 
-      await api.put(`/rbac/users/${editingUser.id}`, payload, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-      });
+      await updateUser(editingUser.id, payload);
 
       handleClose();
       await fetchUsers();
@@ -124,10 +113,7 @@ export default function Users() {
         role_id: newUser.role_id,
       };
 
-      await api.post(`/rbac/users/register`, payload, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-      });
+      await createUser(payload);
 
       handleClose();
       await fetchUsers();
@@ -145,22 +131,22 @@ export default function Users() {
   }, []);
 
   return (
-    <div className="users-container">
-      <div className="users-header">
-        <h1 className="users-title">Users</h1>
-        <p className="users-subtitle">Manage all users in the system.</p>
+    <div className={styles['users-container']}>
+      <div className={styles['users-header']}>
+        <h1 className={styles['users-title']}>Users</h1>
+        <p className={styles['users-subtitle']}>Manage all users in the system.</p>
       </div>
 
-      <div className="users-search-container">
+      <div className={styles['users-search-container']}>
         <input
           type="text"
-          className="form-input"
+          className={styles['form-input']}
           placeholder={`Search by ${searchField}...`}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <select
-          className="form-select"
+          className={styles['form-select']}
           value={searchField}
           onChange={(e) => setSearchField(e.target.value)}
         >
@@ -168,11 +154,11 @@ export default function Users() {
           <option value="name">Name</option>
           <option value="id">ID</option>
         </select>
-        <button className="button" onClick={() => { setSearch(''); fetchUsers(); }}>
+        <button className={styles.button} onClick={() => { setSearch(''); fetchUsers(); }}>
           Reset
         </button>
         <button
-          className="button"
+          className={styles.button}
           onClick={() => {
             setNewUser({ name: '', email: '', password: '', role_id: '' });
             handleClickOpen();
@@ -186,19 +172,19 @@ export default function Users() {
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
-      <div className="users-grid">
+      <div className={styles['users-grid']}>
         {users.map((u) => (
-          <div key={u.id} className="user-card">
-            <div className="user-card-header">
-              <h2 className="user-card-title">{u.name}</h2>
-              <div className="user-card-actions">
-                <button className="button" onClick={() => { setEditingUser(u); handleClickOpen(); }}><EditIcon /></button>
-                <button className="button" onClick={() => handleDelete(u.id)} disabled={isSubmitting && deletingUserId === u.id}>
+          <div key={u.id} className={styles['user-card']}>
+            <div className={styles['user-card-header']}>
+              <h2 className={styles['user-card-title']}>{u.name}</h2>
+              <div className={styles['user-card-actions']}>
+                <button className={styles.button} onClick={() => { setEditingUser(u); handleClickOpen(); }}><EditIcon /></button>
+                <button className={styles.button} onClick={() => handleDelete(u.id)} disabled={isSubmitting && deletingUserId === u.id}>
                   {isSubmitting && deletingUserId === u.id ? 'Deleting...' : <DeleteIcon />}
                 </button>
               </div>
             </div>
-            <div className="user-card-body">
+            <div className={styles['user-card-body']}>
               <p><strong>ID:</strong> {u.id}</p>
               <p><strong>Name:</strong> {u.name}</p>
               <p><strong>Email:</strong> {u.email}</p>
@@ -209,13 +195,13 @@ export default function Users() {
       </div>
 
       {open && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3 className="modal-title">{newUser ? 'Add User' : 'Edit User'}</h3>
-            <div className="modal-content">
+        <div className={styles['modal-overlay']}>
+          <div className={styles.modal}>
+            <h3 className={styles['modal-title']}>{newUser ? 'Add User' : 'Edit User'}</h3>
+            <div className={styles['modal-content']}>
               <input
                 autoFocus
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Name"
                 type="text"
                 value={newUser?.name || editingUser?.name || ''}
@@ -228,7 +214,7 @@ export default function Users() {
                 }}
               />
               <input
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Email"
                 type="email"
                 value={newUser?.email || editingUser?.email || ''}
@@ -241,7 +227,7 @@ export default function Users() {
                 }}
               />
               <input
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Password"
                 type="password"
                 onChange={(e) => {
@@ -253,7 +239,7 @@ export default function Users() {
                 }}
               />
               <input
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Role ID"
                 type="number"
                 value={newUser?.role_id || editingUser?.role_id || ''}
@@ -266,9 +252,9 @@ export default function Users() {
                 }}
               />
             </div>
-            <div className="modal-actions">
-              <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
-              <button className="button" onClick={newUser ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
+            <div className={styles['modal-actions']}>
+              <button className={styles.button} onClick={handleClose} disabled={isSubmitting}>Cancel</button>
+              <button className={styles.button} onClick={newUser ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : (newUser ? 'Add' : 'Save')}
               </button>
             </div>

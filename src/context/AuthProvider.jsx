@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       console.debug('Not logged in:', error);
       return null;
     }
-  }, []);
+  }, [axios]);
 
   useEffect(() => {
     const initialAuthCheck = async () => {
@@ -83,6 +83,7 @@ export const AuthProvider = ({ children }) => {
       toast.success('Dummy Manager Login successful!');
       return { success: true, data: { user: dummyUser } };
     }
+    setError(null);
 
     try {
       const res = await axios.post(
@@ -90,8 +91,10 @@ export const AuthProvider = ({ children }) => {
         { email, password },
         { withCredentials: true }
       );
+      console.log('Login response:', res.data.data);
       // Expect user at res.data.data.user
-      let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
+      let newUser = res.data?.data;
+      console.log('Extracted user from response:', newUser);
       // Map role_id to role string for frontend
       if (newUser && newUser.role_id) {
         if (newUser.role_id === 1) newUser.role = 'admin';
@@ -99,6 +102,7 @@ export const AuthProvider = ({ children }) => {
         else if (newUser.role_id === 3) newUser.role = 'student';
       }
       localStorage.setItem('AdminUser', JSON.stringify(newUser));
+      console.debug('Storing AdminUser in localStorage:', newUser);
       setUser(newUser);
       console.debug('AuthProvider: setUser after login', newUser);
       toast.success('Login successful!');
@@ -109,7 +113,7 @@ export const AuthProvider = ({ children }) => {
       toast.error(err.response?.data?.message || "Login failed");
       return { success: false, error: err };
     }
-  }, []);
+  }, [axios]);
 
   const refresh = useCallback(async () => {
     try {
@@ -127,7 +131,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       return { success: false, error: err };
     }
-  }, []);
+  }, [axios]);
 
   const logout = useCallback(async () => {
     setError(null);
@@ -146,7 +150,7 @@ export const AuthProvider = ({ children }) => {
       toast.error('Logout failed. Please try again.');
       return { success: false, error: err };
     }
-  }, []);
+  }, [axios]);
 
   const value = {
     user,

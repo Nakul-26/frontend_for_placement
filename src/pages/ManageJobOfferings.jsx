@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApi } from '../services/api'; 
+import { NotificationsApi } from '../services/api.js'; 
 import styles from './ManageJobOfferings.module.css';
 import { toast } from 'react-toastify';
 
@@ -62,8 +62,8 @@ export default function ManageJobOfferings() {
         is_active: newJobOffering.is_active ?? true
       };
 
-      const res = await NotificationsApi.post('/jobs', payload);
-      console.log('Job offering added successfully:', res.data);
+      await NotificationsApi.post('/jobs', payload);
+      console.log('Job offering added successfully:');
       setNewJobOffering(null);
       fetchJobOfferings();
       toast.success('Job offering added successfully!');
@@ -91,7 +91,7 @@ export default function ManageJobOfferings() {
         is_active: editingJobOffering.is_active ?? true
       };
 
-      const res = await NotificationsApi.put(`/jobs/${editingJobOffering.id}`, payload);
+      await NotificationsApi.put(`/jobs/${editingJobOffering.id}`, payload);
       setEditingJobOffering(null);
       fetchJobOfferings();
       toast.success('Job offering updated successfully!');
@@ -103,8 +103,8 @@ export default function ManageJobOfferings() {
 
   const handleDeleteJobOffering = async (id) => {
     try {
-      const res = await NotificationsApi.delete(`/jobs/${id}`);
-      console.log('Job offering deleted successfully:', res.data);
+      await NotificationsApi.delete(`/jobs/${id}`);
+      
       fetchJobOfferings();
       toast.success('Job offering deleted successfully!');
     } catch (error) {

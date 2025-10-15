@@ -16,12 +16,14 @@ export default function ProtectedRoute({ roles }) {
     return <Navigate to={loginPath} state={{ from: location.pathname }} replace />;
   }
 
-  if (roles && !roles.includes(user.role)) {
-    console.log(user.role, roles);
+  if (roles!==undefined && !roles.includes(user.role)) {
+    
+    console.log(roles);
     console.log('Access denied: insufficient role');
     // perform a case-insensitive role check
     const userRole = (user.role || '').toString().toLowerCase();
     const allowed = roles.map(r => r.toString().toLowerCase());
+    console.log("userRole:", user);
     if (!allowed.includes(userRole)) {
       return <Navigate to="/" />;
     }

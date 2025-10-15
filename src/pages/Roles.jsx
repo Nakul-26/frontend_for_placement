@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { api } from '../services/api';
+import { readRoles, createRole, updateRole, deleteRole } from '../services/api.js';
 import toast from 'react-hot-toast';
-import './Roles.css';
+import styles from './Roles.module.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -52,10 +52,7 @@ export default function Roles() {
     try {
       setLoading(true);
       setError(null);
-      const config = {
-          withCredentials: true, 
-      }
-      const res = await api.get('/rbac/roles', config);
+      const res = await readRoles();
       setRoles(res.data.data || []);
       toast.success('Roles fetched successfully!');
     } catch (err) {
@@ -70,7 +67,7 @@ export default function Roles() {
   const handleSaveNew = async () => {
     setIsSubmitting(true);
     try {
-      await api.post('/rbac/roles', newRole, { withCredentials: true });
+      await createRole(newRole);
       handleClose();
       fetchRoles();
       toast.success('Role added successfully!');
@@ -84,9 +81,7 @@ export default function Roles() {
   const handleSaveEdit = async () => {
     setIsSubmitting(true);
     try {
-      await api.put(`/rbac/roles/${editingRole.id}`, editingRole, {
-        withCredentials: true,
-      });
+      await updateRole(editingRole.id, editingRole);
       handleClose();
       fetchRoles();
       toast.success('Role updated successfully!');
@@ -102,7 +97,7 @@ export default function Roles() {
     setDeletingRoleId(id);
     setIsSubmitting(true);
     try {
-      await api.delete(`/rbac/roles/${id}`, { withCredentials: true });
+      await deleteRole(id);
       fetchRoles();
       toast.success('Role deleted successfully!');
     } catch (err) {
@@ -118,19 +113,19 @@ export default function Roles() {
   }, []);
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (error) {
-    return <div className="error-message">Error: {error}</div>;
+    return <div className={styles['error-message']}>Error: {error}</div>;
   }
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">Roles</h1>
-      <div className="form-container">
+    <div className={styles['page-container']}>
+      <h1 className={styles['page-title']}>Roles</h1>
+      <div className={styles['form-container']}>
         <button
-          className="button"
+          className={styles.button}
           onClick={() => {
             setNewRole({ name: '', description: '', is_Active: true });
             handleClickOpen();
@@ -140,14 +135,14 @@ export default function Roles() {
           Add Role
         </button>
       </div>
-      <div className="table-container">
-        <table className="table">
-          <thead className='head'>
+      <div className={styles['table-container']}>
+        <table className={styles.table}>
+          <thead className={styles.head}>
             <tr>
               <th>Name</th>
               <th>Description</th>
               <th>Status</th>
-              <th className="roles-table-actions">Actions</th>
+              <th className={styles['roles-table-actions']}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -156,12 +151,12 @@ export default function Roles() {
                 <td>{role.name}</td>
                 <td>{role.description}</td>
                 <td>{role.is_active ? 'Active' : 'Inactive'}</td>
-                <td className="roles-table-actions">
-                  <button className="button" onClick={() => {
+                <td className={styles['roles-table-actions']}>
+                  <button className={styles.button} onClick={() => {
                     setEditingRole(role);
                     handleClickOpen();
                   }}><EditIcon />Edit</button>
-                  <button className="button" onClick={() => handleDelete(role.id)} disabled={isSubmitting && deletingRoleId === role.id}>
+                  <button className={styles.button} onClick={() => handleDelete(role.id)} disabled={isSubmitting && deletingRoleId === role.id}>
                     {isSubmitting && deletingRoleId === role.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
                   </button>
                 </td>
@@ -171,13 +166,13 @@ export default function Roles() {
         </table>
       </div>
       {open && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3 className="modal-title">{newRole ? 'Add Role' : 'Edit Role'}</h3>
-            <div className="modal-content">
+        <div className={styles['modal-overlay']}>
+          <div className={styles.modal}>
+            <h3 className={styles['modal-title']}>{newRole ? 'Add Role' : 'Edit Role'}</h3>
+            <div className={styles['modal-content']}>
               <input
                 autoFocus
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Name"
                 type="text"
                 value={newRole?.name || editingRole?.name || ''}
@@ -190,7 +185,7 @@ export default function Roles() {
                 }}
               />
               <input
-                className="form-input"
+                className={styles['form-input']}
                 placeholder="Description"
                 type="text"
                 value={newRole?.description || editingRole?.description || ''}
@@ -203,7 +198,7 @@ export default function Roles() {
                 }}
               />
               <select
-                className="form-select"
+                className={styles['form-select']}
                 value={newRole ? newRole.is_Active : editingRole?.is_Active}
                 onChange={(e) => {
                   if (newRole) {
@@ -217,9 +212,9 @@ export default function Roles() {
                 <option value={false}>Inactive</option>
               </select>
             </div>
-            <div className="modal-actions">
-              <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
-              <button className="button" onClick={newRole ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
+            <div className={styles['modal-actions']}>
+              <button className={styles.button} onClick={handleClose} disabled={isSubmitting}>Cancel</button>
+              <button className={styles.button} onClick={newRole ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : (newRole ? 'Add' : 'Save')}
               </button>
             </div>

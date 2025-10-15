@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApi } from '../services/api';
+import { NotificationsApi } from '../services/api.js';
 import toast from 'react-hot-toast';
 import styles from './AdminNotifications.module.css';
 

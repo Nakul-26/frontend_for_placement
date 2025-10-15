@@ -1,17 +1,14 @@
-import React from 'react';
-import './JobOfferings.css';
-import { api } from '../services/api';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAuth } from '../context/useAuth';
+import { NotificationsApi } from '../services/api.js';
 
 export default function JobOfferings() {
   const [jobs, setJobs] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  
 
   const handleViewDetails = () => {
   try {
@@ -31,7 +28,7 @@ export default function JobOfferings() {
         const config = {
             withCredentials: true,
         }
-        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alljobdata`, config);
+        const res = await NotificationsApi.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alljobdata`, config);
         console.log('job offerings res: ', res);
         setJobs(res.data.jobs || []);
         toast.success('Job offerings fetched successfully!');

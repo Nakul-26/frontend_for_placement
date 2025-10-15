@@ -30,7 +30,7 @@ const RoleLoginForm = ({ role }) => {
           const from = location.state?.from || `/${role}/dashboard`;
           navigate(from);
         }
-      } catch (err) {
+      } catch {
         // a toast is already shown in the refresh function
       } finally {
         if (!cancelled) setLoading(false);
