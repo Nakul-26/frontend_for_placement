@@ -180,8 +180,8 @@ export default function ManageJobOfferings() {
                   onChange={(e) => setNewJobOffering({ ...newJobOffering, company_id: e.target.value })}
                   placeholder="Company ID"
                 /> */}
-                {/* <select name="" id=""></select> */}
-                <select
+                {newJobOffering && (
+                  <select
                     id="company_id"
                     name="company_id"
                     className="form-input"
@@ -205,6 +205,7 @@ export default function ManageJobOfferings() {
                         </option>
                     ))}
                 </select>
+                )}
             {/* End of Company Select Dropdown */}
             <input
               type="text"
@@ -213,13 +214,13 @@ export default function ManageJobOfferings() {
               onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, title: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, title: e.target.value })}
               placeholder="Enter job title"
             />
-            <input
+            {/* <input
               type="text"
               className="form-input"
               value={editingJobOffering?.company_name || newJobOffering?.company_name || ''}
               onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_name: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_name: e.target.value })}
               placeholder="Enter company name"
-            />
+            /> */}
             <input
               type="text"
               className="form-input"
