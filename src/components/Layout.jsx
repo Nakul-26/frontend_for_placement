@@ -14,6 +14,7 @@ const adminMenuItems = [
   { text: 'Manage Jobs', path: '/admin/jobs', icon: '💼' },
   { text: 'Notifications', path: '/admin/notifications', icon: '🔔' },
   { text: 'Student Applications', path: '/admin/student-applications', icon: '📝' },
+  { test: 'Manage Companies', path: '/admin/companies', icon: '🏢' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
