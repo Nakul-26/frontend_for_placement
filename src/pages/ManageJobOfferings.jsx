@@ -221,13 +221,13 @@ export default function ManageJobOfferings() {
               onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_name: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_name: e.target.value })}
               placeholder="Enter company name"
             /> */}
-            <input
+            {/* <input
               type="text"
               className="form-input"
               value={editingJobOffering?.company_description || newJobOffering?.company_description || ''}
               onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_description: e.target.value })}
               placeholder="Enter company description"
-            />
+            /> */}
             <textarea
               className="form-textarea"
               value={editingJobOffering?.description || newJobOffering?.description || ''}
