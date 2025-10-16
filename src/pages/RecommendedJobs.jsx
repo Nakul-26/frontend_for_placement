@@ -53,7 +53,7 @@ export default function RecommendedJobs() {
     };
     try {
       const res = await axios.post('https://notification-31at.onrender.com/forms', {
-        body: JSON.stringify(payload),
+        body: payload,
       });
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
