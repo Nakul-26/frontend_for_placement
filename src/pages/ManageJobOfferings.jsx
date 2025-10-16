@@ -10,10 +10,11 @@ export default function ManageJobOfferings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [companies, setCompanies] = useState([]);
+  const [currentJob, setCurrentJob] = useState(null);
 
   const fetchCompanies = async () => {
     try {
-      const res = await api.get('/rbac/companies');
+      const res = await NotificationsApi.get('/companies');
       console.log('companies res: ', res);
       setCompanies(res.data.companies || []);
     } catch (err) {
