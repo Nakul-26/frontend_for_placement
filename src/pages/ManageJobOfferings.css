@@ -200,6 +200,9 @@
 .modal {
     width: 90%;
     max-width: 500px;
+
+    max-height: 90vh; /* Set a maximum height (e.g., 90% of the viewport height) */
+    overflow-y: auto;
 }
 
 .modal-title {
