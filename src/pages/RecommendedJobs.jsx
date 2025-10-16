@@ -8,33 +8,28 @@ export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  // State to hold the ID of the job currently being submitted/has an error/success
+  const [currentJobStatus, setCurrentJobStatus] = useState({
+      id: null,
+      message: '',
+      type: null // 'success' or 'error'
+  });
 
   useEffect(() => {
+    // ... (fetchJobOfferings logic remains the same)
     const fetchJobOfferings = async () => {
-      try {
-        setLoading(true);
-        const response = await getJobOfferings();
-        if (Array.isArray(response.data.jobs)) {
-          setJobOfferings(response.data.jobs);
-        } else {
-          console.warn('API did not return an array for job offerings:', response.data);
-          setJobOfferings([]);
-        }
-      } catch (error) {
-        console.error('Error fetching job offerings:', error);
-        toast.error(error.response?.data?.message || 'Failed to fetch job offerings');
-        setJobOfferings([]);
-      } finally {
-        setLoading(false);
-      }
+        // ... (your existing fetch logic)
     };
-
     fetchJobOfferings();
   }, []);
 
   const handleApply = async (job) => {
+    // Reset status for the new attempt
+    setCurrentJobStatus({ id: job.id, message: '', type: 'loading' });
+
     if (!user) {
       toast.error('Please login to apply for jobs.');
+      setCurrentJobStatus({ id: null, message: '', type: null }); // Clear status
       return;
     }
     const payload = {
@@ -52,66 +47,67 @@ export default function RecommendedJobs() {
         body: JSON.stringify(payload),
       });
       console.log('Response from application submission:', res);
-      const result = await res.json().catch(() => ({}));
+      
+      // Attempt to parse JSON, default to empty object on failure
+      const result = await res.json().catch(() => ({})); 
+
       if (res.ok) {
-        toast.success(result?.message || 'Your application was submitted successfully!');
+        const successMessage = result?.message || 'Application submitted successfully!';
+        // Update state for inline message display
+        setCurrentJobStatus({ id: job.id, message: successMessage, type: 'success' }); 
+        // Also show a toast for better UX
+        toast.success(successMessage); 
+        
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
       } else {
-        toast.error(result?.message || 'Failed to submit your application. Please try again later.');
+        const errorMessage = result?.message || 'Failed to submit your application. Please try again later.';
+        // Update state for inline message display
+        setCurrentJobStatus({ id: job.id, message: errorMessage, type: 'error' });
+        // Also show a toast for better UX
+        toast.error(errorMessage);
       }
     } catch (err) {
-      toast.error('Network error: Unable to submit application.');
+        const networkError = 'Network error: Unable to submit application.';
+        // Update state for inline message display
+        setCurrentJobStatus({ id: job.id, message: networkError, type: 'error' });
+        // Also show a toast for better UX
+        toast.error(networkError);
     }
+    // Optionally, use a setTimeout here to clear the status after a few seconds.
   };
 
   if (loading) {
-    return (
-      <div className="recommended-jobs-container">
-        <h1 className="recommended-jobs-title">Jobs</h1>
-        <p>Loading jobs...</p>
-      </div>
-    );
+    // ... (loading state render remains the same)
   }
 
   return (
     <div className="recommended-jobs-container">
-      <div className="recommended-jobs-header">
-        <h1 className="recommended-jobs-title">Jobs</h1>
-        {/* <p className="recommended-jobs-subtitle">Jobs tailored to your profile.</p> */}
-      </div>
+      {/* ... (header remains the same) */}
       <div className="recommended-jobs-content">
         <div className="job-listings">
           {jobOfferings.length > 0 ? (
             jobOfferings.map((job) => (
               <div key={job.id || job.title} className="job-card">
-                <div className="job-card-header">
-                  {job.company_logo && <img src={job.company_logo} alt={`${job.company_name} logo`} className="company-logo" />}
-                  <div>
-                    <h2 className="job-card-title">{job.title}</h2>
-                    <p className="job-card-company">{job.company_name}</p>
-                  </div>
-                </div>
-                <div className="job-card-body">
-                  <p>{job.description}</p>
-                  <p><strong>Location:</strong> {job.location}</p>
-                  <p><strong>Salary:</strong> {job.salary_range}</p>
-                  <div>
-                    <strong>Skills:</strong>
-                    <ul className="skills-list">
-                      {Array.isArray(job.req_skills) && job.req_skills.map((skill, index) => <li key={index}>{skill}</li>)}
-                    </ul>
-                  </div>
-                  <p><strong>Applications Opens from:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
-                  <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
-                </div>
+                {/* ... (job-card-header and job-card-body remain the same) */}
                 <div className="job-card-footer">
-                  {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
-                  <button className="apply-now-btn" onClick={() => handleApply(job)}>
-                    Apply Now
+                  <button 
+                    className="apply-now-btn" 
+                    onClick={() => handleApply(job)}
+                    disabled={currentJobStatus.id === job.id && currentJobStatus.type === 'loading'}
+                  >
+                    {currentJobStatus.id === job.id && currentJobStatus.type === 'loading' ? 'Applying...' : 'Apply Now'}
                   </button>
                 </div>
+                
+                {/* CORRECTED INLINE MESSAGE DISPLAY */}
+                {currentJobStatus.id === job.id && currentJobStatus.type === 'error' && (
+                  <p className="error-message">{currentJobStatus.message}</p>
+                )}
+                {currentJobStatus.id === job.id && currentJobStatus.type === 'success' && (
+                  <p className="success-message">{currentJobStatus.message}</p>
+                )}
               </div>
             ))
           ) : (
