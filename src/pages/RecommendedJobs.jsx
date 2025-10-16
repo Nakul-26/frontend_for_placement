@@ -45,15 +45,21 @@ export default function RecommendedJobs() {
       toast.error('Please login to apply for jobs.');
       return;
     }
-    const payload = {
-      user_name: user.name || user.user_name || user.fullName || user.username || '',
-      user_email: user.email || user.user_email || '',
-      user_id: user.id || user.user_id || '',
-      jobid: job.id || job.jobid || '',
-    };
+    console.log('User details:', user);
+    console.log('Job details:', job);
+    // Prepare payload for the application submission
+    // const payload = {
+    //   user_name: user.name || user.user_name || user.fullName || user.username || '',
+    //   user_email: user.email || user.user_email || '',
+    //   user_id: user.id || user.user_id || '',
+    //   jobid: job.id || job.jobid || '',
+    // };
     try {
       const res = await axios.post('https://notification-31at.onrender.com/forms', {
-        body: payload,
+        user_name: user.name || user.user_name || user.fullName || user.username || '',
+        user_email: user.email || user.user_email || '',
+        user_id: user.id || user.user_id || '',
+        jobid: job.id || job.jobid || '',
       });
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
