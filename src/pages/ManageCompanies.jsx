@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { NotificationsApi } from '../services/api'; // Use NotificationsApi as shown in your original code
-import './ManageCompanies.css'; // Reuse existing styles
+import { NotificationsApi } from '../services/api'; 
+import './ManageCompanies.css'; 
 import { toast } from 'react-toastify';
 
-// Helper function to handle array fields for input/output
+// Helper function: Converts array to comma-separated string for display/input
 const formatArrayForInput = (arr) => {
   if (Array.isArray(arr)) {
     return arr.join(', ');
   }
-  return '';
+  // When initializing a new company, the state will be an empty string, which is fine
+  return arr || ''; 
 };
 
-// Helper function to format input string into a clean array
+// Helper function: Converts comma-separated string back to array for API payload
 const prepareArrayForApi = (str) => {
   return (str || '').split(',').map(s => s.trim()).filter(Boolean);
 };
@@ -22,38 +23,47 @@ export default function ManageCompanies() {
   const [editingCompany, setEditingCompany] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // State for the selected logo file
   const [logoFile, setLogoFile] = useState(null);
-  // State for the image preview URL (either selected file's object URL or existing company's logo URL)
+  // State for the image preview URL
   const [logoPreviewUrl, setLogoPreviewUrl] = useState('');
 
   // Helper to get the current object being viewed/edited
   const currentCompany = editingCompany || newCompany;
 
+  // Effect to generate preview URL for selected file OR display existing logo
   useEffect(() => {
+    // 1. If a new file is selected, create a temporary URL
     if (logoFile) {
       setLogoPreviewUrl(URL.createObjectURL(logoFile));
-      return () => URL.revokeObjectURL(logoPreviewUrl); // Cleanup
-    } else if (currentCompany && currentCompany.logo) {
-      setLogoPreviewUrl(currentCompany.logo); // Display existing logo from API
-    } else {
-      setLogoPreviewUrl(''); // Clear preview if no file and no existing logo
+      // Cleanup function to revoke the object URL when the dependency changes
+      return () => URL.revokeObjectURL(logoPreviewUrl); 
+    } 
+    // 2. If editing and no new file is selected, use the existing logo URL
+    else if (currentCompany && currentCompany.logo) {
+      setLogoPreviewUrl(currentCompany.logo); 
+    } 
+    // 3. Otherwise, clear the preview
+    else {
+      setLogoPreviewUrl('');
     }
+    // Cleanup ensures we only revoke URLs created in this specific instance
+    return () => {}; 
   }, [logoFile, currentCompany]);
 
-  // Helper to update the current object state
-  // AROUND LINE 40 IN THE COMPONENT LOGIC
+  // Handler for all text and number inputs
   const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      // We can merge the state update logic here
-      const updateFunc = newCompany ? setNewCompany : setEditingCompany;
-      const currentObj = newCompany || editingCompany;
+    const { name, value } = e.target;
+    const currentObj = newCompany || editingCompany;
 
-      if (currentObj) {
-          updateFunc({ 
-              ...currentObj, 
-              [name]: value // Directly store the string value
-          });
-      }
+    if (currentObj) {
+      const updateFunc = newCompany ? setNewCompany : setEditingCompany;
+      
+      updateFunc({ 
+        ...currentObj, 
+        [name]: value // Store string value directly in state
+      });
+    }
   };
 
   // Handler for the file input
@@ -65,10 +75,7 @@ export default function ManageCompanies() {
   const fetchCompanies = async () => {
     try {
       setLoading(true);
-      // Endpoint is GET /companies based on your JSON structure
       const res = await NotificationsApi.get('/companies'); 
-      console.log('companies res: ', res);
-      // Assuming res.data.companies is an array of company objects
       setCompanies(res.data.companies || []);
     } catch (err) {
       toast.error(err.message || 'Failed to fetch companies');
@@ -81,15 +88,14 @@ export default function ManageCompanies() {
     fetchCompanies();
   }, []);
 
-  // AROUND LINE 85 IN THE COMPONENT LOGIC
   const resetModalState = () => {
-      // These must be set to null to hide the modal and clean up state.
-      setNewCompany(null);
-      setEditingCompany(null); 
-      
-      // Cleanup image states
-      setLogoFile(null);      
-      setLogoPreviewUrl('');
+    // Crucial: Set to null to close the modal and clear active edit/new state
+    setNewCompany(null);
+    setEditingCompany(null); 
+    
+    // Cleanup image states
+    setLogoFile(null);      
+    setLogoPreviewUrl('');
   };
 
   const buildFormData = (companyData, isEditing = false) => {
@@ -97,7 +103,11 @@ export default function ManageCompanies() {
     
     // Append text fields
     for (const key in companyData) {
-      if (companyData.hasOwnProperty(key) && key !== 'logo') { // Skip logo for now
+      if (companyData.hasOwnProperty(key)) {
+        // Skip logo, which is handled separately
+        if (key === 'logo') continue; 
+        
+        // Handle array fields converted to strings by prepareArrayForApi
         if (Array.isArray(companyData[key])) {
           companyData[key].forEach(item => formData.append(key + '[]', item));
         } else {
@@ -106,19 +116,14 @@ export default function ManageCompanies() {
       }
     }
 
-    // Append logo:
-    // If a new file is selected, use it.
+    // Append logo file or existing URL
     if (logoFile) {
       formData.append('logo', logoFile);
-    } 
-    // If editing and no *new* file is selected, but an existing logo URL exists, re-send the URL
-    // (This is a common pattern if the backend updates logo only if a new file is present,
-    // otherwise it keeps the old one. If your backend *requires* a file every time,
-    // or you're managing separate logo upload, adjust this logic)
-    else if (isEditing && currentCompany?.logo) {
-      formData.append('logo', currentCompany.logo); // Re-send the existing URL if no new file is chosen
+    } else if (isEditing && currentCompany?.logo) {
+      // If editing and no new file, re-send the existing logo URL
+      formData.append('logo', currentCompany.logo); 
     }
-    // For 'add', if no file chosen, 'logo' simply won't be appended (or backend handles default)
+    // If adding and no logo, 'logo' is simply omitted from payload
 
     return formData;
   };
@@ -133,16 +138,17 @@ export default function ManageCompanies() {
       const payload = {
         name: newCompany.name,
         email: newCompany.email,
-        phone: newCompany.phone || '', // Ensure it's not undefined
+        phone: newCompany.phone || '',
         description: newCompany.description || '',
-        headquarters: prepareArrayForApi(newCompany.headquarters), // Converts the string back to array
+        // Convert the comma-separated strings back to arrays for the API
+        headquarters: prepareArrayForApi(newCompany.headquarters), 
         sub_branch_location: prepareArrayForApi(newCompany.sub_branch_location),
         type: prepareArrayForApi(newCompany.type),
       };
 
-      const formData = buildFormData(payload, false); // Not editing
+      const formData = buildFormData(payload, false);
 
-      const res = await NotificationsApi.post('/companies', formData, {
+      await NotificationsApi.post('/companies', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -169,14 +175,15 @@ export default function ManageCompanies() {
         email: editingCompany.email,
         phone: editingCompany.phone || '',
         description: editingCompany.description || '',
-        headquarters: prepareArrayForApi(newCompany.headquarters), // Converts the string back to array
-        sub_branch_location: prepareArrayForApi(newCompany.sub_branch_location),
-        type: prepareArrayForApi(newCompany.type),
+        // FIX: Use editingCompany state for array conversions
+        headquarters: prepareArrayForApi(editingCompany.headquarters), 
+        sub_branch_location: prepareArrayForApi(editingCompany.sub_branch_location),
+        type: prepareArrayForApi(editingCompany.type),
       };
 
-      const formData = buildFormData(payload, true); // Is editing
+      const formData = buildFormData(payload, true); 
 
-      const res = await NotificationsApi.put(`/companies/${editingCompany.id}`, formData, {
+      await NotificationsApi.put(`/companies/${editingCompany.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -193,10 +200,9 @@ export default function ManageCompanies() {
 
   const handleDeleteCompany = async (id) => {
     try {
-      // Endpoint is DELETE /companies/:id
       await NotificationsApi.delete(`/companies/${id}`);
       toast.success('Company deleted successfully!');
-      fetchCompanies(); // Refresh the list
+      fetchCompanies(); 
     } catch (error) {
       console.error('Error deleting company:', error);
       toast.error(error.response?.data?.message || 'Failed to delete company.');
@@ -219,9 +225,10 @@ export default function ManageCompanies() {
         <button className="button" onClick={() => {
             setNewCompany({
                 name: '', email: '', phone: '', logo: '', description: '',
-                headquarters: '', // Initialize as string
-                sub_branch_location: '', // Initialize as string
-                type: '', // Initialize as string
+                // Initialize array fields as empty strings for input visibility fix
+                headquarters: '', 
+                sub_branch_location: '', 
+                type: '', 
             });
             setLogoFile(null);
             setLogoPreviewUrl('');
@@ -249,20 +256,20 @@ export default function ManageCompanies() {
             </div>
             <div className="job-card-footer">
               <button 
-                  className="button" 
-                  onClick={() => {
-                      setEditingCompany({
-                          ...company, // Keep all properties
-                          // Convert arrays to strings for the input fields
-                          headquarters: formatArrayForInput(company.headquarters),
-                          sub_branch_location: formatArrayForInput(company.sub_branch_location),
-                          type: formatArrayForInput(company.type),
-                      });
-                      setLogoFile(null); // Clear selected file when opening for edit
-                      // The useEffect will then set logoPreviewUrl to company.logo
-                  }}
+                className="button" 
+                onClick={() => {
+                    setEditingCompany({
+                        ...company, 
+                        // FIX: Convert arrays to strings ONLY when loading for edit
+                        headquarters: formatArrayForInput(company.headquarters),
+                        sub_branch_location: formatArrayForInput(company.sub_branch_location),
+                        type: formatArrayForInput(company.type),
+                    });
+                    setLogoFile(null); 
+                    // useEffect handles setting logoPreviewUrl to company.logo
+                }}
               >
-                  Edit
+                Edit
               </button>
               <button className="button danger" onClick={() => handleDeleteCompany(company.id)}>Delete</button>
             </div>
@@ -278,10 +285,7 @@ export default function ManageCompanies() {
             
             <label htmlFor="name">Company Name:</label>
             <input
-              type="text"
-              id="name"
-              name="name"
-              className="form-input"
+              type="text" id="name" name="name" className="form-input"
               value={currentCompany?.name || ''}
               onChange={handleInputChange}
               placeholder="Enter company name"
@@ -289,10 +293,7 @@ export default function ManageCompanies() {
             
             <label htmlFor="email">Email:</label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              className="form-input"
+              type="email" id="email" name="email" className="form-input"
               value={currentCompany?.email || ''}
               onChange={handleInputChange}
               placeholder="Enter email"
@@ -300,10 +301,7 @@ export default function ManageCompanies() {
             
             <label htmlFor="phone">Phone:</label>
             <input
-              type="text"
-              id="phone"
-              name="phone"
-              className="form-input"
+              type="text" id="phone" name="phone" className="form-input"
               value={currentCompany?.phone || ''}
               onChange={handleInputChange}
               placeholder="Enter phone number"
@@ -311,16 +309,9 @@ export default function ManageCompanies() {
             
             <label htmlFor="logo">Company Logo (Image File):</label>
             <input
-              type="file"
-              id="logo"
-              name="logo"
-              accept="image/*" // Only accept image files
+              type="file" id="logo" name="logo" accept="image/*" 
               className="form-input" 
               onChange={handleLogoFileChange}
-              // Value for file inputs cannot be controlled like text inputs for security reasons.
-              // If you want to clear a selected file, you reset the input element directly
-              // by rendering it conditionally or using a key prop trick.
-              // For simplicity, we just rely on the onChange and state.
             />
             
             {/* Image Preview */}
@@ -333,35 +324,26 @@ export default function ManageCompanies() {
                 />
               </div>
             )}
-            {/* End Image Preview */}
 
             <label htmlFor="description">Description:</label>
             <textarea
-              id="description"
-              name="description"
-              className="form-textarea"
+              id="description" name="description" className="form-textarea"
               value={currentCompany?.description || ''}
               onChange={handleInputChange}
               placeholder="Enter company description"
             ></textarea>
+            
             <label htmlFor="headquarters">Headquarters (comma separated):</label>
             <input
-              type="text"
-              id="headquarters"
-              name="headquarters"
-              className="form-input"
-              // Value is now the string directly from the state
+              type="text" id="headquarters" name="headquarters" className="form-input"
               value={currentCompany?.headquarters || ''}
-              onChange={handleInputChange} // This now correctly saves the string value
+              onChange={handleInputChange} 
               placeholder="e.g., Sindhnoor, Bangalore"
             />
 
             <label htmlFor="sub_branch_location">Sub Branches (comma separated):</label>
             <input
-              type="text"
-              id="sub_branch_location"
-              name="sub_branch_location"
-              className="form-input"
+              type="text" id="sub_branch_location" name="sub_branch_location" className="form-input"
               value={currentCompany?.sub_branch_location || ''}
               onChange={handleInputChange}
               placeholder="e.g., Bellary, Delhi"
@@ -369,10 +351,7 @@ export default function ManageCompanies() {
 
             <label htmlFor="type">Type (comma separated):</label>
             <input
-              type="text"
-              id="type"
-              name="type"
-              className="form-input"
+              type="text" id="type" name="type" className="form-input"
               value={currentCompany?.type || ''}
               onChange={handleInputChange}
               placeholder="e.g., crm, erp, software"
