@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axios.post(
         "/api/login",
-        { email, password, role },
+        { email, password },
         { withCredentials: true }
       );
       // Expect user at res.data.data.user
