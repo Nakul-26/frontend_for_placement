@@ -59,7 +59,7 @@ export default function RecommendedJobs() {
       });
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
-      if (res.ok) {
+      if (res.status === 200 || res.status === 201) {
         toast.success(result?.message || 'Your application was submitted successfully!');
         setSuccess("your application was submitted successfully!");
         if (job.apply_link) {
