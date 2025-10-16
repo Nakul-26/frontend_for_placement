@@ -58,6 +58,7 @@ const Login = () => {
       // Navigate to the original requested location (if any), else to role dashboard
       const requested = typeof location.state?.from === 'string' ? location.state.from : (location.state?.from ?? null);
       const from = requested || `/${role}/dashboard`;
+      console.log('Login successful, navigating to:', from);
       navigate(from);
     } catch (err) {
       setError(err?.message || 'Login failed. Please try again.');
