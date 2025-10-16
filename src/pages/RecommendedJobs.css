@@ -92,3 +92,15 @@
 .view-details-btn:hover {
   background-color: #1d4ed8;
 }
+
+.error-message {
+  color: #dc2626;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.success-message {
+  color: #16a34a;
+  font-size: 1rem;
+  text-align: center;
+}
