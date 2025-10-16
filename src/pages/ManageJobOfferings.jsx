@@ -13,7 +13,7 @@ export default function ManageJobOfferings() {
 
   const fetchCompanies = async () => {
     try {
-      const res = await api.get('/companies');
+      const res = await api.get('/rbac/companies');
       console.log('companies res: ', res);
       setCompanies(res.data.companies || []);
     } catch (err) {
