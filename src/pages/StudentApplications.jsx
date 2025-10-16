@@ -9,6 +9,7 @@ const API_URL = "https://notification-31at.onrender.com/forms";
 function StudentApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchApplications = async () => {

@@ -10,8 +10,6 @@ const AddIcon = () => (
   </svg>
 );
 
-
-
 const DeleteIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="3 6 5 6 21 6"></polyline>
@@ -30,6 +28,9 @@ export default function Permissions() {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingPermissionId, setDeletingPermissionId] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,6 +52,9 @@ export default function Permissions() {
         }
       );
 
+      console.log('fetchPermissions response:', res.data.data);
+
+
       console.log('fetchPermissions response:', Array.isArray(res.data.data) ? 'true' : 'false');
 
       setPermissions(
@@ -58,9 +62,14 @@ export default function Permissions() {
           ? res.data.data
           : []
       );
+
+      setError(null);
     } catch (err) {
       console.error('fetchPermissions error:', err);
       setPermissions([]);
+      setError(err.message || 'Failed to fetch permissions');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,8 +188,7 @@ export default function Permissions() {
           <div className={`${styles.modal} ${styles.card}`}>
             <h3 className={styles['modal-title']}>{newPermission ? 'Add Permission' : 'Edit Permission'}</h3>
             <div className={styles['modal-content']}>
-              <input
-className={styles['form-input']}
+              <input className={styles['form-input']}
                 placeholder="Name"
                 type="text"
                 value={newPermission?.name || editingPermission?.name || ''}
@@ -192,8 +200,7 @@ className={styles['form-input']}
                   }
                 }}
               />
-              <input
-                className={styles['form-input']}
+              <input className={styles['form-input']}
                 placeholder="Description"
                 type="text"
                 value={newPermission?.description || editingPermission?.description || ''}
@@ -208,7 +215,7 @@ className={styles['form-input']}
             </div>
             <div className={styles['modal-actions']}>
               <button className={`${styles.button} ${styles.secondary}`} onClick={handleClose} disabled={isSubmitting}>Cancel</button>
-              <button className="button" onClick={newPermission ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
+              <button className={styles.button} onClick={newPermission ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : (newPermission ? 'Add' : 'Save')}
               </button>
             </div>

@@ -2,24 +2,24 @@
   padding: 24px;
   background-color: #ffffff; 
   font-family: 'Inter', sans-serif;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px); /* Adjust for header height */
 }
 
 .admin-dashboard-header {
-  margin-bottom: 32px;
+  margin-bottom: 30px;
   text-align: left;
 }
 
 .admin-dashboard-title {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #1e3a8a;
+  color: #111827;
   margin-bottom: 8px;
 }
 
 .admin-dashboard-subtitle {
   font-size: 1rem;
-  color: #6b7280; 
+  color: #4b5563; 
 }
 
 .admin-dashboard-grid {
@@ -31,21 +31,19 @@
 .dashboard-card {
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   padding: 24px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid #e0e7ff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* min-height: 150px; */
-  /* max-width: 500px !important; */
 }
 
 .dashboard-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  border-color: #2563eb; 
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  border-color: #1976d2; 
 }
 
 .dashboard-card-title {

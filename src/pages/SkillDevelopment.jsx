@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from '../components/Header';
 import './SkillDevelopment.css';
 
 const categories = ['All', 'Web Development', 'Data Science', 'AI/ML', 'DevOps'];
@@ -67,48 +68,51 @@ const SkillDevelopment = () => {
   });
 
   return (
-    <div className="skill-development-container">
-      <div className="header-section">
-        <h1>Skill Development</h1>
-        <p>Your one-stop portal for learning resources, roadmaps, and tutorials.</p>
-      </div>
+    <>
+      <Header />
+      <div className="skill-development-container">
+        <div className="header-section">
+          <h1>Skill Development</h1>
+          <p>Your one-stop portal for learning resources, roadmaps, and tutorials.</p>
+        </div>
 
-      <div className="controls-section">
-        <input
-          type="text"
-          placeholder="Search resources..."
-          className="search-bar"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <div className="filter-buttons">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
+        <div className="controls-section">
+          <input
+            type="text"
+            placeholder="Search resources..."
+            className="search-bar"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="filter-buttons">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="resources-grid">
+          {filteredResources.map((resource) => (
+            <div key={resource.id} className="resource-card">
+              <div className="card-header">
+                <span className="resource-type">{resource.type}</span>
+                <span className="resource-category">{resource.category}</span>
+              </div>
+              <h3 className="resource-title">{resource.title}</h3>
+              <p className="resource-description">{resource.description}</p>
+              <a href={resource.link} className="resource-link" target="_blank" rel="noopener noreferrer">
+                Start Learning &rarr;
+              </a>
+            </div>
           ))}
         </div>
       </div>
-
-      <div className="resources-grid">
-        {filteredResources.map((resource) => (
-          <div key={resource.id} className="resource-card">
-            <div className="card-header">
-              <span className="resource-type">{resource.type}</span>
-              <span className="resource-category">{resource.category}</span>
-            </div>
-            <h3 className="resource-title">{resource.title}</h3>
-            <p className="resource-description">{resource.description}</p>
-            <a href={resource.link} className="resource-link" target="_blank" rel="noopener noreferrer">
-              Start Learning &rarr;
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 

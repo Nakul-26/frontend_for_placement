@@ -2,12 +2,15 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { NotificationsApi } from '../services/api.js';
+import { useAuth } from '../context/useAuth.jsx';
+import './JobOfferings.css';
 
 export default function JobOfferings() {
   const [jobs, setJobs] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [error2, setError2] = React.useState(null);
 
   const handleViewDetails = () => {
   try {
@@ -74,7 +77,7 @@ export default function JobOfferings() {
             </div>
             <div className="job-card-footer">
                 <button onClick={handleViewDetails} className="view-details-btn">View Details</button>
-                <button >Apply</button>
+                {/* <button >Apply</button> */}
             </div>
           </div>
         ))}

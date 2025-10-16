@@ -1,0 +1,42 @@
+.job-detail-container {
+  padding: 24px;
+  background-color: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+  min-height: calc(100vh - 60px); /* Adjust for header height */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.job-detail-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 100%;
+  max-width: 800px;
+  border: 1px solid #e5e7eb;
+}
+
+.job-detail-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .job-detail-container {
+    padding: 16px;
+  }
+
+  .job-detail-card {
+    padding: 16px;
+  }
+
+  .job-detail-title {
+    font-size: 1.5rem;
+  }
+}

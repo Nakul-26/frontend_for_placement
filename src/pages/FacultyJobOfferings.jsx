@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import './RecommendedJobs.css'; // Reusing the CSS for now
-import { getJobOfferings } from '../services/api';
+import { api } from '../services/api';
+
 import { toast } from 'react-toastify';
 
 export default function FacultyJobOfferings() {
@@ -11,7 +12,7 @@ export default function FacultyJobOfferings() {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
-        const response = await getJobOfferings();
+        const response = await api.get('/jobs', { withCredentials: true });
         if (Array.isArray(response.data.jobs)) {
           setJobOfferings(response.data.jobs);
         } else {

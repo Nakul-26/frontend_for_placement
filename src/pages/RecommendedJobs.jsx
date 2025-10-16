@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './RecommendedJobs.module.css';
-import { getJobOfferings } from '../services/api';
+import { api } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 
@@ -8,12 +8,14 @@ export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const [jobMessages, setJobMessages] = useState({}); // New state for job-specific messages
+  const [currentlyApplyingJobId, setCurrentlyApplyingJobId] = useState(null); // Track which job is being applied to
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
-        const response = await getJobOfferings();
+        const response = await api.get('/jobs', { withCredentials: true });
         if (Array.isArray(response.data.jobs)) {
           setJobOfferings(response.data.jobs);
         } else {
@@ -37,6 +39,10 @@ export default function RecommendedJobs() {
       toast.error('Please login to apply for jobs.');
       return;
     }
+
+    setCurrentlyApplyingJobId(job.id || job.jobid);
+    setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: null })); // Clear previous message for this job
+
     const payload = {
       user_name: user.name || user.user_name || user.fullName || user.username || '',
       user_email: user.email || user.user_email || '',
@@ -54,15 +60,17 @@ export default function RecommendedJobs() {
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
       if (res.ok) {
-        toast.success(result?.message || 'Your application was submitted successfully!');
+        setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: { type: 'success', message: 'Your application was submitted successfully!' } }));
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
       } else {
-        toast.error(result?.message || 'Failed to submit your application. Please try again later.');
+        setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: { type: 'error', message: result?.message || 'Failed to submit your application. Please try again later.' } }));
       }
     } catch (err) {
-      toast.error('Network error: Unable to submit application.');
+      setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: { type: 'error', message: 'Network error: Unable to submit application.' } }));
+    } finally {
+      setCurrentlyApplyingJobId(null);
     }
   };
 
@@ -106,10 +114,9 @@ export default function RecommendedJobs() {
                   <p><strong>Applications Opens from:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
                   <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 </div>
-                {(error || success) && (currentlyApplyingJobId === job.id || currentlyApplyingJobId === job.jobid) && (
-                  <div className={`${styles.notification} ${error ? styles.error : styles.success}`}>
-                    {error && <p>{error}</p>}
-                    {success && <p>{success}</p>}
+                {jobMessages[job.id || job.jobid] && (
+                  <div className={`${styles.notification} ${jobMessages[job.id || job.jobid].type === 'error' ? styles.error : styles.success}`}>
+                    <p>{jobMessages[job.id || job.jobid].message}</p>
                   </div>
                 )}
                 <div className={styles['job-card-footer']}>

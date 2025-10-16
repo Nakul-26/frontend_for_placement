@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { readUsers, createUser, updateUser, deleteUser } from '../services/api.js';
+import { api } from '../services/api.js';
 import styles from './Users.module.css';
 
 const AddIcon = () => (
@@ -50,7 +50,7 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await readUsers();
+      const res = await api.get('/rbac/users', { withCredentials: true });
       console.log('users res: ', res);
       setUsers(res.data.data || []);
       setError('');
@@ -68,7 +68,7 @@ export default function Users() {
     setDeletingUserId(id);
     setIsSubmitting(true);
     try {
-      await deleteUser(id);
+      await api.delete(`/users/${id}`, { withCredentials: true });
       await fetchUsers();
       toast.success('User deleted successfully!');
     } catch (err) {
@@ -90,7 +90,7 @@ export default function Users() {
         role_id: editingUser.role_id,
       };
 
-      await updateUser(editingUser.id, payload);
+      await api.put(`/users/${editingUser.id}`, payload, { withCredentials: true });
 
       handleClose();
       await fetchUsers();
@@ -113,7 +113,7 @@ export default function Users() {
         role_id: newUser.role_id,
       };
 
-      await createUser(payload);
+      await api.post('/users/register', payload, { withCredentials: true });
 
       handleClose();
       await fetchUsers();

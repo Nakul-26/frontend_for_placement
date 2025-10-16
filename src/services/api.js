@@ -53,41 +53,41 @@ export const addNotification = (notification) => {
   console.log('Adding notification 2:', notification);
   return NotificationsApi.post(`/notifications`, { notification });
 }
-export const editNotification = (id, notification) => NotificationsApi.put(`/notifications/${id}`, { notification });
-export const deleteNotification = (id) => NotificationsApi.delete(`/notifications/${id}`);
-export const getNotifications = () => NotificationsApi.get(`/notifications`);
+export const editNotification = (id, notification) => NotificationsApi.put(`/notifications/${id}`, { notification }, { withCredentials: true });
+export const deleteNotification = (id) => NotificationsApi.delete(`/notifications/${id}`, { withCredentials: true });
+export const getNotifications = () => NotificationsApi.get(`/notifications`, { withCredentials: true });
 
 // Job Offerings
-export const addJobOffering = (jobOffering) => NotificationsApi.post(`/jobs`, { jobOffering });
-export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/jobs/${id}`, { jobOffering });
-export const deleteJobOffering = (id) => NotificationsApi.delete(`/jobs/${id}`);
-export const getJobOfferings = () => NotificationsApi.get(`/jobs`);
+export const addJobOffering = (jobOffering) => NotificationsApi.post(`/jobs`, { jobOffering }, { withCredentials: true });
+export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/jobs/${id}`, { jobOffering }, { withCredentials: true });
+export const deleteJobOffering = (id) => NotificationsApi.delete(`/jobs/${id}`, { withCredentials: true });
+export const getJobOfferings = () => NotificationsApi.get(`/jobs`, { withCredentials: true });
 
 // Users
-export const readUsers = () => api.get('/users');
-export const createUser = (data) => api.post('/users/register', data);
-export const readUser = () => api.get('/users/me');
-export const updateUser = (id, data) => api.put(`/users/${id}`, data);
-export const deleteUser = (id) => api.delete(`/users/${id}`);
+export const readUsers = () => api.get('/rbac/users', { withCredentials: true });
+export const createUser = (data) => api.post('/rbac/users/register', data, { withCredentials: true });
+export const readUser = () => api.get('/rbac/users/me', { withCredentials: true });
+export const updateUser = (id, data) => api.put(`/rbac/users/${id}`, data, { withCredentials: true });
+export const deleteUser = (id) => api.delete(`/rbac/users/${id}`, { withCredentials: true });
 
 // Roles
-export const readRoles = () => api.get('/roles');
-export const readRole = (id) => api.get(`/roles/${id}`);
-export const createRole = (data) => api.post('/roles', data);
-export const updateRole = (id, data) => api.put(`/roles/${id}`, data);
-export const deleteRole = (id) => api.delete(`/roles/${id}`);
+export const readRoles = () => api.get('/rbac/roles', { withCredentials: true });
+export const readRole = (id) => api.get(`/rbac/roles/${id}`, { withCredentials: true });
+export const createRole = (data) => api.post('/rbac/roles', data, { withCredentials: true });
+export const updateRole = (id, data) => api.put(`/rbac/roles/${id}`, data, { withCredentials: true });
+export const deleteRole = (id) => api.delete(`/rbac/roles/${id}`, { withCredentials: true });
 
 // Permissions
-export const readPermissions = () => api.get('/permissions');
-export const readPermission = (id) => api.get(`/permissions/${id}`);
-export const createPermission = (data) => api.post('/permissions', data);
-export const deletePermission = (id) => api.delete(`/permissions/${id}`);
+export const readPermissions = () => api.get('/rbac/permissions', { withCredentials: true });
+export const readPermission = (id) => api.get(`/rbac/permissions/${id}`, { withCredentials: true });
+export const createPermission = (data) => api.post('/rbac/permissions', data, { withCredentials: true });
+export const deletePermission = (id) => api.delete(`/rbac/permissions/${id}`, { withCredentials: true });
 
 // Role-Permissions
-export const readRolePermissions = (roleId) => api.get(`/role-permissions/${roleId}`);
-export const assignPermissionToRole = (data) => api.post('/role-permissions', data);
-export const revokePermissionFromRole = (data) => api.delete('/role-permissions', { data });
-export const checkRoleAccess = (data) => api.post('/role-permissions/check-access', data);
+export const readRolePermissions = (roleId) => api.get(`/rbac/role-permissions/${roleId}`, { withCredentials: true });
+export const assignPermissionToRole = (data) => api.post('/rbac/role-permissions', data, { withCredentials: true });
+export const revokePermissionFromRole = (data) => api.delete('/rbac/role-permissions', { data }, { withCredentials: true });
+export const checkRoleAccess = (data) => api.post('/rbac/role-permissions/check-access', data, { withCredentials: true });
 
 
 export { api, NotificationsApi };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApi } from '../services/api.js';
+import { api } from '../services/api.js';
 import toast from 'react-hot-toast';
 import styles from './AdminNotifications.module.css';
 
@@ -36,6 +36,9 @@ const AdminNotifications = () => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingNotificationId, setDeletingNotificationId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
 
   const handleClickOpen = () => {
     setOpen(true);

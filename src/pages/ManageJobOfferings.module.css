@@ -37,88 +37,50 @@
     justify-content: space-between;
 }
 
-.job-card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.company-logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 15px;
-    object-fit: contain;
-    border: 1px solid #eee;
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.job-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #007bff;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.company-name {
-    color: #666;
-    font-size: 0.9rem;
+.form-group label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.95rem;
 }
 
-.job-card-body p {
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
-
-.skills-list {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 5px;
-}
-
-.skills-list li {
-    background-color: #e9f5ff;
-    color: #007bff;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-}
-
-/* FIX: Job Card Footer - Use flex to position buttons */
-.job-card-footer {
-    display: flex; 
-    /* Removing 'gap: 10px;' here to avoid conflict and use the margin fix below */
-    justify-content: flex-end; /* Align buttons to the right */
-    margin-top: auto; /* Use auto margin to push the footer to the bottom of the flex card */
-    padding-top: 15px;
-    border-top: 1px solid #f0f0f0;
-}
-
-/* FIX: Apply margin-right to the Edit button (first child) to separate it from Delete button */
-.job-card-footer .button:first-child {
-    /* Set a strong right margin to push the next button away */
-    margin-right: 10px !important; 
-    /* Remove margin-left: 30px !important; as it was only for testing/causing issues */
-}
-/* --- End Job Card Styles --- */
-
-
-/* --- Form and Button Styles --- */
-
-.form-container {
-    margin-bottom: 20px; 
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .form-input, .form-textarea {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+}
 .form-textarea {
     resize: vertical;
     min-height: 100px;
@@ -150,39 +112,41 @@
 }
 
 .button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    background-color: #007bff; 
-    color: white;
-    font-weight: 500;
+  background-color: #1976d2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .button:hover {
-    background-color: #0056b3;
+  background-color: #115293;
 }
 
 .button.danger {
-    background-color: #f44336;
-    color: white;
+  background-color: #ef4444;
+  color: white;
 }
 
 .button.danger:hover {
-    background-color: #d32f2f;
+  background-color: #dc2626;
 }
 
 .button.secondary {
-    background-color: #f0f0f0;
-    color: #333;
+  background-color: #e5e7eb;
+  color: #4b5563;
 }
 
 .button.secondary:hover {
-    background-color: #e0e0e0;
+  background-color: #d1d5db;
 }
-
-/* --- Modal Styles --- */
 
 .modal-overlay {
     position: fixed;
@@ -198,18 +162,38 @@
 }
 
 .modal {
-    width: 90%;
-    max-width: 500px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 500px;
+  position: relative; /* Added for proper positioning of children */
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-title {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 70vh; /* Adjust as needed */
+  overflow-y: auto;
+  padding-right: 10px; /* Add some padding for the scrollbar */
 }
 
 .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px; /* Use gap for modal actions, as it seems to be working here */
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }

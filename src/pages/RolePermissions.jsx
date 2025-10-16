@@ -14,6 +14,10 @@ export default function RolePermissions() {
   const [originalRolePermissions, setOriginalRolePermissions] = useState([]); // To track initial permissions for comparison
   const [hasChanges, setHasChanges] = useState(false);
 
+  const [rolePermissionsLoading, setRolePermissionsLoading] = useState(false);
+  const [rolePermissionsError, setRolePermissionsError] = useState(null);
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
     // Compare rolePermissions with originalRolePermissions to determine if there are changes
     const changesDetected = 

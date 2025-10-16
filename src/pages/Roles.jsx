@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
-// import './Roles.css';
+import styles from './Roles.module.css';
 
 const AddIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -25,6 +25,27 @@ const DeleteIcon = () => (
   </svg>
 );
 
+const createRole = async (roleData) => {
+  const config = {
+    withCredentials: true,
+  };
+  return await api.post('/rbac/roles', roleData, config);
+};
+
+const updateRole = async (id, roleData) => {
+  const config = {
+    withCredentials: true,
+  };
+  return await api.put(`/rbac/roles/${id}`, roleData, config);
+};
+
+const deleteRole = async (id) => {
+  const config = {
+    withCredentials: true,
+  };
+  return await api.delete(`/rbac/roles/${id}`, config);
+};
+
 export default function Roles() {
   const [roles, setRoles] = useState([]);
 
@@ -34,6 +55,9 @@ export default function Roles() {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingRoleId, setDeletingRoleId] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
