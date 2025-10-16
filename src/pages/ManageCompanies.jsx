@@ -41,13 +41,19 @@ export default function ManageCompanies() {
   }, [logoFile, currentCompany]);
 
   // Helper to update the current object state
+  // AROUND LINE 40 IN THE COMPONENT LOGIC
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (newCompany) {
-      setNewCompany({ ...newCompany, [name]: value });
-    } else if (editingCompany) {
-      setEditingCompany({ ...editingCompany, [name]: value });
-    }
+      const { name, value } = e.target;
+      // We can merge the state update logic here
+      const updateFunc = newCompany ? setNewCompany : setEditingCompany;
+      const currentObj = newCompany || editingCompany;
+
+      if (currentObj) {
+          updateFunc({ 
+              ...currentObj, 
+              [name]: value // Directly store the string value
+          });
+      }
   };
 
   // Handler for the file input
@@ -75,11 +81,15 @@ export default function ManageCompanies() {
     fetchCompanies();
   }, []);
 
+  // AROUND LINE 85 IN THE COMPONENT LOGIC
   const resetModalState = () => {
-    setNewCompany(null);
-    setEditingCompany(null);
-    setLogoFile(null);       // Clear selected file
-    setLogoPreviewUrl(''); // Clear preview URL
+      // These must be set to null to hide the modal and clean up state.
+      setNewCompany(null);
+      setEditingCompany(null); 
+      
+      // Cleanup image states
+      setLogoFile(null);      
+      setLogoPreviewUrl('');
   };
 
   const buildFormData = (companyData, isEditing = false) => {
@@ -239,19 +249,20 @@ export default function ManageCompanies() {
             </div>
             <div className="job-card-footer">
               <button 
-                className="button" 
-                onClick={() => {
-                  setEditingCompany({
-                      ...company, // Spread all existing properties
-                      // Convert array fields back to strings for the input fields
-                      headquarters: formatArrayForInput(company.headquarters),
-                      sub_branch_location: formatArrayForInput(company.sub_branch_location),
-                      type: formatArrayForInput(company.type),
-                  });
-                  setLogoFile(null);
-                }}
+                  className="button" 
+                  onClick={() => {
+                      setEditingCompany({
+                          ...company, // Keep all properties
+                          // Convert arrays to strings for the input fields
+                          headquarters: formatArrayForInput(company.headquarters),
+                          sub_branch_location: formatArrayForInput(company.sub_branch_location),
+                          type: formatArrayForInput(company.type),
+                      });
+                      setLogoFile(null); // Clear selected file when opening for edit
+                      // The useEffect will then set logoPreviewUrl to company.logo
+                  }}
               >
-                Edit
+                  Edit
               </button>
               <button className="button danger" onClick={() => handleDeleteCompany(company.id)}>Delete</button>
             </div>
