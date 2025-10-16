@@ -125,7 +125,7 @@ export default function ManageCompanies() {
         email: newCompany.email,
         phone: newCompany.phone || '', // Ensure it's not undefined
         description: newCompany.description || '',
-        headquarters: prepareArrayForApi(newCompany.headquarters),
+        headquarters: prepareArrayForApi(newCompany.headquarters), // Converts the string back to array
         sub_branch_location: prepareArrayForApi(newCompany.sub_branch_location),
         type: prepareArrayForApi(newCompany.type),
       };
@@ -159,9 +159,9 @@ export default function ManageCompanies() {
         email: editingCompany.email,
         phone: editingCompany.phone || '',
         description: editingCompany.description || '',
-        headquarters: prepareArrayForApi(editingCompany.headquarters),
-        sub_branch_location: prepareArrayForApi(editingCompany.sub_branch_location),
-        type: prepareArrayForApi(editingCompany.type),
+        headquarters: prepareArrayForApi(newCompany.headquarters), // Converts the string back to array
+        sub_branch_location: prepareArrayForApi(newCompany.sub_branch_location),
+        type: prepareArrayForApi(newCompany.type),
       };
 
       const formData = buildFormData(payload, true); // Is editing
@@ -208,11 +208,13 @@ export default function ManageCompanies() {
       <div className="form-container">
         <button className="button" onClick={() => {
             setNewCompany({
-                name: '', email: '', phone: '', logo: '', description: '', // logo here is just a placeholder
-                headquarters: [], sub_branch_location: [], type: [],
+                name: '', email: '', phone: '', logo: '', description: '',
+                headquarters: '', // Initialize as string
+                sub_branch_location: '', // Initialize as string
+                type: '', // Initialize as string
             });
-            setLogoFile(null);        // Crucially clear any previously selected file
-            setLogoPreviewUrl(''); // Clear preview
+            setLogoFile(null);
+            setLogoPreviewUrl('');
         }}>Add New Company</button>
       </div>
       
@@ -239,9 +241,14 @@ export default function ManageCompanies() {
               <button 
                 className="button" 
                 onClick={() => {
-                  setEditingCompany(company);
-                  setLogoFile(null); // Clear selected file when opening for edit
-                  // The useEffect will then set logoPreviewUrl to company.logo
+                  setEditingCompany({
+                      ...company, // Spread all existing properties
+                      // Convert array fields back to strings for the input fields
+                      headquarters: formatArrayForInput(company.headquarters),
+                      sub_branch_location: formatArrayForInput(company.sub_branch_location),
+                      type: formatArrayForInput(company.type),
+                  });
+                  setLogoFile(null);
                 }}
               >
                 Edit
@@ -326,36 +333,36 @@ export default function ManageCompanies() {
               onChange={handleInputChange}
               placeholder="Enter company description"
             ></textarea>
-            
             <label htmlFor="headquarters">Headquarters (comma separated):</label>
             <input
               type="text"
               id="headquarters"
               name="headquarters"
               className="form-input"
-              value={formatArrayForInput(currentCompany?.headquarters)}
-              onChange={handleInputChange}
+              // Value is now the string directly from the state
+              value={currentCompany?.headquarters || ''}
+              onChange={handleInputChange} // This now correctly saves the string value
               placeholder="e.g., Sindhnoor, Bangalore"
             />
-            
+
             <label htmlFor="sub_branch_location">Sub Branches (comma separated):</label>
             <input
               type="text"
               id="sub_branch_location"
               name="sub_branch_location"
               className="form-input"
-              value={formatArrayForInput(currentCompany?.sub_branch_location)}
+              value={currentCompany?.sub_branch_location || ''}
               onChange={handleInputChange}
               placeholder="e.g., Bellary, Delhi"
             />
-            
+
             <label htmlFor="type">Type (comma separated):</label>
             <input
               type="text"
               id="type"
               name="type"
               className="form-input"
-              value={formatArrayForInput(currentCompany?.type)}
+              value={currentCompany?.type || ''}
               onChange={handleInputChange}
               placeholder="e.g., crm, erp, software"
             />
