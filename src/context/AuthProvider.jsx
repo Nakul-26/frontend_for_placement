@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
         { withCredentials: true }
       );
       // Expect user at res.data.data.user
-      let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
+      let newUser = res.data?.data;
       // Map role_id to role string for frontend
       if (newUser && newUser.role_id) {
         if (newUser.role_id === 1) newUser.role = 'admin';

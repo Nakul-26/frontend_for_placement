@@ -46,6 +46,7 @@ const Login = () => {
       setLoading(true);
       const result = await login(email, password, role);
       if (!result?.success) {
+        console.log('Login failed:', result);
         setError(result?.error?.response?.data?.message || 'Login failed.');
         return;
       }
