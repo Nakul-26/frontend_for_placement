@@ -3,6 +3,7 @@ import './RecommendedJobs.css';
 import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
+import axios from 'axios';
 
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
@@ -36,6 +37,7 @@ export default function RecommendedJobs() {
   }, []);
 
   const handleApply = async (job) => {
+    console.log('Starting application process for job:', job.id || job.jobid || null);
     setSuccess(false);
     setError('');
     setCurrentJobId(job.id || job.jobid || null);
@@ -50,30 +52,30 @@ export default function RecommendedJobs() {
       jobid: job.id || job.jobid || '',
     };
     try {
-      const res = await fetch('https://notification-31at.onrender.com/forms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const res = await axios.post('https://notification-31at.onrender.com/forms', {
         body: JSON.stringify(payload),
       });
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
       if (res.status === 200 || res.status === 201) {
+        console.log('Response from application submission:', res);
         toast.success(result?.message || 'Your application was submitted successfully!');
         setSuccess("your application was submitted successfully!");
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
       } else {
+        console.error('Error submitting application:', result);
         setError(result?.message || 'Failed to submit your application. Please try again later.');
         toast.error(result?.message || 'Failed to submit your application. Please try again later.');
       }
     } catch (err) {
+      console.log('Response from application submission:', err.response);
       console.error('Network error while submitting application:', err);
       setError('Network error: Unable to submit application.');
       toast.error('Network error: Unable to submit application.');
     } finally {
+      console.log('Finished handling application for job:', job.id || job.jobid || null);
       // setSuccess(true);
       setCurrentJobId(null);
     }
