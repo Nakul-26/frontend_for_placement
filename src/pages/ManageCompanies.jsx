@@ -283,13 +283,17 @@ export default function ManageCompanies() {
           <div className="modal card">
             <h3 className="modal-title">{newCompany ? 'Add New Company' : `Edit ${editingCompany.name}`}</h3>
             
-            <label htmlFor="name">Company Name:</label>
-            <input
-              type="text" id="name" name="name" className="form-input"
-              value={currentCompany?.name || ''}
-              onChange={handleInputChange}
-              placeholder="Enter company name"
-            />
+            {newCompany && (
+              <>
+              <label htmlFor="name">Company Name:</label>
+              <input
+                type="text" id="name" name="name" className="form-input"
+                value={currentCompany?.name || ''}
+                onChange={handleInputChange}
+                placeholder="Enter company name"
+              />
+              </>
+            )}
             
             <label htmlFor="email">Email:</label>
             <input
