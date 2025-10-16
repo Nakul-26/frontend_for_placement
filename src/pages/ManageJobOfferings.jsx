@@ -8,8 +8,21 @@ export default function ManageJobOfferings() {
   const [newJobOffering, setNewJobOffering] = useState(null);
   const [editingJobOffering, setEditingJobOffering] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [companies, setCompanies] = useState([]);
+
+  const fetchCompanies = async () => {
+    try {
+      const res = await api.get('/companies');
+      console.log('companies res: ', res);
+      setCompanies(res.data.companies || []);
+    } catch (err) {
+      console.error('Failed to fetch companies:', err);
+    }
+  };
 
   useEffect(() => {
+    fetchCompanies();
     fetchJobOfferings();
   }, []);
 
@@ -159,13 +172,39 @@ export default function ManageJobOfferings() {
             <div className="modal card">
             <h3 className="modal-title">{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
                 <label htmlFor="">Company ID:</label>
-                <input
+                {/* <input
                   type="number"
                   className="form-input"
                   value={newJobOffering?.company_id || ''}
                   onChange={(e) => setNewJobOffering({ ...newJobOffering, company_id: e.target.value })}
                   placeholder="Company ID"
-                />
+                /> */}
+                {/* <select name="" id=""></select> */}
+                <select
+                    id="company_id"
+                    name="company_id"
+                    className="form-input"
+                    // Ensure the value is correctly bound, converting to string for the select input
+                    value={currentJob?.company_id?.toString() || ''} 
+                    onChange={(e) => {
+                        // Update state, ensuring the value is stored as a number
+                        const companyId = Number(e.target.value);
+                        if (newJobOffering) {
+                            setNewJobOffering({ ...newJobOffering, company_id: companyId });
+                        } else if (editingJobOffering) {
+                            setEditingJobOffering({ ...editingJobOffering, company_id: companyId });
+                        }
+                    }}
+                >
+                    {/* Default/Placeholder option */}
+                    <option value="" disabled>Select a Company</option>
+                    {companies.map(company => (
+                        <option key={company.id} value={company.id}>
+                            {company.name}
+                        </option>
+                    ))}
+                </select>
+            {/* End of Company Select Dropdown */}
             <input
               type="text"
               className="form-input"
@@ -234,13 +273,13 @@ export default function ManageJobOfferings() {
               placeholder="Required skills (comma separated)"
             />
 
-            <input
+            {/* <input
               type="text"
               className="form-input"
               value={editingJobOffering?.company_logo || newJobOffering?.company_logo || ''}
               onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_logo: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_logo: e.target.value })}
               placeholder="Company logo URL"
-            />
+            /> */}
 
             <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input
