@@ -172,7 +172,7 @@ export default function ManageJobOfferings() {
         <div className="modal-overlay">
             <div className="modal card">
             <h3 className="modal-title">{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
-                <label htmlFor="">Company ID:</label>
+                
                 {/* <input
                   type="number"
                   className="form-input"
@@ -181,6 +181,8 @@ export default function ManageJobOfferings() {
                   placeholder="Company ID"
                 /> */}
                 {newJobOffering && (
+                  <>
+                  <label htmlFor="">Company ID:</label>
                   <select
                     id="company_id"
                     name="company_id"
@@ -205,6 +207,7 @@ export default function ManageJobOfferings() {
                         </option>
                     ))}
                 </select>
+                </>
                 )}
             {/* End of Company Select Dropdown */}
             <input
