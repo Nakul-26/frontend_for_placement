@@ -244,7 +244,7 @@ export default function ManageJobOfferings() {
             />
 
             <input
-              type="number"
+              type="text"
               className="form-input"
               value={editingJobOffering?.salary_range || newJobOffering?.salary_range || ''}
               onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, salary_range: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, salary_range: e.target.value })}
