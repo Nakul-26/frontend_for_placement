@@ -198,10 +198,11 @@
 }
 
 .modal {
+    margin-top: 10vh; /* Add some top margin to avoid being too close to the top */
     width: 90%;
     max-width: 500px;
 
-    max-height: 90vh; /* Set a maximum height (e.g., 90% of the viewport height) */
+    max-height: 80vh; /* Set a maximum height (e.g., 90% of the viewport height) */
     overflow-y: auto;
 }
 
