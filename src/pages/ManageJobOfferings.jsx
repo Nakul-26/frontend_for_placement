@@ -9,8 +9,21 @@ export default function ManageJobOfferings() {
   const [editingJobOffering, setEditingJobOffering] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [companies, setCompanies] = useState([]);
+  const [currentJob, setCurrentJob] = useState(null);
+
+  const fetchCompanies = async () => {
+    try {
+      const res = await NotificationsApi.get('/companies');
+      console.log('companies res: ', res);
+      setCompanies(res.data.companies || []);
+    } catch (err) {
+      console.error('Failed to fetch companies:', err);
+    }
+  };
 
   useEffect(() => {
+    fetchCompanies();
     fetchJobOfferings();
   }, []);
 
@@ -165,64 +178,74 @@ export default function ManageJobOfferings() {
         ))}
       </div>
       {(editingJobOffering || newJobOffering) && (
-        <div className={styles['modal-overlay']}>
-            <div className={`${styles.modal} ${styles.card}`}>
-            <h3 className={styles['modal-title']}>{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
-            <div className={styles['modal-content']}>
-                <div className={styles['form-group']}>
-                    <label htmlFor="company_id">Company ID:</label>
-                    <input
-                      id="company_id"
-                      type="number"
-                      className={styles['form-input']}
-                      value={newJobOffering?.company_id || ''}
-                      onChange={(e) => setNewJobOffering({ ...newJobOffering, company_id: e.target.value })}
-                      placeholder="Company ID"
-                    />
-                </div>
-                <div className={styles['form-group']}>
-                    <label htmlFor="title">Job Title:</label>
-                    <input
-                      id="title"
-                      type="text"
-                      className={styles['form-input']}
-                      value={editingJobOffering?.title || newJobOffering?.title || ''}
-                      onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, title: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, title: e.target.value })}
-                      placeholder="Enter job title"
-                    />
-                </div>
-                <div className={styles['form-group']}>
-                    <label htmlFor="company_name">Company Name:</label>
-                    <input
-                      id="company_name"
-                      type="text"
-                      className={styles['form-input']}
-                      value={editingJobOffering?.company_name || newJobOffering?.company_name || ''}
-                      onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_name: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_name: e.target.value })}
-                      placeholder="Enter company name"
-                    />
-                </div>
-                <div className={styles['form-group']}>
-                    <label htmlFor="company_description">Company Description:</label>
-                    <input
-                      id="company_description"
-                      type="text"
-                      className={styles['form-input']}
-                      value={editingJobOffering?.company_description || newJobOffering?.company_description || ''}
-                      onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_description: e.target.value })}
-                      placeholder="Enter company description"
-                    />
-                </div>
-                <div className={styles['form-group']}>
-                    <label htmlFor="description">Job Description:</label>
-                    <textarea
-                      id="description"
-                      className={styles['form-textarea']}
-                      value={editingJobOffering?.description || newJobOffering?.description || ''}
-                      onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, description: e.target.value })}
-                      placeholder="Enter job description"
-                    ></textarea>
-                </div>
+        <div className="modal-overlay">
+            <div className="modal card">
+            <h3 className="modal-title">{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
+                
+                {/* <input
+                  type="number"
+                  className="form-input"
+                  value={newJobOffering?.company_id || ''}
+                  onChange={(e) => setNewJobOffering({ ...newJobOffering, company_id: e.target.value })}
+                  placeholder="Company ID"
+                /> */}
+                {newJobOffering && (
+                  <>
+                  <label htmlFor="">Company ID:</label>
+                  <select
+                    id="company_id"
+                    name="company_id"
+                    className="form-input"
+                    // Ensure the value is correctly bound, converting to string for the select input
+                    value={currentJob?.company_id?.toString() || ''} 
+                    onChange={(e) => {
+                        // Update state, ensuring the value is stored as a number
+                        const companyId = Number(e.target.value);
+                        if (newJobOffering) {
+                            setNewJobOffering({ ...newJobOffering, company_id: companyId });
+                        } else if (editingJobOffering) {
+                            setEditingJobOffering({ ...editingJobOffering, company_id: companyId });
+                        }
+                    }}
+                >
+                    {/* Default/Placeholder option */}
+                    <option value="" disabled>Select a Company</option>
+                    {companies.map(company => (
+                        <option key={company.id} value={company.id}>
+                            {company.name}
+                        </option>
+                    ))}
+                </select>
+                </>
+                )}
+            {/* End of Company Select Dropdown */}
+            <input
+              type="text"
+              className="form-input"
+              value={editingJobOffering?.title || newJobOffering?.title || ''}
+              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, title: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, title: e.target.value })}
+              placeholder="Enter job title"
+            />
+            {/* <input
+              type="text"
+              className="form-input"
+              value={editingJobOffering?.company_name || newJobOffering?.company_name || ''}
+              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_name: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_name: e.target.value })}
+              placeholder="Enter company name"
+            /> */}
+            {/* <input
+              type="text"
+              className="form-input"
+              value={editingJobOffering?.company_description || newJobOffering?.company_description || ''}
+              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_description: e.target.value })}
+              placeholder="Enter company description"
+            /> */}
+            <textarea
+              className="form-textarea"
+              value={editingJobOffering?.description || newJobOffering?.description || ''}
+              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, description: e.target.value })}
+              placeholder="Enter job description"
+            ></textarea>
 
                 <div className={styles['form-group']}>
                     <label htmlFor="location">Location:</label>
@@ -236,17 +259,13 @@ export default function ManageJobOfferings() {
                     />
                 </div>
 
-                <div className={styles['form-group']}>
-                    <label htmlFor="salary_range">Salary Range:</label>
-                    <input
-                      id="salary_range"
-                      type="number"
-                      className={styles['form-input']}
-                      value={editingJobOffering?.salary_range || newJobOffering?.salary_range || ''}
-                      onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, salary_range: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, salary_range: e.target.value })}
-                      placeholder="Enter salary range"
-                    />
-                </div>
+            <input
+              type="text"
+              className="form-input"
+              value={editingJobOffering?.salary_range || newJobOffering?.salary_range || ''}
+              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, salary_range: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, salary_range: e.target.value })}
+              placeholder="Enter salary range"
+            />
 
                 <div className={styles['form-group']}>
                     <label htmlFor="start_date">Start Date:</label>
@@ -282,17 +301,13 @@ export default function ManageJobOfferings() {
                     />
                 </div>
 
-                <div className={styles['form-group']}>
-                    <label htmlFor="company_logo">Company Logo URL:</label>
-                    <input
-                      id="company_logo"
-                      type="text"
-                      className={styles['form-input']}
-                      value={editingJobOffering?.company_logo || newJobOffering?.company_logo || ''}
-                      onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_logo: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_logo: e.target.value })}
-                      placeholder="Company logo URL"
-                    />
-                </div>
+            {/* <input
+              type="text"
+              className="form-input"
+              value={editingJobOffering?.company_logo || newJobOffering?.company_logo || ''}
+              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_logo: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_logo: e.target.value })}
+              placeholder="Company logo URL"
+            /> */}
 
                 <div className={styles['form-group']}>
                     <label htmlFor="is_active" className={styles['checkbox-label']}>

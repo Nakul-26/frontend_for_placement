@@ -1,0 +1,224 @@
+/* JobOfferings.css - Cleaned and Fixed Version */
+
+.job-offerings-container {
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* --- Job Card Styles --- */
+.job-listings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.job-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.job-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.company-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: contain;
+    border: 1px solid #eee;
+}
+
+.job-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.company-name {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.job-card-body p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.skills-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.skills-list li {
+    background-color: #e9f5ff;
+    color: #007bff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* FIX: Job Card Footer - Use flex to position buttons */
+.job-card-footer {
+    display: flex; 
+    /* Removing 'gap: 10px;' here to avoid conflict and use the margin fix below */
+    justify-content: flex-end; /* Align buttons to the right */
+    margin-top: auto; /* Use auto margin to push the footer to the bottom of the flex card */
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* FIX: Apply margin-right to the Edit button (first child) to separate it from Delete button */
+.job-card-footer .button:first-child {
+    /* Set a strong right margin to push the next button away */
+    margin-right: 10px !important; 
+    /* Remove margin-left: 30px !important; as it was only for testing/causing issues */
+}
+/* --- End Job Card Styles --- */
+
+
+/* --- Form and Button Styles --- */
+
+.form-container {
+    margin-bottom: 20px; 
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px !important;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Table styles are included for completeness but not directly relevant to the button fix */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table th {
+    font-weight: 600;
+    color: #555;
+}
+
+.action-buttons {
+    display: flex;
+}
+
+.job-card-footer .button:first-child {
+    margin-right: 10px;
+}
+
+.button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: #007bff; 
+    color: white;
+    font-weight: 500;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.button.danger {
+    background-color: #f44336;
+    color: white;
+}
+
+.button.danger:hover {
+    background-color: #d32f2f;
+}
+
+.button.secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.button.secondary:hover {
+    background-color: #e0e0e0;
+}
+
+/* --- Modal Styles --- */
+
+/* --- Modal Styles --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    margin-top: 10vh; /* Optional: Adds breathing room above the modal */
+    width: 90%;
+    max-width: 500px;
+    
+    /* These styles enable scrolling */
+    max-height: 80vh; 
+    overflow-y: auto;
+}
+
+/* ... rest of the CSS ... */
+
+.modal-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px; /* Use gap for modal actions, as it seems to be working here */
+    margin-top: 20px;
+}

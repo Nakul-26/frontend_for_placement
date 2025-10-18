@@ -3,13 +3,15 @@ import styles from './RecommendedJobs.module.css';
 import { api } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
+import axios from 'axios';
 
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const [jobMessages, setJobMessages] = useState({}); // New state for job-specific messages
-  const [currentlyApplyingJobId, setCurrentlyApplyingJobId] = useState(null); // Track which job is being applied to
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const [currentJobId, setCurrentJobId] = useState(null);
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
@@ -35,42 +37,53 @@ export default function RecommendedJobs() {
   }, []);
 
   const handleApply = async (job) => {
+    console.log('Starting application process for job:', job.id || job.jobid || null);
+    setSuccess(false);
+    setError('');
+    setCurrentJobId(job.id || job.jobid || null);
     if (!user) {
       toast.error('Please login to apply for jobs.');
       return;
     }
-
-    setCurrentlyApplyingJobId(job.id || job.jobid);
-    setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: null })); // Clear previous message for this job
-
-    const payload = {
-      user_name: user.name || user.user_name || user.fullName || user.username || '',
-      user_email: user.email || user.user_email || '',
-      user_id: user.id || user.user_id || '',
-      jobid: job.id || job.jobid || '',
-    };
+    console.log('User details:', user);
+    console.log('Job details:', job);
+    // Prepare payload for the application submission
+    // const payload = {
+    //   user_name: user.name || user.user_name || user.fullName || user.username || '',
+    //   user_email: user.email || user.user_email || '',
+    //   user_id: user.id || user.user_id || '',
+    //   jobid: job.id || job.jobid || '',
+    // };
     try {
-      const res = await fetch('https://notification-31at.onrender.com/forms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+      const res = await axios.post('https://notification-31at.onrender.com/forms', {
+        user_name: user.name || user.user_name || user.fullName || user.username || '',
+        user_email: user.email || user.user_email || '',
+        user_id: user.id || user.user_id || '',
+        jobid: job.id || job.jobid || '',
       });
       console.log('Response from application submission:', res);
       const result = await res.json().catch(() => ({}));
-      if (res.ok) {
-        setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: { type: 'success', message: 'Your application was submitted successfully!' } }));
+      if (res.status === 200 || res.status === 201) {
+        console.log('Response from application submission:', res);
+        toast.success(result?.message || 'Your application was submitted successfully!');
+        setSuccess("your application was submitted successfully!");
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
       } else {
-        setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: { type: 'error', message: result?.message || 'Failed to submit your application. Please try again later.' } }));
+        console.error('Error submitting application:', result);
+        setError(result?.message || 'Failed to submit your application. Please try again later.');
+        toast.error(result?.message || 'Failed to submit your application. Please try again later.');
       }
     } catch (err) {
-      setJobMessages(prevMessages => ({ ...prevMessages, [job.id || job.jobid]: { type: 'error', message: 'Network error: Unable to submit application.' } }));
+      console.log('Response from application submission:', err.response);
+      console.error('Network error while submitting application:', err);
+      setError('Network error: Unable to submit application.');
+      toast.error('Network error: Unable to submit application.');
     } finally {
-      setCurrentlyApplyingJobId(null);
+      console.log('Finished handling application for job:', job.id || job.jobid || null);
+      // setSuccess(true);
+      setCurrentJobId(null);
     }
   };
 
@@ -114,12 +127,9 @@ export default function RecommendedJobs() {
                   <p><strong>Applications Opens from:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
                   <p><strong>Applications Closes on:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
                 </div>
-                {jobMessages[job.id || job.jobid] && (
-                  <div className={`${styles.notification} ${jobMessages[job.id || job.jobid].type === 'error' ? styles.error : styles.success}`}>
-                    <p>{jobMessages[job.id || job.jobid].message}</p>
-                  </div>
-                )}
-                <div className={styles['job-card-footer']}>
+                {error && currentJobId === job.id && <p className="error-message">{error}</p> }
+                {success && currentJobId === job.id && <p className="success-message">Application submitted successfully!</p>}
+                <div className="job-card-footer">
                   {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
                   <button className={styles['apply-now-btn']} onClick={() => handleApply(job)}>
                     Apply Now

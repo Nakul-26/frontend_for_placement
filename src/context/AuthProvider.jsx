@@ -89,10 +89,12 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.post(
         "/api/login",
         { email, password },
+        { email, password },
         { withCredentials: true }
       );
       console.log('Login response:', res.data.data);
       // Expect user at res.data.data.user
+      let newUser = res.data?.data;
       let newUser = res.data?.data;
       console.log('Extracted user from response:', newUser);
       // Map role_id to role string for frontend

@@ -43,6 +43,7 @@ import RecommendedJobs from './pages/RecommendedJobs.jsx';
 
 
 import StudentApplications from "./pages/StudentApplications";
+import ManageCompanies from "./pages/ManageCompanies";
 
 import './index.css';
 
@@ -75,6 +76,7 @@ function App() {
               <Route path="/admin/jobs" element={<Layout><ManageJobOfferings /></Layout>} />
               <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} />
               <Route path="/admin/student-applications" element={<Layout><StudentApplications /></Layout>} />
+              <Route path="/admin/companies" element={<Layout><ManageCompanies /></Layout>} />
             </Route>
 
             {/* Manager Routes */}
