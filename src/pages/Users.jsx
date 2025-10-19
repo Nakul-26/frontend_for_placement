@@ -165,6 +165,7 @@ export default function Users() {
 
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
   }, []);
 
   return (

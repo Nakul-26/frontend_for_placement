@@ -141,6 +141,7 @@ export default function Roles() {
           <table className="table">
             <thead className='head'>
               <tr>
+                <th>Role ID</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Status</th>
@@ -150,6 +151,7 @@ export default function Roles() {
             <tbody>
               {roles.map((role) => (
                 <tr key={role.id}>
+                  <td>{role.id}</td>
                   <td>{role.name}</td>
                   <td>{role.description}</td>
                   <td>{role.is_active ? 'Active' : 'Inactive'}</td>
