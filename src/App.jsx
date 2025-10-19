@@ -128,6 +128,7 @@ function App() {
               {/* <Route path="/student/score-history" element={<Layout><ScoreHistory /></Layout>} /> */}
               {/* <Route path="/student/skill-roadmaps" element={<Layout><SkillRoadmaps /></Layout>} /> */}
               {/* <Route path="/student/my-saved-content" element={<Layout><MySavedContent /></Layout>} /> */}
+              <Route path="/student/manage-notifications" element={<Layout><AdminNotifications /></Layout>} />
             </Route>
 
             {/* Shared Routes for authenticated users */}

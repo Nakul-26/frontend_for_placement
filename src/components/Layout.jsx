@@ -44,6 +44,7 @@ const studentMenuItems = [
   // { text: 'My Saved Content', path: '/student/my-saved-content', icon: '🔖' },
   { text: 'Notifications', path: '/student/notifications', icon: '🔔' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
+  { text: 'Manage Notifications', path: '/student/manage-notifications', icon: '📢' },
 ];
 
 const managerMenuItems = [
