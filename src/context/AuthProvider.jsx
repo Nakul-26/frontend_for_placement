@@ -150,7 +150,7 @@ export const AuthProvider = ({ children }) => {
     // localStorage.removeItem('FacultyUser');
     // localStorage.removeItem('StudentUser');
     try {
-      await axios.get("/api/logout", { withCredentials: true });
+      await axios.post("/api/logout", {}, { withCredentials: true });
       setUser(null);
       // tokens are httpOnly; backend clears them via /api/logout
       toast.success('Logged out successfully!');
