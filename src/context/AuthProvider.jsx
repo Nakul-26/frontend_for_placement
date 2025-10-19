@@ -13,10 +13,11 @@ export const AuthProvider = ({ children }) => {
   const loadUser = useCallback(async () => {
     try {
       setError(null);
-      const storedAdminUser = localStorage.getItem('AdminUser');
-      if (storedAdminUser) {
-        setUser(JSON.parse(storedAdminUser));
-        return JSON.parse(storedAdminUser);
+      const storedUser = localStorage.getItem(`${user?.role || 'admin'}User`);
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        console.log('loadUser found stored user:', JSON.parse(storedUser));
+        return JSON.parse(storedUser);
       }
 
       const res = await axios.get('/api/login', { withCredentials: true });
@@ -29,6 +30,9 @@ export const AuthProvider = ({ children }) => {
       }
       console.log('loadUser processed user:', newUser);
       localStorage.setItem(`${newUser.role}User`, JSON.stringify(newUser));
+      // if() {
+
+      // }
       setUser(newUser ?? null);
       return newUser;
     } catch (error) {
