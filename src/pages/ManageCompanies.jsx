@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NotificationsApi } from '../services/api'; 
+import { NotificationsApi, NotificationsApiSecure } from '../services/api'; 
 import './ManageCompanies.css'; 
 import { toast } from 'react-toastify';
 
@@ -75,7 +75,7 @@ export default function ManageCompanies() {
   const fetchCompanies = async () => {
     try {
       setLoading(true);
-      const res = await NotificationsApi.get('/companies'); 
+      const res = await NotificationsApiSecure.get('/companies'); 
       setCompanies(res.data.companies || []);
     } catch (err) {
       toast.error(err.message || 'Failed to fetch companies');
@@ -148,11 +148,12 @@ export default function ManageCompanies() {
 
       const formData = buildFormData(payload, false);
 
-      await NotificationsApi.post('/companies', formData, {
+      const res = await NotificationsApiSecure.post('/companies', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log('Company added successfully:', res.data);
       
       toast.success('Company added successfully!');
       resetModalState();
@@ -183,11 +184,13 @@ export default function ManageCompanies() {
 
       const formData = buildFormData(payload, true); 
 
-      await NotificationsApi.put(`/companies/${editingCompany.id}`, formData, {
+      const res = await NotificationsApiSecure.put(`/companies/${editingCompany.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log('Company updated successfully:', res.data);
+      
 
       toast.success('Company updated successfully!');
       resetModalState();
@@ -200,7 +203,8 @@ export default function ManageCompanies() {
 
   const handleDeleteCompany = async (id) => {
     try {
-      await NotificationsApi.delete(`/companies/${id}`);
+      const res = await NotificationsApiSecure.delete(`/companies/${id}`);
+      console.log('Company deleted successfully:', res.data);
       toast.success('Company deleted successfully!');
       fetchCompanies(); 
     } catch (error) {

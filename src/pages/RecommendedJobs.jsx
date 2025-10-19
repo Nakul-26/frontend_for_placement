@@ -4,7 +4,7 @@ import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import axios from 'axios';
-import { api, NotificationsApi } from '../services/api';
+import { api, NotificationsApi, NotificationsApiSecure } from '../services/api';
 
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
@@ -49,7 +49,7 @@ export default function RecommendedJobs() {
     console.log('User details:', user);
     console.log('Job details:', job);
     try {
-      const res = await NotificationsApi.post('/forms', {
+      const res = await NotificationsApiSecure.post('/forms', {
         user_name: user.name || user.user_name || user.fullName || user.username || '',
         user_email: user.email || user.user_email || '',
         user_id: user.id || user.user_id || '',

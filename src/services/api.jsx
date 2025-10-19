@@ -2,6 +2,7 @@ import axios from "axios";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const notificationUrl = import.meta.env.VITE_NOTIFICATIONS_URL;
+const notificationUrlSecure = import.meta.env.VITE_NOTIFICATIONS_URL_SECURE;
 
 if (!backendUrl) {
   throw new Error("VITE_BACKEND_URL is not defined. Please check your .env file and restart the development server.");
@@ -9,6 +10,10 @@ if (!backendUrl) {
 
 if (!notificationUrl) {
   throw new Error("VITE_NOTIFICATIONS_URL is not defined. Please check your .env file and restart the development server.");
+}
+
+if (!notificationUrlSecure) {
+  throw new Error("VITE_NOTIFICATIONS_URL_SECURE is not defined. Please check your .env file and restart the development server.");
 }
 
 const api = axios.create({
@@ -48,6 +53,11 @@ const NotificationsApi = axios.create({
   withCredentials: true, // send cookies for session auth
 });
 
+const NotificationsApiSecure = axios.create({
+  baseURL: `${notificationUrlSecure}/`, // backend URL
+  withCredentials: true, // send cookies for session auth
+});
+
 // Notifications
 export const addNotification = (notification) => {
   console.log('Adding notification 2:', notification);
@@ -63,4 +73,4 @@ export const editJobOffering = (id, jobOffering) => NotificationsApi.put(`/jobs/
 export const deleteJobOffering = (id) => NotificationsApi.delete(`/jobs/${id}`);
 export const getJobOfferings = () => NotificationsApi.get(`/jobs`);
 
-export { api, NotificationsApi };
+export { api, NotificationsApi, NotificationsApiSecure };

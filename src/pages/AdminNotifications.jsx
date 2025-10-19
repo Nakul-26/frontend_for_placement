@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApi } from '../services/api';
+import { api, NotificationsApi, NotificationsApiSecure } from '../services/api';
 import './AdminNotifications.css'; // New CSS file for the combined page
 
 const AddIcon = () => (
@@ -62,7 +62,7 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.get('/notifications', config);
+      const response = await NotificationsApiSecure.get('/notifications', config);
       console.log('Fetched notifications:', response.data);
       if (Array.isArray(response.data.notifications)) {
         setNotifications(response.data.notifications);
@@ -84,7 +84,7 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.post('/notifications', {
+      const response = await NotificationsApiSecure.post('/notifications', {
         author_id: newNotification.author_id,
         author: newNotification.author,
         content: newNotification.content,
@@ -108,7 +108,7 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.put(`/notifications/${editingNotification.id}`, {
+      const response = await NotificationsApiSecure.put(`/notifications/${editingNotification.id}`, {
         author_id: editingNotification.author_id,
         author: editingNotification.author,
         content: editingNotification.content,
@@ -134,7 +134,7 @@ const AdminNotifications = () => {
       const config = {
         withCredentials: true,
       };
-      const response = await NotificationsApi.delete(`/notifications/${id}`, config);
+      const response = await NotificationsApiSecure.delete(`/notifications/${id}`, config);
       console.log('Notification deleted successfully:', response.data);
       handleClose();
       fetchNotifications();

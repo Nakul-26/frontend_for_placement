@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import "./StudentApplication.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { api, NotificationsApi, NotificationsApiSecure } from "../services/api";
 
-const API_URL = "https://notification-31at.onrender.com/forms";
+// const API_URL = "https://notification-31at.onrender.com/forms";
 
 function StudentApplications() {
   const [applications, setApplications] = useState([]);
@@ -14,9 +15,10 @@ function StudentApplications() {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(API_URL);
+        const response = await NotificationsApiSecure.get('/forms');
         console.log('Fetched applications response:', response);
-        const data = response.data.data;
+        const data = response.data.data || [];
+        setApplications(data);
       } catch (error) {
         console.error('Error fetching applications:', error);
         setApplications([]);

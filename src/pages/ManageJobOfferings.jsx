@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApi } from '../services/api'; 
+import { api, NotificationsApi, NotificationsApiSecure } from '../services/api'; 
 import './ManageJobOfferings.css';
 import { toast } from 'react-toastify';
 
@@ -14,7 +14,7 @@ export default function ManageJobOfferings() {
 
   const fetchCompanies = async () => {
     try {
-      const res = await NotificationsApi.get('/companies');
+      const res = await NotificationsApiSecure.get('/companies');
       console.log('companies res: ', res);
       setCompanies(res.data.companies || []);
     } catch (err) {
@@ -30,7 +30,7 @@ export default function ManageJobOfferings() {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
-        const res = await NotificationsApi.get(`/jobs`);
+        const res = await NotificationsApiSecure.get(`/jobs`);
         console.log('job offerings res: ', res);
         setJobOfferings(res.data.jobs || []);
       } catch (err) {
@@ -59,7 +59,7 @@ export default function ManageJobOfferings() {
         is_active: newJobOffering.is_active ?? true
       };
 
-      const res = await NotificationsApi.post('/jobs', payload);
+      const res = await NotificationsApiSecure.post('/jobs', payload);
       console.log('Job offering added successfully:', res.data);
       setNewJobOffering(null);
       fetchJobOfferings();
@@ -88,7 +88,7 @@ export default function ManageJobOfferings() {
         is_active: editingJobOffering.is_active ?? true
       };
 
-      const res = await NotificationsApi.put(`/jobs/${editingJobOffering.id}`, payload);
+      const res = await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
       setEditingJobOffering(null);
       fetchJobOfferings();
       toast.success('Job offering updated successfully!');
@@ -100,7 +100,7 @@ export default function ManageJobOfferings() {
 
   const handleDeleteJobOffering = async (id) => {
     try {
-      const res = await NotificationsApi.delete(`/jobs/${id}`);
+      const res = await NotificationsApiSecure.delete(`/jobs/${id}`);
       console.log('Job offering deleted successfully:', res.data);
       fetchJobOfferings();
       toast.success('Job offering deleted successfully!');
