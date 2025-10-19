@@ -23,6 +23,8 @@ const DeleteIcon = () => (
 
 export default function Permissions() {
   const [permissions, setPermissions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const [newPermission, setNewPermission] = useState(null);
   const [editingPermission, setEditingPermission] = useState(null);
@@ -42,6 +44,8 @@ export default function Permissions() {
   };
 
   const fetchPermissions = async () => {
+    setLoading(true);
+    setError('');
     try {
       const res = await api.get(
         '/rbac/permissions',
@@ -60,7 +64,10 @@ export default function Permissions() {
       );
     } catch (err) {
       console.error('fetchPermissions error:', err);
+      setError('Failed to fetch permissions');
       setPermissions([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -69,7 +76,7 @@ export default function Permissions() {
   }, []);
 
   const handleSaveNew = async () => {
-    if (!newPermission.name.trim()) return alert('Name is required');
+    if (!newPermission.name.trim()) return toast.error('Name is required');
 
     setIsSubmitting(true);
     try {
@@ -80,7 +87,6 @@ export default function Permissions() {
       await fetchPermissions();
       toast.success('Permission added successfully!');
     } catch (err) {
-      alert('Failed to add permission');
       toast.error(err.response?.data?.message || 'Failed to add permission');
     } finally {
       setIsSubmitting(false);
@@ -97,7 +103,6 @@ export default function Permissions() {
       await fetchPermissions();
       toast.success('Permission updated successfully!');
     } catch (err) {
-      alert('Failed to update permission');
       toast.error(err.response?.data?.message || 'Failed to update permission');
     } finally {
       setIsSubmitting(false);
@@ -137,36 +142,40 @@ export default function Permissions() {
           Add Permission
         </button>
       </div>
-      <div className="table-container card">
-        <table className="table">
-          <thead className='head'>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th className="action-buttons">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {permissions.map((perm) => (
-              <tr key={perm.id}>
-                <td>{perm.id}</td>
-                <td>{perm.name}</td>
-                <td>{perm.description || '-'}</td>
-                <td className="action-buttons">
-                  {/* <button className="button" onClick={() => {
-                    setEditingPermission(perm);
-                    handleClickOpen();
-                  }}><EditIcon />Edit</button> */}
-                  <button className="button danger" onClick={() => handleDelete(perm.id)} disabled={isSubmitting && deletingPermissionId === perm.id}>
-                    {isSubmitting && deletingPermissionId === perm.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
-                  </button>
-                </td>
+      {loading && <p>Loading permissions...</p>}
+      {error && <p className="error-message">{error}</p>}
+      {!loading && !error && (
+        <div className="table-container card">
+          <table className="table">
+            <thead className='head'>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th className="action-buttons">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {permissions.map((perm) => (
+                <tr key={perm.id}>
+                  <td>{perm.id}</td>
+                  <td>{perm.name}</td>
+                  <td>{perm.description || '-'}</td>
+                  <td className="action-buttons">
+                    {/* <button className="button" onClick={() => {
+                      setEditingPermission(perm);
+                      handleClickOpen();
+                    }}><EditIcon />Edit</button> */}
+                    <button className="button danger" onClick={() => handleDelete(perm.id)} disabled={isSubmitting && deletingPermissionId === perm.id}>
+                      {isSubmitting && deletingPermissionId === perm.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       {open && (
         <div className="modal-overlay">
           <div className="modal card">

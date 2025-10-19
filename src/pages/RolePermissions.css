@@ -108,3 +108,23 @@
     text-align: center;
     margin-top: 50px;
 }
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    border: 1px solid red;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #ffe5e5;
+}
+
+.success-message {
+    color: green;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    border: 1px solid green;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #e5ffe5;
+}

@@ -87,25 +87,28 @@
 }
 
 .job-card-footer {
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .view-details-btn {
-    background-color: #2563eb;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .view-details-btn:hover {
-    background-color: #1d4ed8;
+  background-color: #1d4ed8;
+
 }
 
 @media (max-width: 768px) {

@@ -27,6 +27,7 @@ export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [search, setSearch] = useState('');
   const [searchField, setSearchField] = useState('email');
 
@@ -37,6 +38,8 @@ export default function Users() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingUserId, setDeletingUserId] = useState(null);
 
+  const [roles, setRoles] = useState([]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -45,6 +48,26 @@ export default function Users() {
     setOpen(false);
     setNewUser(null);
     setEditingUser(null);
+  };
+
+  const fetchRoles = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      console.log('fetching roles ...');
+      console.log('fetching roles ... & api: ',  api);
+      const config = {
+          withCredentials: true, 
+      }
+      const res = await api.get('/rbac/roles', config);
+      console.log('roles res: ', res.data.data);
+      setRoles(res.data.data || []);
+    } catch (err) {
+      setError('Failed to fetch roles');
+      toast.error(err.message || 'Failed to fetch roles');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchUsers = async () => {
@@ -151,6 +174,8 @@ export default function Users() {
         <p className="users-subtitle">Manage all users in the system.</p>
       </div>
 
+
+
       <div className="users-search-container">
         <input
           type="text"
@@ -185,6 +210,7 @@ export default function Users() {
 
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
+      {success && <p>{success}</p>}
 
       <div className="users-grid">
         {users.map((u) => (
@@ -252,7 +278,7 @@ export default function Users() {
                   }
                 }}
               />
-              <input
+              {/* <input
                 className="form-input"
                 placeholder="Role ID"
                 type="number"
@@ -264,8 +290,30 @@ export default function Users() {
                     setEditingUser({ ...editingUser, role_id: e.target.value });
                   }
                 }}
-              />
+              /> */}
+              <select
+                className="form-select"
+                value={newUser ? newUser.role_id : editingUser?.role_id}
+                onChange={(e) => {
+                  if (newUser) {
+                    setNewUser({ ...newUser, role_id: e.target.value });
+                  } else {
+                    setEditingUser({ ...editingUser, role_id: e.target.value });
+                  }
+                }}
+              >
+                <option value="">Select Role</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
+              {error && <p className="error-message">{error}</p>}
+              {success && <p className="success-message">{success}</p>}
+              {loading && <p>Loading...</p>}
             </div>
+
             <div className="modal-actions">
               <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>
               <button className="button" onClick={newUser ? handleSaveNew : handleSaveEdit} disabled={isSubmitting}>

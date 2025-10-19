@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { api } from '../services/api';
 import './Roles.css';
 
@@ -27,6 +28,8 @@ const DeleteIcon = () => (
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const [newRole, setNewRole] = useState(null);
   const [editingRole, setEditingRole] = useState(null);
@@ -46,6 +49,8 @@ export default function Roles() {
   };
 
   const fetchRoles = async () => {
+    setLoading(true);
+    setError('');
     try {
       console.log('fetching roles ...');
       console.log('fetching roles ... & api: ',  api);
@@ -56,7 +61,10 @@ export default function Roles() {
       console.log('roles res: ', res.data.data);
       setRoles(res.data.data || []);
     } catch (err) {
-      alert(err.message || 'Failed to fetch roles');
+      setError('Failed to fetch roles');
+      toast.error(err.message || 'Failed to fetch roles');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,8 +75,9 @@ export default function Roles() {
       await api.post('/rbac/roles', newRole, { withCredentials: true });
       handleClose();
       fetchRoles();
+      toast.success('Role added successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -82,8 +91,9 @@ export default function Roles() {
       });
       handleClose();
       fetchRoles();
+      toast.success('Role updated successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -96,8 +106,9 @@ export default function Roles() {
     try {
       await api.delete(`/rbac/roles/${id}`, { withCredentials: true });
       fetchRoles();
+      toast.success('Role deleted successfully!');
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setIsSubmitting(false);
       setDeletingRoleId(null);
@@ -123,36 +134,40 @@ export default function Roles() {
           Add Role
         </button>
       </div>
-      <div className="table-container">
-        <table className="table">
-          <thead className='head'>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th className="roles-table-actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {roles.map((role) => (
-              <tr key={role.id}>
-                <td>{role.name}</td>
-                <td>{role.description}</td>
-                <td>{role.is_active ? 'Active' : 'Inactive'}</td>
-                <td className="roles-table-actions">
-                  <button className="button" onClick={() => {
-                    setEditingRole(role);
-                    handleClickOpen();
-                  }}><EditIcon />Edit</button>
-                  <button className="button" onClick={() => handleDelete(role.id)} disabled={isSubmitting && deletingRoleId === role.id}>
-                    {isSubmitting && deletingRoleId === role.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
-                  </button>
-                </td>
+      {loading && <p>Loading roles...</p>}
+      {error && <p className="error-message">{error}</p>}
+      {!loading && !error && (
+        <div className="table-container">
+          <table className="table">
+            <thead className='head'>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th className="roles-table-actions">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {roles.map((role) => (
+                <tr key={role.id}>
+                  <td>{role.name}</td>
+                  <td>{role.description}</td>
+                  <td>{role.is_active ? 'Active' : 'Inactive'}</td>
+                  <td className="roles-table-actions">
+                    <button className="button" onClick={() => {
+                      setEditingRole(role);
+                      handleClickOpen();
+                    }}><EditIcon />Edit</button>
+                    <button className="button" onClick={() => handleDelete(role.id)} disabled={isSubmitting && deletingRoleId === role.id}>
+                      {isSubmitting && deletingRoleId === role.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       {open && (
         <div className="modal-overlay">
           <div className="modal">

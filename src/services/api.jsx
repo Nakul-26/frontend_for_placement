@@ -44,7 +44,7 @@ api.interceptors.response.use(
 );
 
 const NotificationsApi = axios.create({
-  baseURL: notificationUrl, // backend URL
+  baseURL: `${notificationUrl}/`, // backend URL
   withCredentials: true, // send cookies for session auth
 });
 

@@ -78,7 +78,7 @@ export default function JobOfferings() {
             </div>
             <div className="job-card-footer">
                 <button onClick={handleViewDetails} className="view-details-btn">View Details</button>
-                <button >Apply</button>
+                {/* <button >Apply</button> */}
             </div>
           </div>
         ))}

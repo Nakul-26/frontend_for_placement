@@ -5,6 +5,7 @@ export default function ProtectedRoute({ roles }) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
+  console.log('ProtectedRoute check:', { user, loading, roles, location: location.pathname });
   if (loading) {
     return <div>Loading...</div>; // Or a spinner component
   }

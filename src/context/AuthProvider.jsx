@@ -19,13 +19,16 @@ export const AuthProvider = ({ children }) => {
         return JSON.parse(storedAdminUser);
       }
 
-      const res = await axios.get('/api/me', { withCredentials: true });
+      const res = await axios.get('/api/login', { withCredentials: true });
       let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
+      console.log('loadUser fetched user:', newUser);
       if (newUser && newUser.role_id) {
         if (newUser.role_id === 1) newUser.role = 'admin';
         else if (newUser.role_id === 2) newUser.role = 'faculty';
-        else if (newUser.role_id === 3) newUser.role = 'student';
+        else if (newUser.role_id === 13) newUser.role = 'student';
       }
+      console.log('loadUser processed user:', newUser);
+      localStorage.setItem(`${newUser.role}User`, JSON.stringify(newUser));
       setUser(newUser ?? null);
       return newUser;
     } catch (error) {
@@ -53,6 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = useCallback(async (email, password, role) => {
     setError(null);
+    setLoading(true);
 
     // Dummy login credentials for testing
     if (email === 'testadmin@test.com' && password === 'testpassword' && role === 'admin') {
@@ -90,15 +94,18 @@ export const AuthProvider = ({ children }) => {
         { email, password },
         { withCredentials: true }
       );
+      console.log('Login response2:', res);
       // Expect user at res.data.data.user
       let newUser = res.data?.data;
+      console.log('Extracted user from response:', newUser);
       // Map role_id to role string for frontend
       if (newUser && newUser.role_id) {
         if (newUser.role_id === 1) newUser.role = 'admin';
         else if (newUser.role_id === 2) newUser.role = 'faculty';
-        else if (newUser.role_id === 3) newUser.role = 'student';
+        else if (newUser.role_id === 13) newUser.role = 'student';
       }
-      localStorage.setItem('AdminUser', JSON.stringify(newUser));
+      console.log('Mapped user:', newUser);
+      localStorage.setItem(`${newUser.role}User`, JSON.stringify(newUser));
       setUser(newUser);
       console.debug('AuthProvider: setUser after login', newUser);
       toast.success('Login successful!');
@@ -108,6 +115,8 @@ export const AuthProvider = ({ children }) => {
       setError(err.response?.data?.message || "Login failed");
       toast.error(err.response?.data?.message || "Login failed");
       return { success: false, error: err };
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -132,6 +141,9 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     setError(null);
     localStorage.removeItem('dummyUser');
+    localStorage.removeItem(`${user?.role}User`);
+    // localStorage.removeItem('FacultyUser');
+    // localStorage.removeItem('StudentUser');
     try {
       await axios.get("/api/logout", { withCredentials: true });
       setUser(null);

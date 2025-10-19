@@ -7,6 +7,7 @@ export default function RolePermissions() {
   const [roles, setRoles] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -25,6 +26,7 @@ export default function RolePermissions() {
   const fetchPermissions = async () => {
     try {
       setLoading(true);
+      setError('');
 
       const res = await api.get(
         '/rbac/permissions',
@@ -43,6 +45,7 @@ export default function RolePermissions() {
       );
     } catch (err) {
       console.error('fetchPermissions error:', err);
+      setError('Failed to fetch permissions');
       setPermissions([]);
     } finally {
       setLoading(false);
@@ -54,6 +57,7 @@ export default function RolePermissions() {
       console.log('fetching roles ...');
       console.log('fetching roles ... & api: ',  api);
       setLoading(true);
+      setError('');
       const config = {
           withCredentials: true, 
       }
@@ -62,6 +66,7 @@ export default function RolePermissions() {
       setRoles(res.data.data || []);
     } catch (err) {
       console.error('fetchRoles error:', err);
+      setError('Failed to fetch roles');
     } finally {
       setLoading(false);
     }
@@ -186,63 +191,70 @@ export default function RolePermissions() {
   return (
     <div className="page-container">
       <h1 className="page-title">Role Permissions</h1>
-      <div className="card">
-        <div className="role-permissions-grid">
-          <div className="roles-list-container">
-            <h2 className="sub-title">Roles</h2>
-            <ul className="roles-list">
-              {roles.map((role) => (
-                <li
-                  key={role.id}
-                  className={`role-item ${selectedRole?.id === role.id ? 'selected' : ''}`}
-                  onClick={() => handleSelectRole(role)}
-                >
-                  {role.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="permissions-list-container">
-            {selectedRole ? (
-              <div>
-                <h2 className="sub-title">Permissions for {selectedRole.name}</h2>
-                {loading ? (
-                  <p className="placeholder-text">Loading permissions...</p>
-                ) : (
-                  <ul className="permissions-list">
-                    {permissions.map((perm) => (
-                      <li key={perm.id} className="permission-item" onClick={() => togglePermission(perm.id)}>
-                        <input
-                          type="checkbox"
-                          checked={rolePermissions.includes(perm.id)}
-                          readOnly
-                        />
-                        <span>{perm.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {console.log('hasChanges: ', hasChanges)}
-                {hasChanges && (
-                  <div className="action-buttons">
-                    <button className="button" onClick={handleSave} disabled={isSubmitting}>
-                      {isSubmitting ? 'Saving...' : 'Save'}
-                    </button>
-                    <button className="button secondary" onClick={() => {
-                      // On cancel, revert rolePermissions to the state fetched by fetchData
-                      if (selectedRole) fetchData();
-                    }}>
-                      Cancel
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="placeholder-text">Select a role to manage its permissions.</p>
-            )}
+      {error && <p className="error-message">{error}</p>}
+      {!error && (
+        <div className="card">
+          <div className="role-permissions-grid">
+            <div className="roles-list-container">
+              <h2 className="sub-title">Roles</h2>
+              {loading ? (
+                <p>Loading roles...</p>
+              ) : (
+                <ul className="roles-list">
+                  {roles.map((role) => (
+                    <li
+                      key={role.id}
+                      className={`role-item ${selectedRole?.id === role.id ? 'selected' : ''}`}
+                      onClick={() => handleSelectRole(role)}
+                    >
+                      {role.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="permissions-list-container">
+              {selectedRole ? (
+                <div>
+                  <h2 className="sub-title">Permissions for {selectedRole.name}</h2>
+                  {loading ? (
+                    <p className="placeholder-text">Loading permissions...</p>
+                  ) : (
+                    <ul className="permissions-list">
+                      {permissions.map((perm) => (
+                        <li key={perm.id} className="permission-item" onClick={() => togglePermission(perm.id)}>
+                          <input
+                            type="checkbox"
+                            checked={rolePermissions.includes(perm.id)}
+                            readOnly
+                          />
+                          <span>{perm.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {console.log('hasChanges: ', hasChanges)}
+                  {hasChanges && (
+                    <div className="action-buttons">
+                      <button className="button" onClick={handleSave} disabled={isSubmitting}>
+                        {isSubmitting ? 'Saving...' : 'Save'}
+                      </button>
+                      <button className="button secondary" onClick={() => {
+                        // On cancel, revert rolePermissions to the state fetched by fetchData
+                        if (selectedRole) fetchData();
+                      }}>
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="placeholder-text">Select a role to manage its permissions.</p>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

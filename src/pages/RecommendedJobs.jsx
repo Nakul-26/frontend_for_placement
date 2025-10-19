@@ -4,6 +4,7 @@ import { getJobOfferings } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import axios from 'axios';
+import { api, NotificationsApi } from '../services/api';
 
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
@@ -17,7 +18,7 @@ export default function RecommendedJobs() {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
-        const response = await getJobOfferings();
+        const response = await NotificationsApi.get('/alljobdata');
         if (Array.isArray(response.data.jobs)) {
           setJobOfferings(response.data.jobs);
         } else {
@@ -47,26 +48,19 @@ export default function RecommendedJobs() {
     }
     console.log('User details:', user);
     console.log('Job details:', job);
-    // Prepare payload for the application submission
-    // const payload = {
-    //   user_name: user.name || user.user_name || user.fullName || user.username || '',
-    //   user_email: user.email || user.user_email || '',
-    //   user_id: user.id || user.user_id || '',
-    //   jobid: job.id || job.jobid || '',
-    // };
     try {
-      const res = await axios.post('https://notification-31at.onrender.com/forms', {
+      const res = await NotificationsApi.post('/forms', {
         user_name: user.name || user.user_name || user.fullName || user.username || '',
         user_email: user.email || user.user_email || '',
         user_id: user.id || user.user_id || '',
         jobid: job.id || job.jobid || '',
-      });
+      }, { withCredentials: true });
       console.log('Response from application submission:', res);
-      const result = await res.json().catch(() => ({}));
+      const result = res.data;
       if (res.status === 200 || res.status === 201) {
         console.log('Response from application submission:', res);
         toast.success(result?.message || 'Your application was submitted successfully!');
-        setSuccess("your application was submitted successfully!");
+        setSuccess(true);
         if (job.apply_link) {
           window.open(job.apply_link, '_blank', 'noopener,noreferrer');
         }
@@ -82,8 +76,6 @@ export default function RecommendedJobs() {
       toast.error('Network error: Unable to submit application.');
     } finally {
       console.log('Finished handling application for job:', job.id || job.jobid || null);
-      // setSuccess(true);
-      setCurrentJobId(null);
     }
   };
 
@@ -129,6 +121,7 @@ export default function RecommendedJobs() {
                 </div>
                 {error && currentJobId === job.id && <p className="error-message">{error}</p> }
                 {success && currentJobId === job.id && <p className="success-message">Application submitted successfully!</p>}
+                {/* <p>{error}</p> */}
                 <div className="job-card-footer">
                   {/* <a href={`/jobs/${job.id}`} className="view-details-btn">View Details</a> */}
                   <button className="apply-now-btn" onClick={() => handleApply(job)}>

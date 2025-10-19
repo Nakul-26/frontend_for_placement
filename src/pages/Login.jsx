@@ -14,26 +14,26 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    // If already authenticated, redirect to role dashboard
-    const checkAuth = async () => {
-      try {
-        setLoading(true);
-        const { success } = await refresh();
-        if (success) {
-          // First check location state, then fallback to role dashboard
-          const from = location.state?.from || `/${role}/dashboard`;
-          navigate(from);
-          return;
-        }
-      } catch {
-        // Not authenticated, no action needed
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, [refresh, navigate, location.state, role]);
+  // useEffect(() => {
+  //   // If already authenticated, redirect to role dashboard
+  //   const checkAuth = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const { success } = await refresh();
+  //       if (success) {
+  //         // First check location state, then fallback to role dashboard
+  //         const from = location.state?.from || `/${role}/dashboard`;
+  //         navigate(from);
+  //         return;
+  //       }
+  //     } catch {
+  //       // Not authenticated, no action needed
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   checkAuth();
+  // }, [refresh, navigate, location.state, role]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,7 +44,9 @@ const Login = () => {
     }
     try {
       setLoading(true);
+      console.log('Attempting login with:', { email, role });
       const result = await login(email, password, role);
+      console.log('Login result:', result);
       if (!result?.success) {
         console.log('Login failed:', result);
         setError(result?.error?.response?.data?.message || 'Login failed.');
@@ -52,6 +54,7 @@ const Login = () => {
       }
       // Prefer the server-provided user role to avoid mismatches
       const loggedInUser = result?.data?.user ?? null;
+      console.log('Logged in user:', loggedInUser);
       if (loggedInUser && loggedInUser.role && loggedInUser.role.toLowerCase() !== role.toLowerCase()) {
         setError(`Logged in user role (${loggedInUser.role}) does not match the selected role (${role}).`);
         return;
