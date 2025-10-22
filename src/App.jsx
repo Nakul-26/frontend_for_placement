@@ -58,6 +58,7 @@ import MySavedContent from './pages/MySavedContent.jsx';
 
 import StudentApplications from "./pages/StudentApplications";
 import ManageCompanies from "./pages/ManageCompanies";
+import AdminStudentRegistration from "./pages/AdminStudentRegistration.jsx";
 
 import './index.css';
 
@@ -91,6 +92,7 @@ function App() {
               <Route path="/admin/notifications" element={<Layout><AdminNotifications /></Layout>} />
               <Route path="/admin/student-applications" element={<Layout><StudentApplications /></Layout>} />
               <Route path="/admin/companies" element={<Layout><ManageCompanies /></Layout>} />
+              <Route path="/admin/student-registration" element={<Layout><AdminStudentRegistration /></Layout>} />
             </Route>
 
             {/* Manager Routes */}
@@ -128,7 +130,7 @@ function App() {
               {/* <Route path="/student/score-history" element={<Layout><ScoreHistory /></Layout>} /> */}
               {/* <Route path="/student/skill-roadmaps" element={<Layout><SkillRoadmaps /></Layout>} /> */}
               {/* <Route path="/student/my-saved-content" element={<Layout><MySavedContent /></Layout>} /> */}
-              <Route path="/student/manage-notifications" element={<Layout><AdminNotifications /></Layout>} />
+              {/* <Route path="/student/manage-notifications" element={<Layout><AdminNotifications /></Layout>} /> */}
             </Route>
 
             {/* Shared Routes for authenticated users */}

@@ -15,6 +15,7 @@ const adminMenuItems = [
   { text: 'Notifications', path: '/admin/notifications', icon: '🔔' },
   { text: 'Student Applications', path: '/admin/student-applications', icon: '📝' },
   { text: 'Manage Companies', path: '/admin/companies', icon: '🏢' },
+  { text: 'Student Registration', path: '/admin/student-registration', icon: '🎓' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
 ];
 
@@ -44,7 +45,7 @@ const studentMenuItems = [
   // { text: 'My Saved Content', path: '/student/my-saved-content', icon: '🔖' },
   { text: 'Notifications', path: '/student/notifications', icon: '🔔' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
-  { text: 'Manage Notifications', path: '/student/manage-notifications', icon: '📢' },
+  // { text: 'Manage Notifications', path: '/student/manage-notifications', icon: '📢' },
 ];
 
 const managerMenuItems = [

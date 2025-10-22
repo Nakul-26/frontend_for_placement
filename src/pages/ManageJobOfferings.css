@@ -217,3 +217,10 @@
     gap: 10px; /* Use gap for modal actions, as it seems to be working here */
     margin-top: 20px;
 }
+
+.no-job-offerings {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 20px;
+}

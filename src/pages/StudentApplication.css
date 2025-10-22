@@ -47,3 +47,10 @@
     font-size: 0.95rem;
   }
 }
+
+.no-applications-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 20px;
+}

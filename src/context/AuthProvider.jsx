@@ -13,11 +13,20 @@ export const AuthProvider = ({ children }) => {
   const loadUser = useCallback(async () => {
     try {
       setError(null);
-      const storedUser = localStorage.getItem(`${user?.role || 'admin'}User`);
+      const roles = ['admin', 'faculty', 'student', 'manager'];
+      let storedUser = null;
+      for (const role of roles) {
+        const userStr = localStorage.getItem(`${role}User`);
+        if (userStr) {
+          storedUser = JSON.parse(userStr);
+          break;
+        }
+      }
+
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
-        console.log('loadUser found stored user:', JSON.parse(storedUser));
-        return JSON.parse(storedUser);
+        setUser(storedUser);
+        console.log('loadUser found stored user:', storedUser);
+        return storedUser;
       }
 
       const res = await axios.get('/api/login', { withCredentials: true });
@@ -143,9 +152,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const logout = useCallback(async () => {
+  const logout = async () => {
     setError(null);
     localStorage.removeItem('dummyUser');
+    console.log('Logging out user:', user);
     localStorage.removeItem(`${user?.role}User`);
     // localStorage.removeItem('FacultyUser');
     // localStorage.removeItem('StudentUser');
@@ -163,7 +173,7 @@ export const AuthProvider = ({ children }) => {
       toast.error('Logout failed. Please try again.');
       return { success: false, error: err };
     }
-  }, []);
+  };
 
   const value = {
     user,

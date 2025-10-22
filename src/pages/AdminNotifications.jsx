@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api, NotificationsApi, NotificationsApiSecure } from '../services/api';
+import { useAuth } from '../context/useAuth';
 import './AdminNotifications.css'; // New CSS file for the combined page
 
 const AddIcon = () => (
@@ -35,9 +36,12 @@ const AdminNotifications = () => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingNotificationId, setDeletingNotificationId] = useState(null);
+  const { user } = useAuth();
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpen(false);
   };
 
   const handleClose = () => {
@@ -55,7 +59,22 @@ const AdminNotifications = () => {
 
   useEffect(() => {
     fetchNotifications();
+    console.log('Component mounted, fetching notifications.');
+    console.log('User info:', user);
+
   }, []);
+
+  useEffect(() => {
+    console.log('New notification state changed:', newNotification);
+    console.log('Editing notification state changed:', editingNotification);
+    console.log('Current notifications:', notifications);
+    newNotification.author_id = user ? user.id : 0;
+    newNotification.author = user ? user.name : '';
+    if (editingNotification) {
+      editingNotification.author_id = user ? user.id : 0;
+      editingNotification.author = user ? user.name : '';
+    }
+  }, [newNotification, editingNotification, notifications]);
 
   const fetchNotifications = async () => {
     try {
@@ -167,128 +186,60 @@ const AdminNotifications = () => {
       <div className="admin-notifications-header">
         <h1 className="admin-notifications-title">Manage Notifications</h1>
         <p className="admin-notifications-subtitle">Create, edit, and delete notifications for all users.</p>
+        <button className="button" onClick={() => setIsAddFormVisible(!isAddFormVisible)}>
+          {isAddFormVisible ? 'Collapse Form' : 'Add New Notification'}
+        </button>
       </div>
 
-      <div className="admin-notifications-form-card card">
-        <h2 className="card-title">Add New Notification</h2>
-        <div className="modal-content">
-          <input
-            type="number"
-            className="form-input"
-            name="author_id"
-            value={newNotification.author_id}
-            onChange={handleNewNotificationChange}
-            placeholder="Author ID"
-          />
-          <input
-            type="text"
-            className="form-input"
-            name="author"
-            value={newNotification.author}
-            onChange={handleNewNotificationChange}
-            placeholder="Author Name"
-          />
-          <textarea
-            className="form-textarea"
-            name="content"
-            value={newNotification.content}
-            onChange={handleNewNotificationChange}
-            placeholder="Notification content..."
-          ></textarea>
-          <select
-            className="form-select"
-            name="type"
-            value={newNotification.type}
-            onChange={handleNewNotificationChange}
-          >
-            <option value="general">General</option>
-            <option value="maintenance">Maintenance</option>
-            {/* <option value="Urgent">Urgent</option> */}
-            <option value="info">Info</option>
-            <option value="alert">Alert</option>
-            <option value="warning">Warning</option>
-          </select>
-          <label>
-            <input
-              type="checkbox"
-              name="is_public"
-              checked={newNotification.is_public}
-              onChange={handleNewNotificationChange}
-            />
-            Is Public
-          </label>
-          <input
-            type="datetime-local"
-            className="form-input"
-            name="expires_at"
-            value={newNotification.expires_at}
-            onChange={handleNewNotificationChange}
-          />
-        </div>
-        <div className="modal-actions">
-          <button className="button" onClick={handleAddNotification} disabled={isSubmitting}>
-            {isSubmitting ? 'Adding...' : <><AddIcon /> Add Notification</>}
-          </button>
-        </div>
-      </div>
-
-      <div className="admin-notifications-grid">
-        {/* <h2 className="admin-notifications-grid-title">All Noti fications</h2> */}
-        {console.log(notifications)}
-        {notifications && notifications.map((notification) => (
-          <div key={notification.id} className="admin-notification-card">
-            <div className="admin-notification-card-header">
-              <h2 className="admin-notification-card-title">{notification.type} Notification</h2>
-              <div className="admin-notification-card-actions">
-                <button className="button" onClick={() => { setEditingNotification(notification); handleClickOpen(); }}><EditIcon /></button>
-                <button className="button" onClick={() => handleDeleteNotification(notification.id)} disabled={isSubmitting && deletingNotificationId === notification.id}>
-                  {isSubmitting && deletingNotificationId === notification.id ? 'Deleting...' : <DeleteIcon />}
-                </button>
-              </div>
-            </div>
-            <div className="admin-notification-card-body">
-              <p><strong>Author:</strong> {notification.author} (ID: {notification.author_id})</p>
-              <p><strong>Content:</strong> {notification.content}</p>
-              <p><strong>Public:</strong> {notification.is_public ? 'Yes' : 'No'}</p>
-              <p><strong>Expires:</strong> {notification.expires_at ? new Date(notification.expires_at).toLocaleString() : 'Never'}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {open && (editingNotification) && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3 className="modal-title">Edit Notification</h3>
-            <div className="modal-content">
+      {isAddFormVisible && (
+        <div className="admin-notifications-form-card card">
+          <h2 className="card-title">Add New Notification</h2>
+          {/* {console.log("newNotification:",newNotification)}
+        {console.log("user:",user)} */}
+          <div className="modal-content">
+            <div className="form-field">
+              <label htmlFor="author_id">Author ID:</label>
               <input
-                type="text"
+                id="author_id"
+                type="number"
                 className="form-input"
                 name="author_id"
-                value={editingNotification.author_id}
-                onChange={handleEditingNotificationChange}
+                value={newNotification.author_id}
+                onChange={handleNewNotificationChange}
                 placeholder="Author ID"
               />
+            </div>
+            <div className="form-field">
+              <label htmlFor="author">Author Name:</label>
               <input
+                id="author"
                 type="text"
                 className="form-input"
                 name="author"
-                value={editingNotification.author}
-                onChange={handleEditingNotificationChange}
+                value={newNotification.author}
+                onChange={handleNewNotificationChange}
                 placeholder="Author Name"
               />
+            </div>
+            <div className="form-field">
+              <label htmlFor="content">Content:</label>
               <textarea
+                id="content"
                 className="form-textarea"
                 name="content"
-                value={editingNotification.content}
-                onChange={handleEditingNotificationChange}
+                value={newNotification.content}
+                onChange={handleNewNotificationChange}
                 placeholder="Notification content..."
               ></textarea>
+            </div>
+            <div className="form-field">
+              <label htmlFor="type">Type:</label>
               <select
+                id="type"
                 className="form-select"
                 name="type"
-                value={editingNotification.type}
-                onChange={handleEditingNotificationChange}
+                value={newNotification.type}
+                onChange={handleNewNotificationChange}
               >
                 <option value="general">General</option>
                 <option value="maintenance">Maintenance</option>
@@ -297,22 +248,147 @@ const AdminNotifications = () => {
                 <option value="alert">Alert</option>
                 <option value="warning">Warning</option>
               </select>
-              <label>
+            </div>
+            <div className="form-field">
+              <label htmlFor="is_public">
                 <input
+                  id="is_public"
                   type="checkbox"
                   name="is_public"
-                  checked={editingNotification.is_public}
-                  onChange={handleEditingNotificationChange}
+                  checked={newNotification.is_public}
+                  onChange={handleNewNotificationChange}
                 />
                 Is Public
               </label>
+            </div>
+            <div className="form-field">
+              <label htmlFor="expires_at">Expires At:</label>
               <input
+                id="expires_at"
                 type="datetime-local"
                 className="form-input"
                 name="expires_at"
-                value={editingNotification.expires_at ? editingNotification.expires_at.substring(0, 16) : ''}
-                onChange={handleEditingNotificationChange}
+                value={newNotification.expires_at}
+                onChange={handleNewNotificationChange}
               />
+            </div>
+          </div>
+          <div className="modal-actions">
+            <button className="button" onClick={handleAddNotification} disabled={isSubmitting}>
+              {isSubmitting ? 'Adding...' : <><AddIcon /> Add Notification</>}
+            </button>
+          </div>
+        </div>
+      )}
+
+
+      {!loading && notifications.length === 0 ? (
+        <p className="no-notifications-message">No notifications available.</p>
+      ) : (
+        <div className="admin-notifications-grid">
+          {/* <h2 className="admin-notifications-grid-title">All Noti fications</h2> */}
+          {console.log(notifications)}
+          {notifications && notifications.map((notification) => (
+            <div key={notification.id} className="admin-notification-card">
+              <div className="admin-notification-card-header">
+                <h2 className="admin-notification-card-title">{notification.type} Notification</h2>
+                <div className="admin-notification-card-actions">
+                  <button className="button" onClick={() => { setEditingNotification(notification); handleClickOpen(); }}><EditIcon /></button>
+                  <button className="button" onClick={() => handleDeleteNotification(notification.id)} disabled={isSubmitting && deletingNotificationId === notification.id}>
+                    {isSubmitting && deletingNotificationId === notification.id ? 'Deleting...' : <DeleteIcon />}
+                  </button>
+                </div>
+              </div>
+              <div className="admin-notification-card-body">
+                <p><strong>Author:</strong> {notification.author} (ID: {notification.author_id})</p>
+                <p><strong>Content:</strong> {notification.content}</p>
+                <p><strong>Public:</strong> {notification.is_public ? 'Yes' : 'No'}</p>
+                <p><strong>Expires:</strong> {notification.expires_at ? new Date(notification.expires_at).toLocaleString() : 'Never'}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {open && (editingNotification) && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3 className="modal-title">Edit Notification</h3>
+            <div className="modal-content">
+              <div className="form-field">
+                <label htmlFor="edit_author_id">Author ID:</label>
+                <input
+                  id="edit_author_id"
+                  type="text"
+                  className="form-input"
+                  name="author_id"
+                  value={editingNotification.author_id}
+                  onChange={handleEditingNotificationChange}
+                  placeholder="Author ID"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="edit_author">Author Name:</label>
+                <input
+                  id="edit_author"
+                  type="text"
+                  className="form-input"
+                  name="author"
+                  value={editingNotification.author}
+                  onChange={handleEditingNotificationChange}
+                  placeholder="Author Name"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="edit_content">Content:</label>
+                <textarea
+                  id="edit_content"
+                  className="form-textarea"
+                  name="content"
+                  value={editingNotification.content}
+                  onChange={handleEditingNotificationChange}
+                  placeholder="Notification content..."
+                ></textarea>
+              </div>
+              <div className="form-field">
+                <label htmlFor="edit_type">Type:</label>
+                <select
+                  id="edit_type"
+                  className="form-select"
+                  name="type"
+                  value={editingNotification.type}
+                  onChange={handleEditingNotificationChange}
+                >
+                  <option value="general">General</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="info">Info</option>
+                  <option value="alert">Alert</option>
+                  <option value="warning">Warning</option>
+                </select>
+              </div>
+              <div className="form-field">
+                <label htmlFor="edit_is_public">
+                  <input
+                    id="edit_is_public"
+                    type="checkbox"
+                    name="is_public"
+                    checked={editingNotification.is_public}
+                    onChange={handleEditingNotificationChange}
+                  />
+                  Is Public
+                </label>
+              </div>
+              <div className="form-field">
+                <label htmlFor="edit_expires_at">Expires At:</label>
+                <input
+                  id="edit_expires_at"
+                  type="datetime-local"
+                  className="form-input"
+                  name="expires_at"
+                  value={editingNotification.expires_at ? editingNotification.expires_at.substring(0, 16) : ''}
+                  onChange={handleEditingNotificationChange}
+                />
+              </div>
             </div>
             <div className="modal-actions">
               <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>

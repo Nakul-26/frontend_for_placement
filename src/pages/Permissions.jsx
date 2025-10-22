@@ -181,33 +181,39 @@ export default function Permissions() {
           <div className="modal card">
             <h3 className="modal-title">{newPermission ? 'Add Permission' : 'Edit Permission'}</h3>
             <div className="modal-content">
-              <input
-                autoFocus
-                className="form-input"
-                placeholder="Name"
-                type="text"
-                value={newPermission?.name || editingPermission?.name || ''}
-                onChange={(e) => {
-                  if (newPermission) {
-                    setNewPermission({ ...newPermission, name: e.target.value });
-                  } else {
-                    setEditingPermission({ ...editingPermission, name: e.target.value });
-                  }
-                }}
-              />
-              <input
-                className="form-input"
-                placeholder="Description"
-                type="text"
-                value={newPermission?.description || editingPermission?.description || ''}
-                onChange={(e) => {
-                  if (newPermission) {
-                    setNewPermission({ ...newPermission, description: e.target.value });
-                  } else {
-                    setEditingPermission({ ...editingPermission, description: e.target.value });
-                  }
-                }}
-              />
+              <div className="form-field">
+                <label htmlFor="name">Name</label>
+                <input
+                  autoFocus
+                  className="form-input"
+                  placeholder="Name"
+                  type="text"
+                  value={newPermission?.name || editingPermission?.name || ''}
+                  onChange={(e) => {
+                    if (newPermission) {
+                      setNewPermission({ ...newPermission, name: e.target.value });
+                    } else {
+                      setEditingPermission({ ...editingPermission, name: e.target.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="description">Description</label>
+                <input
+                  className="form-input"
+                  placeholder="Description"
+                  type="text"
+                  value={newPermission?.description || editingPermission?.description || ''}
+                  onChange={(e) => {
+                    if (newPermission) {
+                      setNewPermission({ ...newPermission, description: e.target.value });
+                    } else {
+                      setEditingPermission({ ...editingPermission, description: e.target.value });
+                    }
+                  }}
+                />
+              </div>
             </div>
             <div className="modal-actions">
               <button className="button secondary" onClick={handleClose} disabled={isSubmitting}>Cancel</button>

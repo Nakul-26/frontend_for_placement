@@ -9,8 +9,10 @@ export default function ManageJobOfferings() {
   const [editingJobOffering, setEditingJobOffering] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [companies, setCompanies] = useState([]);
   const [currentJob, setCurrentJob] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchCompanies = async () => {
     try {
@@ -30,10 +32,12 @@ export default function ManageJobOfferings() {
     const fetchJobOfferings = async () => {
       try {
         setLoading(true);
+        setError(null);
         const res = await NotificationsApiSecure.get(`/jobs`);
         console.log('job offerings res: ', res);
         setJobOfferings(res.data.jobs || []);
       } catch (err) {
+        setError(err.message || 'Failed to fetch job offerings');
         toast.error(err.message || 'Failed to fetch job offerings');
       } finally {
         setLoading(false);
@@ -41,6 +45,9 @@ export default function ManageJobOfferings() {
     };
 
   const handleAddJobOffering = async () => {
+    setError(null);
+    setSuccess(null);
+    setIsSubmitting(true);
     try {
       // Ensure req_skills is an array before sending
       const reqSkillsArray = Array.isArray(newJobOffering.req_skills)
@@ -63,14 +70,21 @@ export default function ManageJobOfferings() {
       console.log('Job offering added successfully:', res.data);
       setNewJobOffering(null);
       fetchJobOfferings();
+      setSuccess('Job offering added successfully!');
       toast.success('Job offering added successfully!');
     } catch (error) {
       console.error('Error adding job offering:', error);
+      setError(error.response?.data?.message || 'Failed to add job offering.');
       toast.error(error.response?.data?.message || 'Failed to add job offering.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleEditJobOffering = async () => {
+    setError(null);
+    setSuccess(null);
+    setIsSubmitting(true);
     try {
       const reqSkillsArray = Array.isArray(editingJobOffering.req_skills)
         ? editingJobOffering.req_skills
@@ -91,37 +105,39 @@ export default function ManageJobOfferings() {
       const res = await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
       setEditingJobOffering(null);
       fetchJobOfferings();
+      setSuccess('Job offering updated successfully!');
       toast.success('Job offering updated successfully!');
     } catch (error) {
       console.error('Error editing job offering:', error);
+      setError(error.response?.data?.message || 'Failed to update job offering.');
       toast.error(error.response?.data?.message || 'Failed to update job offering.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDeleteJobOffering = async (id) => {
+    setError(null);
+    setSuccess(null);
     try {
       const res = await NotificationsApiSecure.delete(`/jobs/${id}`);
       console.log('Job offering deleted successfully:', res.data);
       fetchJobOfferings();
+      setSuccess('Job offering deleted successfully!');
       toast.success('Job offering deleted successfully!');
     } catch (error) {
       console.error('Error deleting job offering:', error);
+      setError(error.response?.data?.message || 'Failed to delete job offering.');
       toast.error(error.response?.data?.message || 'Failed to delete job offering.');
     }
   };
 
-  if (loading) {
-    return (
-      <div className="job-offerings-container">
-        <h1 className="page-title">Manage Job Offerings</h1>
-        <p>Loading job offerings...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="job-offerings-container">
       <h1 className="page-title">Manage Job Offerings</h1>
+      {loading && <p>Loading...</p>}
+      {error && <p className="error-message">{error}</p>}
+      
       <div className="form-container">
         <button className="button" onClick={() => setNewJobOffering({
           company_id: 6,
@@ -135,6 +151,9 @@ export default function ManageJobOfferings() {
           is_active: true
         })}>Add Job Offering</button>
       </div>
+      {!loading && !error && jobOfferings.length === 0 && (
+        <p className="no-job-offerings">No job offerings available.</p>
+      )}
       <div className="job-listings">
         {jobOfferings.map((job) => (
           <div key={job.id || job.title} className="job-card">
@@ -172,17 +191,12 @@ export default function ManageJobOfferings() {
         <div className="modal-overlay">
             <div className="modal card">
             <h3 className="modal-title">{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
+            {error && <p className="error-message">{error}</p>}
+            {success && <p className="success-message">{success}</p>}
                 
-                {/* <input
-                  type="number"
-                  className="form-input"
-                  value={newJobOffering?.company_id || ''}
-                  onChange={(e) => setNewJobOffering({ ...newJobOffering, company_id: e.target.value })}
-                  placeholder="Company ID"
-                /> */}
                 {newJobOffering && (
-                  <>
-                  <label htmlFor="">Company ID:</label>
+                  <div className="form-field">
+                  <label htmlFor="company_id">Company:</label>
                   <select
                     id="company_id"
                     name="company_id"
@@ -207,96 +221,97 @@ export default function ManageJobOfferings() {
                         </option>
                     ))}
                 </select>
-                </>
+                </div>
                 )}
-            {/* End of Company Select Dropdown */}
-            <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.title || newJobOffering?.title || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, title: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, title: e.target.value })}
-              placeholder="Enter job title"
-            />
-            {/* <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.company_name || newJobOffering?.company_name || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_name: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_name: e.target.value })}
-              placeholder="Enter company name"
-            /> */}
-            {/* <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.company_description || newJobOffering?.company_description || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_description: e.target.value })}
-              placeholder="Enter company description"
-            /> */}
-            <textarea
-              className="form-textarea"
-              value={editingJobOffering?.description || newJobOffering?.description || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, description: e.target.value })}
-              placeholder="Enter job description"
-            ></textarea>
-
-            <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.location || newJobOffering?.location || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, location: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, location: e.target.value })}
-              placeholder="Enter location"
-            />
-
-            <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.salary_range || newJobOffering?.salary_range || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, salary_range: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, salary_range: e.target.value })}
-              placeholder="Enter salary range"
-            />
-
-            <label htmlFor="">Start Date:</label>
-            <input
-              type="date"
-              className="form-input"
-              value={editingJobOffering?.start_date ? new Date(editingJobOffering.start_date).toISOString().slice(0,10) : (newJobOffering?.start_date ? new Date(newJobOffering.start_date).toISOString().slice(0,10) : '')}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, start_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, start_date: e.target.value })}
-            />
-
-            <label htmlFor="">End Date:</label>
-            <input
-              type="date"
-              className="form-input"
-              value={editingJobOffering?.end_date ? new Date(editingJobOffering.end_date).toISOString().slice(0,10) : (newJobOffering?.end_date ? new Date(newJobOffering.end_date).toISOString().slice(0,10) : '')}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, end_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, end_date: e.target.value })}
-            />
-
-            <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.req_skills || newJobOffering?.req_skills || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, req_skills: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, req_skills: e.target.value })}
-              placeholder="Required skills (comma separated)"
-            />
-
-            {/* <input
-              type="text"
-              className="form-input"
-              value={editingJobOffering?.company_logo || newJobOffering?.company_logo || ''}
-              onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, company_logo: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, company_logo: e.target.value })}
-              placeholder="Company logo URL"
-            /> */}
-
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className="form-field">
+              <label htmlFor="title">Job Title:</label>
               <input
-                type="checkbox"
-                checked={(editingJobOffering?.is_active ?? newJobOffering?.is_active) ?? true}
-                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, is_active: e.target.checked }) : setEditingJobOffering({ ...editingJobOffering, is_active: e.target.checked })}
+                id="title"
+                type="text"
+                className="form-input"
+                value={editingJobOffering?.title || newJobOffering?.title || ''}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, title: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, title: e.target.value })}
+                placeholder="Enter job title"
               />
-              Active
-            </label>
+            </div>
+            <div className="form-field">
+              <label htmlFor="description">Description:</label>
+              <textarea
+                id="description"
+                className="form-textarea"
+                value={editingJobOffering?.description || newJobOffering?.description || ''}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, description: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, description: e.target.value })}
+                placeholder="Enter job description"
+              ></textarea>
+            </div>
+            <div className="form-field">
+              <label htmlFor="location">Location:</label>
+              <input
+                id="location"
+                type="text"
+                className="form-input"
+                value={editingJobOffering?.location || newJobOffering?.location || ''}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, location: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, location: e.target.value })}
+                placeholder="Enter location"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="salary_range">Salary Range:</label>
+              <input
+                id="salary_range"
+                type="text"
+                className="form-input"
+                value={editingJobOffering?.salary_range || newJobOffering?.salary_range || ''}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, salary_range: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, salary_range: e.target.value })}
+                placeholder="Enter salary range"
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="start_date">Start Date:</label>
+              <input
+                id="start_date"
+                type="date"
+                className="form-input"
+                value={editingJobOffering?.start_date ? new Date(editingJobOffering.start_date).toISOString().slice(0,10) : (newJobOffering?.start_date ? new Date(newJobOffering.start_date).toISOString().slice(0,10) : '')}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, start_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, start_date: e.target.value })}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="end_date">End Date:</label>
+              <input
+                id="end_date"
+                type="date"
+                className="form-input"
+                value={editingJobOffering?.end_date ? new Date(editingJobOffering.end_date).toISOString().slice(0,10) : (newJobOffering?.end_date ? new Date(newJobOffering.end_date).toISOString().slice(0,10) : '')}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, end_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, end_date: e.target.value })}
+              />
+            </div>
+            <div className="form-field">
+              <label htmlFor="req_skills">Required Skills (comma separated):</label>
+              <input
+                id="req_skills"
+                type="text"
+                className="form-input"
+                value={editingJobOffering?.req_skills || newJobOffering?.req_skills || ''}
+                onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, req_skills: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, req_skills: e.target.value })}
+                placeholder="Required skills (comma separated)"
+              />
+            </div>
+            <div className="form-field">
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  type="checkbox"
+                  checked={(editingJobOffering?.is_active ?? newJobOffering?.is_active) ?? true}
+                  onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, is_active: e.target.checked }) : setEditingJobOffering({ ...editingJobOffering, is_active: e.target.checked })}
+                />
+                Active
+              </label>
+            </div>
 
             <div className="modal-actions">
-                <button className="button" onClick={newJobOffering ? handleAddJobOffering : handleEditJobOffering}>Save</button>
+                <button className="button" onClick={newJobOffering ? handleAddJobOffering : handleEditJobOffering} disabled={isSubmitting}>
+                  {isSubmitting ? 'Saving...' : 'Save'}
+                </button>
 
                 <button className="button secondary" onClick={() => {setEditingJobOffering(null); setNewJobOffering(null)}}>Cancel</button>
             </div>

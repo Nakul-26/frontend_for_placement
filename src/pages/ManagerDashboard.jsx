@@ -24,7 +24,7 @@ const ManagerDashboard = () => {
         <p className="dashboard-subtitle">Welcome to the Manager Portal. You can manage job offerings and notifications from here.</p>
       </div>
 
-      <DummyCredentials />
+      {/* <DummyCredentials /> */}
 
       <div className="dashboard-grid">
         <Link to="/manager/notifications" className="dashboard-card">
@@ -43,14 +43,14 @@ const ManagerDashboard = () => {
         </Link>
       </div>
 
-      <div className="dashboard-info">
+      {/* <div className="dashboard-info">
         <h3>Quick Tips</h3>
         <ul>
           <li>Use the navigation menu on the left to quickly access different sections</li>
           <li>You can manage job postings and send notifications to all users</li>
           <li>Make sure to log out when you're done to protect account security</li>
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };

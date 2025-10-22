@@ -213,26 +213,34 @@ export default function Users() {
       {error && <p>{error}</p>}
       {success && <p>{success}</p>}
 
-      <div className="users-grid">
-        {users.map((u) => (
-          <div key={u.id} className="user-card">
-            <div className="user-card-header">
-              <h2 className="user-card-title">{u.name}</h2>
-              <div className="user-card-actions">
-                <button className="button" onClick={() => { setEditingUser(u); handleClickOpen(); }}><EditIcon /></button>
-                <button className="button" onClick={() => handleDelete(u.id)} disabled={isSubmitting && deletingUserId === u.id}>
-                  {isSubmitting && deletingUserId === u.id ? 'Deleting...' : <DeleteIcon />}
-                </button>
-              </div>
-            </div>
-            <div className="user-card-body">
-              <p><strong>ID:</strong> {u.id}</p>
-              <p><strong>Name:</strong> {u.name}</p>
-              <p><strong>Email:</strong> {u.email}</p>
-              <p><strong>Role:</strong> {u.role_id}</p>
-            </div>
-          </div>
-        ))}
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.id}>
+                <td>{u.id}</td>
+                <td>{u.name}</td>
+                <td>{u.email}</td>
+                <td>{u.role_id}</td>
+                <td className="user-actions">
+                  <button className="button" onClick={() => { setEditingUser(u); handleClickOpen(); }}><EditIcon />Edit</button>
+                  <button className="button danger" onClick={() => handleDelete(u.id)} disabled={isSubmitting && deletingUserId === u.id}>
+                    {isSubmitting && deletingUserId === u.id ? 'Deleting...' : <><DeleteIcon />Delete</>}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {open && (
@@ -240,76 +248,79 @@ export default function Users() {
           <div className="modal">
             <h3 className="modal-title">{newUser ? 'Add User' : 'Edit User'}</h3>
             <div className="modal-content">
-              <input
-                autoFocus
-                className="form-input"
-                placeholder="Name"
-                type="text"
-                value={newUser?.name || editingUser?.name || ''}
-                onChange={(e) => {
-                  if (newUser) {
-                    setNewUser({ ...newUser, name: e.target.value });
-                  } else {
-                    setEditingUser({ ...editingUser, name: e.target.value });
-                  }
-                }}
-              />
-              <input
-                className="form-input"
-                placeholder="Email"
-                type="email"
-                value={newUser?.email || editingUser?.email || ''}
-                onChange={(e) => {
-                  if (newUser) {
-                    setNewUser({ ...newUser, email: e.target.value });
-                  } else {
-                    setEditingUser({ ...editingUser, email: e.target.value });
-                  }
-                }}
-              />
-              <input
-                className="form-input"
-                placeholder="Password"
-                type="password"
-                onChange={(e) => {
-                  if (newUser) {
-                    setNewUser({ ...newUser, password: e.target.value });
-                  } else {
-                    setEditingUser({ ...editingUser, password: e.target.value });
-                  }
-                }}
-              />
-              {/* <input
-                className="form-input"
-                placeholder="Role ID"
-                type="number"
-                value={newUser?.role_id || editingUser?.role_id || ''}
-                onChange={(e) => {
-                  if (newUser) {
-                    setNewUser({ ...newUser, role_id: e.target.value });
-                  } else {
-                    setEditingUser({ ...editingUser, role_id: e.target.value });
-                  }
-                }}
-              /> */}
-              <select
-                className="form-select"
-                value={newUser ? newUser.role_id : editingUser?.role_id}
-                onChange={(e) => {
-                  if (newUser) {
-                    setNewUser({ ...newUser, role_id: e.target.value });
-                  } else {
-                    setEditingUser({ ...editingUser, role_id: e.target.value });
-                  }
-                }}
-              >
-                <option value="">Select Role</option>
-                {roles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
+              <div className="form-field">
+                <label htmlFor="name">Name</label>
+                <input
+                  id="name"
+                  autoFocus
+                  className="form-input"
+                  placeholder="Name"
+                  type="text"
+                  value={newUser?.name || editingUser?.name || ''}
+                  onChange={(e) => {
+                    if (newUser) {
+                      setNewUser({ ...newUser, name: e.target.value });
+                    } else {
+                      setEditingUser({ ...editingUser, name: e.target.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  className="form-input"
+                  placeholder="Email"
+                  type="email"
+                  value={newUser?.email || editingUser?.email || ''}
+                  onChange={(e) => {
+                    if (newUser) {
+                      setNewUser({ ...newUser, email: e.target.value });
+                    } else {
+                      setEditingUser({ ...editingUser, email: e.target.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="password">Password</label>
+                <input
+                  id="password"
+                  className="form-input"
+                  placeholder="Password"
+                  type="password"
+                  onChange={(e) => {
+                    if (newUser) {
+                      setNewUser({ ...newUser, password: e.target.value });
+                    } else {
+                      setEditingUser({ ...editingUser, password: e.target.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="role">Role</label>
+                <select
+                  id="role"
+                  className="form-select"
+                  value={newUser ? newUser.role_id : editingUser?.role_id}
+                  onChange={(e) => {
+                    if (newUser) {
+                      setNewUser({ ...newUser, role_id: e.target.value });
+                    } else {
+                      setEditingUser({ ...editingUser, role_id: e.target.value });
+                    }
+                  }}
+                >
+                  <option value="">Select Role</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               {error && <p className="error-message">{error}</p>}
               {success && <p className="success-message">{success}</p>}
               {loading && <p>Loading...</p>}

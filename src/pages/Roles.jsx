@@ -175,47 +175,56 @@ export default function Roles() {
           <div className="modal">
             <h3 className="modal-title">{newRole ? 'Add Role' : 'Edit Role'}</h3>
             <div className="modal-content">
-              <input
-                autoFocus
-                className="form-input"
-                placeholder="Name"
-                type="text"
-                value={newRole?.name || editingRole?.name || ''}
-                onChange={(e) => {
-                  if (newRole) {
-                    setNewRole({ ...newRole, name: e.target.value });
-                  } else {
-                    setEditingRole({ ...editingRole, name: e.target.value });
-                  }
-                }}
-              />
-              <input
-                className="form-input"
-                placeholder="Description"
-                type="text"
-                value={newRole?.description || editingRole?.description || ''}
-                onChange={(e) => {
-                  if (newRole) {
-                    setNewRole({ ...newRole, description: e.target.value });
-                  } else {
-                    setEditingRole({ ...editingRole, description: e.target.value });
-                  }
-                }}
-              />
-              <select
-                className="form-select"
-                value={newRole ? newRole.is_Active : editingRole?.is_Active}
-                onChange={(e) => {
-                  if (newRole) {
-                    setNewRole({ ...newRole, is_Active: e.target.value === 'true' });
-                  } else {
-                    setEditingRole({ ...editingRole, is_Active: e.target.value === 'true' });
-                  }
-                }}
-              >
-                <option value={true}>Active</option>
-                <option value={false}>Inactive</option>
-              </select>
+              <div className="form-field">
+                <label htmlFor="name">Name</label>
+                <input
+                  autoFocus
+                  className="form-input"
+                  placeholder="Name"
+                  type="text"
+                  value={newRole?.name || editingRole?.name || ''}
+                  onChange={(e) => {
+                    if (newRole) {
+                      setNewRole({ ...newRole, name: e.target.value });
+                    } else {
+                      setEditingRole({ ...editingRole, name: e.target.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="description">Description</label>
+                <input
+                  className="form-input"
+                  placeholder="Description"
+                  type="text"
+                  value={newRole?.description || editingRole?.description || ''}
+                  onChange={(e) => {
+                    if (newRole) {
+                      setNewRole({ ...newRole, description: e.target.value });
+                    } else {
+                      setEditingRole({ ...editingRole, description: e.target.value });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="status">Status</label>
+                <select
+                  className="form-select"
+                  value={newRole ? newRole.is_Active : editingRole?.is_Active}
+                  onChange={(e) => {
+                    if (newRole) {
+                      setNewRole({ ...newRole, is_Active: e.target.value === 'true' });
+                    } else {
+                      setEditingRole({ ...editingRole, is_Active: e.target.value === 'true' });
+                    }
+                  }}
+                >
+                  <option value={true}>Active</option>
+                  <option value={false}>Inactive</option>
+                </select>
+              </div>
             </div>
             <div className="modal-actions">
               <button className="button" onClick={handleClose} disabled={isSubmitting}>Cancel</button>

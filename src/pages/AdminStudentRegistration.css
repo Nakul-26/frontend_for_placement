@@ -1,38 +1,49 @@
-
-.users-container {
+.admin-student-registration-container {
   padding: 24px;
   background-color: #ffffff;
   font-family: 'Inter', sans-serif;
 }
 
-.users-header {
-  margin-bottom: 24px;
-}
-
-.users-title {
+.page-title {
   font-size: 2.2rem;
   font-weight: 700;
   color: #111827;
+  margin-bottom: 8px;
 }
 
-.users-subtitle {
+.page-subtitle {
   font-size: 1rem;
   color: #4b5563;
-}
-
-.users-search-container {
-  display: flex;
-  gap: 10px;
   margin-bottom: 24px;
 }
 
-.form-input,
-.form-select {
-  height: 40px;
-  padding: 0 10px;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  font-size: 1rem;
+.table-container {
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.table tbody tr:hover {
+  background-color: #f3f4f6;
 }
 
 .button {
@@ -54,6 +65,21 @@
 .button:hover {
   background: linear-gradient(135deg, #2196f3, #1976d2);
   transform: translateY(-1px);
+}
+
+.button.secondary {
+  background-color: #6b7280;
+}
+
+.button.secondary:hover {
+  background-color: #4b5563;
+}
+
+.no-users-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 20px;
 }
 
 .modal-overlay {
@@ -97,28 +123,6 @@
   margin-top: 24px;
 }
 
-.error-message {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin-top: 4px;
-  /* display: none; */
-  border: 1px solid #dc2626;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: #fee2e2;
-}
-
-.success-message {
-  color: #15803d;
-  font-size: 0.875rem;
-  margin-top: 4px;
-  /* display: none; */
-  border: 1px solid #15803d;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: #d1fae5;
-}
-
 .form-field {
   display: flex;
   flex-direction: column;
@@ -130,51 +134,36 @@
   color: #374151;
 }
 
-/* Table styles */
-.table-container {
-  margin-top: 24px;
-  overflow-x: auto;
-}
-
-.table {
+.form-input,
+.form-textarea,
+.form-select {
   width: 100%;
-  border-collapse: collapse;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
-.table th,
-.table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
 }
 
-.table th {
-  background-color: #f9fafb;
+.section-title {
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #4b5563;
-  text-transform: uppercase;
-  font-size: 0.875rem;
+  color: #111827;
+  margin-top: 32px;
+  margin-bottom: 16px;
 }
 
-.table tbody tr:hover {
-  background-color: #f3f4f6;
+.no-students-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 20px;
 }
 
-.user-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.user-actions .button {
-  height: 32px;
-  padding: 0 12px;
-  font-size: 0.875rem;
-}
-
-.user-actions .button.danger {
-  background-color: #ef4444;
-}
-
-.user-actions .button.danger:hover {
-  background-color: #dc2626;
+.registered-students-section {
+  margin-top: 80px; /* Add space between tables */
 }
