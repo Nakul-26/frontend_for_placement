@@ -55,6 +55,8 @@ import QuizAttemptPage from './pages/QuizAttemptPage.jsx';
 import ScoreHistory from './pages/ScoreHistory.jsx';
 import SkillRoadmaps from './pages/SkillRoadmaps.jsx';
 import MySavedContent from './pages/MySavedContent.jsx';
+import StudentProfileEdit from './pages/StudentProfileEdit.jsx'; // Import the new component
+import SkillRoadmapRedirect from './pages/SkillRoadmapRedirect.jsx'; // Import the new component
 
 import StudentApplications from "./pages/StudentApplications";
 import ManageCompanies from "./pages/ManageCompanies";
@@ -119,6 +121,8 @@ function App() {
             {/* Student Routes */}
             <Route element={<ProtectedRoute roles={['student']} />}>
               <Route path="/student/dashboard" element={<Layout><StudentDashboard /></Layout>} />
+              <Route path="/student/profile/edit" element={<Layout><StudentProfileEdit /></Layout>} />
+              <Route path="/student/roadmap" element={<Layout><SkillRoadmapRedirect /></Layout>} />
               {/* <Route path="/student/skill-development" element={<Layout><SkillDevelopment /></Layout>} /> */}
               {/* <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} /> */}
               {/* <Route path="/student/profile" element={<Layout><StudentProfile /></Layout>} /> */}

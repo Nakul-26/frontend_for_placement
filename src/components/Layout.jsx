@@ -46,6 +46,9 @@ const studentMenuItems = [
   { text: 'Notifications', path: '/student/notifications', icon: '🔔' },
   // { text: 'Chat', path: '/chat', icon: '💬' },
   // { text: 'Manage Notifications', path: '/student/manage-notifications', icon: '📢' },
+  // { text: 'Applications', path: '/student/applications', icon: '📝' },
+  { text: 'Profile', path: '/student/profile/edit', icon: '🧑‍🎓' },
+  { text: 'Skill Roadmap', path: '/student/roadmap', icon: '🗺️' },
 ];
 
 const managerMenuItems = [
