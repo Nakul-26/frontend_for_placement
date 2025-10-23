@@ -100,6 +100,13 @@ export const AuthProvider = ({ children }) => {
       toast.success('Dummy Manager Login successful!');
       return { success: true, data: { user: dummyUser } };
     }
+    if (email === 'testcompany@test.com' && password === 'testpassword' && role === 'company') {
+      const dummyUser = { id: '5', email: 'testcompany@test.com', role: 'company', name: 'Test Company' };
+      localStorage.setItem('dummyUser', JSON.stringify(dummyUser));
+      setUser(dummyUser);
+      toast.success('Dummy Company Login successful!');
+      return { success: true, data: { user: dummyUser } };
+    }
 
     try {
       const res = await axios.post(

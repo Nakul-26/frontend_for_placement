@@ -124,6 +124,7 @@ const Login = () => {
               <option value="faculty">Faculty</option>
               <option value="admin">Admin</option>
               <option value="manager">Manager</option>
+              <option value="company">Company</option>
             </select>
           </div>
           <button

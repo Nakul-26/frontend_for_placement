@@ -19,6 +19,10 @@ import AdminDashboard from './pages/AdminDashboard.jsx';
 import FacultyDashboard from './pages/FacultyDashboard.jsx';
 import StudentDashboard from './pages/StudentDashboard.jsx';
 import ManagerDashboard from './pages/ManagerDashboard.jsx';
+import CompanyDashboard from './pages/CompanyDashboard.jsx'; // Import Company Dashboard
+
+// Company Pages
+import CompanyJobOfferings from './pages/CompanyJobOfferings.jsx';
 
 // Admin Pages
 import Users from './pages/Users.jsx';
@@ -102,6 +106,12 @@ function App() {
               <Route path="/manager/dashboard" element={<Layout><ManagerDashboard /></Layout>} />
               <Route path="/manager/notifications" element={<Layout><AdminNotifications /></Layout>} />
               <Route path="/manager/job-offerings" element={<Layout><ManageJobOfferings /></Layout>} />
+            </Route>
+
+            {/* Company Routes */}
+            <Route element={<ProtectedRoute roles={['company']} />}>
+              <Route path="/company/dashboard" element={<Layout><CompanyDashboard /></Layout>} />
+              <Route path="/company/jobs" element={<Layout><CompanyJobOfferings /></Layout>} />
             </Route>
 
             {/* Faculty Routes */}

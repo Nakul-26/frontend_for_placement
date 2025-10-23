@@ -57,6 +57,13 @@ const managerMenuItems = [
   { text: 'Notifications', path: '/manager/notifications', icon: '🔔' },
 ];
 
+const companyMenuItems = [
+  { text: 'Dashboard', path: '/company/dashboard', icon: '🏠' },
+  { text: 'Manage Jobs', path: '/company/jobs', icon: '💼' },
+  // { text: 'Notifications', path: '/company/notifications', icon: '🔔' },
+];
+
+
 const getMenuItems = (role) => {
   switch (role) {
     case 'admin':
@@ -67,6 +74,8 @@ const getMenuItems = (role) => {
       return facultyMenuItems;
     case 'student':
       return studentMenuItems;
+    case 'company':
+      return companyMenuItems;
     default:
       return [];
   }
