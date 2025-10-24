@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApi, NotificationsApiSecure } from '../services/api'; 
+import { graphqlRequest, NotificationsApiSecure } from '../services/api'; 
 import './ManageJobOfferings.css';
 import { toast } from 'react-toastify';
 
@@ -15,10 +16,17 @@ export default function ManageJobOfferings() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchCompanies = async () => {
+    const query = `
+      query GetAllCompanies {
+        companies {
+          id
+          name
+        }
+      }
+    `;
     try {
-      const res = await NotificationsApiSecure.get('/companies');
-      console.log('companies res: ', res);
-      setCompanies(res.data.companies || []);
+      const response = await graphqlRequest(query);
+      setCompanies(response.data.companies || []);
     } catch (err) {
       console.error('Failed to fetch companies:', err);
     }
@@ -30,12 +38,30 @@ export default function ManageJobOfferings() {
   }, []);
 
     const fetchJobOfferings = async () => {
+      const query = `
+        query GetAllJobs {
+          jobs {
+            id
+            title
+            company_name
+            company_logo
+            location
+            salary_range
+            description
+            description
+            req_skills
+            start_date
+            end_date
+            is_active
+            company_id
+          }
+        }
+      `;
       try {
         setLoading(true);
         setError(null);
-        const res = await NotificationsApiSecure.get(`/jobs`);
-        console.log('job offerings res: ', res);
-        setJobOfferings(res.data.jobs || []);
+        const response = await graphqlRequest(query);
+        setJobOfferings(response.data.jobs || []);
       } catch (err) {
         setError(err.message || 'Failed to fetch job offerings');
         toast.error(err.message || 'Failed to fetch job offerings');

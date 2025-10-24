@@ -61,6 +61,7 @@ const companyMenuItems = [
   { text: 'Dashboard', path: '/company/dashboard', icon: '🏠' },
   { text: 'Manage Jobs', path: '/company/jobs', icon: '💼' },
   // { text: 'Notifications', path: '/company/notifications', icon: '🔔' },
+  { text: 'Profile', path: '/company/profile', icon: '🏢' },
 ];
 
 

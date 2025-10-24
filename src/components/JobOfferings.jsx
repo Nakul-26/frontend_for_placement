@@ -1,6 +1,7 @@
+
 import React from 'react';
 import './JobOfferings.css';
-import { api } from '../services/api';
+import { graphqlRequest } from '../services/api';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -39,14 +40,23 @@ export default function JobOfferings() {
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
+      const query = `
+        query GetAllJobs {
+          jobs {
+            id
+            title
+            company_name
+            company_logo
+            location
+            start_date
+            end_date
+          }
+        }
+      `;
       try {
         setLoading(true);
-        const config = {
-            withCredentials: true,
-        }
-        const res = await api.get(`${import.meta.env.VITE_NOTIFICATIONS_URL}/alljobdata`, config);
-        console.log('job offerings res: ', res);
-        setJobs(res.data.jobs || []);
+        const response = await graphqlRequest(query);
+        setJobs(response.data.jobs || []);
       } catch (err) {
         toast.error(err.message || 'Failed to fetch job offerings');
       } finally {

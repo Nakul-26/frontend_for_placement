@@ -4,18 +4,18 @@ import "./StudentApplication.css";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { api, NotificationsApi, NotificationsApiSecure } from "../services/api";
-
 function StudentApplications() {
   const [applications, setApplications] = useState([]);
   const [jobOfferings, setJobOfferings] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState('');
   const [loading, setLoading] = useState(true);
+  const [filteredApplications, setFilteredApplications] = useState([]);
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
       try {
-        const response = await api.get('/jobs'); // Assuming this endpoint fetches all jobs
-        setJobOfferings(response.data.data || []);
+        const response = await NotificationsApiSecure.get('/jobs'); // Assuming this endpoint fetches all jobs
+        setJobOfferings(response.data.jobs || []);
       } catch (error) {
         console.error('Error fetching job offerings:', error);
         toast.error('Failed to load job offerings.');
@@ -28,12 +28,7 @@ function StudentApplications() {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        let response;
-        if (selectedJobId) {
-          response = await NotificationsApiSecure.get(`/forms/job/${selectedJobId}`);
-        } else {
-          response = await NotificationsApiSecure.get('/forms');
-        }
+        const response = await NotificationsApiSecure.get('/forms');
         console.log('Fetched applications response:', response);
         const data = response.data.data || [];
         setApplications(data);
@@ -46,7 +41,17 @@ function StudentApplications() {
     };
 
     fetchApplications();
-  }, [selectedJobId]);
+  }, []);
+
+  useEffect(() => {
+    if (selectedJobId) {
+      setFilteredApplications(
+        applications.filter(app => app.jobid.toString() === selectedJobId)
+      );
+    } else {
+      setFilteredApplications(applications);
+    }
+  }, [selectedJobId, applications]);
 
   if (loading) return <div className="student-applications-container">Loading...</div>;
 
@@ -58,19 +63,20 @@ function StudentApplications() {
         <label htmlFor="job-filter">Filter by Job:</label>
         <select 
           id="job-filter"
+          className="job-filter-select"
           value={selectedJobId}
           onChange={(e) => setSelectedJobId(e.target.value)}
         >
           <option value="">All Jobs</option>
           {jobOfferings.map(job => (
             <option key={job.id} value={job.id}>
-              {job.title}
+              {job.title}, id:{job.id}
             </option>
           ))}
         </select>
       </div>
 
-      {!loading && applications.length === 0 ? (
+      {!loading && filteredApplications.length === 0 ? (
         <p className="no-applications-message">No applications found for the selected filter.</p>
       ) : (
         <table className="student-applications-table">
@@ -85,7 +91,7 @@ function StudentApplications() {
             </tr>
           </thead>
           <tbody>
-            {applications.map(app => (
+            {filteredApplications.map(app => (
               <tr key={app.id}>
                 <td>{app.id}</td>
                 <td>{app.user_name}</td>

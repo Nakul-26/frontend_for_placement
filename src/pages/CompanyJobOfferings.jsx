@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { api, NotificationsApiSecure } from '../services/api'; 
+import { api, NotificationsApi, graphqlRequest, NotificationsApiSecure } from '../services/api'; 
 import './ManageJobOfferings.css';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
@@ -22,12 +23,29 @@ export default function CompanyJobOfferings() {
   }, [user]);
 
   const fetchJobOfferings = async () => {
+    const query = `
+      query GetAllJobs {
+        jobs {
+          id
+          title
+          company_name
+          location
+          req_skills
+          description
+          req_skills
+          salary_range
+          start_date
+          end_date
+          location
+          is_active
+        }
+      }
+    `;
     try {
       setLoading(true);
       setError(null);
-      // The backend should automatically filter jobs based on the authenticated company user
-      const res = await NotificationsApiSecure.get(`/jobs`);
-      setJobOfferings(res.data.jobs || []);
+      const response = await graphqlRequest(query);
+      setJobOfferings(response.data.jobs || []);
     } catch (err) {
       const errorMsg = err.response?.data?.message || err.message || 'Failed to fetch job offerings';
       setError(errorMsg);
@@ -108,7 +126,7 @@ export default function CompanyJobOfferings() {
     setSelectedJob(job);
     try {
         setLoading(true);
-        const res = await NotificationsApiSecure.get(`/forms/job/${job.id}`);
+        const res = await NotificationsApiSecure.get((`/forms/job/${job.id}`), { withCredentials: true });
         setApplicants(res.data.data || []);
     } catch (err) {
         toast.error('Could not fetch applicants.');

@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import './RecommendedJobs.css';
-import { getJobOfferings } from '../services/api';
+import { graphqlRequest } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
-import axios from 'axios';
-import { api, NotificationsApi, NotificationsApiSecure } from '../services/api';
+import { NotificationsApiSecure } from '../services/api';
 
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
@@ -16,9 +16,25 @@ export default function RecommendedJobs() {
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
+      const query = `
+        query GetAllJobs {
+          jobs {
+            id
+            title
+            company_name
+            company_logo
+            location
+            description
+            salary_range
+            req_skills
+            start_date
+            end_date
+          }
+        }
+      `;
       try {
         setLoading(true);
-        const response = await NotificationsApi.get('/alljobdata');
+        const response = await graphqlRequest(query);
         if (Array.isArray(response.data.jobs)) {
           setJobOfferings(response.data.jobs);
         } else {

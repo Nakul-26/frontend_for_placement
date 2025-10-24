@@ -75,7 +75,7 @@ const AdminStudentRegistration = () => {
     // Logic to register student
     console.log(`Registering user ${userId} as student with data:`, studentData);
     const formData = new FormData();
-    formData.append('id',userID);
+    formData.append('id', userId);
     formData.append('offical_email', studentData.offical_email);
     formData.append('personal_email', studentData.personal_email);
     if (studentData.resume) {

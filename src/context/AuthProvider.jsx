@@ -36,6 +36,8 @@ export const AuthProvider = ({ children }) => {
         if (newUser.role_id === 1) newUser.role = 'admin';
         else if (newUser.role_id === 2) newUser.role = 'faculty';
         else if (newUser.role_id === 13) newUser.role = 'student';
+        else if (newUser.role_id === 15) newUser.role = 'manager';
+        else if (newUser.role_id === 17) newUser.role = 'company';
       }
       console.log('loadUser processed user:', newUser);
       localStorage.setItem(`${newUser.role}User`, JSON.stringify(newUser));
@@ -124,6 +126,7 @@ export const AuthProvider = ({ children }) => {
         else if (newUser.role_id === 2) newUser.role = 'faculty';
         else if (newUser.role_id === 13) newUser.role = 'student';
         else if (newUser.role_id === 15) newUser.role = 'manager';
+        else if (newUser.role_id === 17) newUser.role = 'company';
       }
       console.log('Mapped user:', newUser);
       localStorage.setItem(`${newUser.role}User`, JSON.stringify(newUser));

@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { NotificationsApi, NotificationsApiSecure } from '../services/api'; 
+import { graphqlRequest, NotificationsApiSecure } from '../services/api'; 
 import './ManageCompanies.css'; 
 import { toast } from 'react-toastify';
 
@@ -73,10 +74,26 @@ export default function ManageCompanies() {
   };
 
   const fetchCompanies = async () => {
+    const query = `
+      query GetAllCompanies {
+        companies {
+          id
+          name
+          logo
+          email
+          description
+          headquarters
+          sub_branch_location
+          phone
+          type
+          created_at
+        }
+      }
+    `;
     try {
       setLoading(true);
-      const res = await NotificationsApiSecure.get('/companies'); 
-      setCompanies(res.data.companies || []);
+      const response = await graphqlRequest(query);
+      setCompanies(response.data.companies || []);
     } catch (err) {
       toast.error(err.message || 'Failed to fetch companies');
     } finally {

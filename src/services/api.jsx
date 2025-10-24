@@ -58,6 +58,20 @@ const NotificationsApiSecure = axios.create({
   withCredentials: true, // send cookies for session auth
 });
 
+// GraphQL request helper
+export const graphqlRequest = async (query, variables = {}) => {
+  try {
+    const response = await NotificationsApiSecure.post('/graphql', {
+      query,
+      variables,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('GraphQL request failed:', error);
+    throw error;
+  }
+};
+
 // Notifications
 export const addNotification = (notification) => {
   console.log('Adding notification 2:', notification);

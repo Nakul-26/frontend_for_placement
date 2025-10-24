@@ -112,6 +112,7 @@ function App() {
             <Route element={<ProtectedRoute roles={['company']} />}>
               <Route path="/company/dashboard" element={<Layout><CompanyDashboard /></Layout>} />
               <Route path="/company/jobs" element={<Layout><CompanyJobOfferings /></Layout>} />
+              <Route path="/company/profile" element={<Layout><CompanyProfile /></Layout>} />
             </Route>
 
             {/* Faculty Routes */}

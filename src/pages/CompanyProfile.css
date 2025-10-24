@@ -171,3 +171,10 @@
 .save-button:hover {
   background-color: #229954;
 }
+
+.company-logo-img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
