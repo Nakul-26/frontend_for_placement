@@ -75,7 +75,7 @@ const AdminStudentRegistration = () => {
     // Logic to register student
     console.log(`Registering user ${userId} as student with data:`, studentData);
     const formData = new FormData();
-    formData.append('id', 14);
+    formData.append('id',userID);
     formData.append('offical_email', studentData.offical_email);
     formData.append('personal_email', studentData.personal_email);
     if (studentData.resume) {
@@ -95,7 +95,7 @@ const AdminStudentRegistration = () => {
         },
         withCredentials: true,
       };
-      const response = await api.post(`rbac/students/register/14`, formData, config);
+      const response = await api.post(`rbac/students/register/${userId}`, formData, config);
       toast.success('Student registered successfully!');
       console.log('Student registration response:', response.data);
       setIsRegisterFormVisible(false);
