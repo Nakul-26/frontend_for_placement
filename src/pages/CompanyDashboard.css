@@ -64,3 +64,9 @@
 .company-details p {
   margin-bottom: 8px;
 }
+
+.company-logo {
+  max-width: 150px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+}

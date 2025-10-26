@@ -21,33 +21,6 @@ const api = axios.create({
   withCredentials: true, // send cookies for session auth
 });
 
-// Handle expired tokens with automatic refresh
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Only attempt refresh if the error is "access token not defined" and we haven't retried yet
-    if (
-      error.response?.data?.message === "access token not defined" && 
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-      try {
-        // Attempt to refresh the token
-        await api.get("/api/refresh");
-        // Retry the original request with the new token (cookies will be sent automatically)
-        return api(originalRequest);
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        // Let the error propagate - AuthProvider will handle clearing user state if needed
-        return Promise.reject(refreshError);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
 const NotificationsApi = axios.create({
   baseURL: `${notificationUrl}/`, // backend URL
   withCredentials: true, // send cookies for session auth
@@ -57,6 +30,44 @@ const NotificationsApiSecure = axios.create({
   baseURL: `${notificationUrlSecure}/`, // backend URL
   withCredentials: true, // send cookies for session auth
 });
+
+// Handle expired tokens with automatic refresh
+const responseInterceptor = async (error) => {
+  console.log('API Interceptor processing response');
+  const originalRequest = error.config;
+
+  // Only attempt refresh if the error is "access token not defined" and we haven't retried yet
+  console.log('API Interceptor error:', error);
+  console.log('API Interceptor caught error:', error.response?.data?.message);
+  if (
+    (error.response?.data?.message === "access token not defined" || error.response?.data?.message === "Invalid or expired token" || error.response?.data?.message === "Authorization token required") &&
+    !originalRequest._retry
+  ) {
+    originalRequest._retry = true;
+    try {
+      // Attempt to refresh the token
+      const response = await api.post("/api/login");
+      console.log("Token refreshed successfully:", response);
+      // Retry the original request with the new token (cookies will be sent automatically)
+      if (originalRequest.baseURL === backendUrl) {
+        return api(originalRequest);
+      } else if (originalRequest.baseURL === `${notificationUrl}/`) {
+        return NotificationsApi(originalRequest);
+      } else if (originalRequest.baseURL === `${notificationUrlSecure}/`) {
+        return NotificationsApiSecure(originalRequest);
+      }
+    } catch (refreshError) {
+      console.error("Token refresh failed:", refreshError);
+      // Let the error propagate - AuthProvider will handle clearing user state if needed
+      return Promise.reject(refreshError);
+    }
+  }
+  return Promise.reject(error);
+};
+
+api.interceptors.response.use((response) => response, responseInterceptor);
+NotificationsApi.interceptors.response.use((response) => response, responseInterceptor);
+NotificationsApiSecure.interceptors.response.use((response) => response, responseInterceptor);
 
 // GraphQL request helper
 export const graphqlRequest = async (query, variables = {}) => {

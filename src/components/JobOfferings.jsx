@@ -1,11 +1,11 @@
 
 import React from 'react';
 import './JobOfferings.css';
-import { graphqlRequest } from '../services/api';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
+import { api, NotificationsApi } from '../services/api';
 
 export default function JobOfferings() {
   const [jobs, setJobs] = React.useState([]);
@@ -40,22 +40,9 @@ export default function JobOfferings() {
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
-      const query = `
-        query GetAllJobs {
-          jobs {
-            id
-            title
-            company_name
-            company_logo
-            location
-            start_date
-            end_date
-          }
-        }
-      `;
       try {
         setLoading(true);
-        const response = await graphqlRequest(query);
+        const response = await NotificationsApi.get('/alljobdata');
         setJobs(response.data.jobs || []);
       } catch (err) {
         toast.error(err.message || 'Failed to fetch job offerings');

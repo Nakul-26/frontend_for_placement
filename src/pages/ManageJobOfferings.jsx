@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { graphqlRequest, NotificationsApiSecure } from '../services/api'; 
 import './ManageJobOfferings.css';
@@ -38,29 +37,32 @@ export default function ManageJobOfferings() {
   }, []);
 
     const fetchJobOfferings = async () => {
-      const query = `
-        query GetAllJobs {
-          jobs {
-            id
-            title
-            company_name
-            company_logo
-            location
-            salary_range
-            description
-            description
-            req_skills
-            start_date
-            end_date
-            is_active
-            company_id
-          }
-        }
-      `;
+      // const query = `
+      //   query GetAllJobs {
+      //     jobs {
+      //       id
+      //       title
+      //       company_name
+      //       company_logo
+      //       location
+      //       salary_range
+      //       description
+      //       req_skills
+      //       start_date
+      //       end_date
+      //       is_active
+      //       company_id
+            
+            
+
+      //     }
+      //   }
+      // `;
       try {
         setLoading(true);
         setError(null);
-        const response = await graphqlRequest(query);
+        // const response = await graphqlRequest(query);
+        const response = await NotificationsApiSecure.get('/jobs');
         setJobOfferings(response.data.jobs || []);
       } catch (err) {
         setError(err.message || 'Failed to fetch job offerings');
@@ -81,15 +83,8 @@ export default function ManageJobOfferings() {
         : (newJobOffering.req_skills || '').split(',').map(s => s.trim()).filter(Boolean);
 
       const payload = {
-        company_id: newJobOffering.company_id || 6, // Default or get from current context
-        title: newJobOffering.title,
-        description: newJobOffering.description,
+        ...newJobOffering,
         req_skills: reqSkillsArray,
-        salary_range: newJobOffering.salary_range,
-        start_date: newJobOffering.start_date,
-        end_date: newJobOffering.end_date,
-        location: newJobOffering.location,
-        is_active: newJobOffering.is_active ?? true
       };
 
       const res = await NotificationsApiSecure.post('/jobs', payload);
@@ -117,15 +112,8 @@ export default function ManageJobOfferings() {
         : (editingJobOffering.req_skills || '').split(',').map(s => s.trim()).filter(Boolean);
 
       const payload = {
-        company_id: editingJobOffering.company_id || 6,
-        title: editingJobOffering.title,
-        description: editingJobOffering.description,
+        ...editingJobOffering,
         req_skills: reqSkillsArray,
-        salary_range: editingJobOffering.salary_range,
-        start_date: editingJobOffering.start_date,
-        end_date: editingJobOffering.end_date,
-        location: editingJobOffering.location,
-        is_active: editingJobOffering.is_active ?? true
       };
 
       const res = await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
@@ -174,7 +162,10 @@ export default function ManageJobOfferings() {
           start_date: '',
           end_date: '',
           location: '',
-          is_active: true
+          is_active: true,
+          CGPA: '',
+          tenth_percentage: '',
+          twelfth_percentage: ''
         })}>Add Job Offering</button>
       </div>
       {!loading && !error && jobOfferings.length === 0 && (
@@ -194,6 +185,9 @@ export default function ManageJobOfferings() {
                 <p><strong>Location:</strong> {job.location || 'N/A'}</p>
                 <p><strong>Salary:</strong> {job.salary_range || 'N/A'}</p>
                 <p><strong>Description:</strong> {job.description || 'N/A'}</p>
+                <p><strong>CGPA:</strong> {job.CGPA || 'N/A'}</p>
+                <p><strong>10th %:</strong> {job.tenth_percentage || 'N/A'}</p>
+                <p><strong>12th %:</strong> {job.twelfth_percentage || 'N/A'}</p>
                 {job.company_description && <p><strong>Company:</strong> {job.company_description}</p>}
                 <div>
                     <strong>Skills:</strong>
@@ -227,19 +221,12 @@ export default function ManageJobOfferings() {
                     id="company_id"
                     name="company_id"
                     className="form-input"
-                    // Ensure the value is correctly bound, converting to string for the select input
-                    value={currentJob?.company_id?.toString() || ''} 
+                    value={newJobOffering?.company_id?.toString() || ''} 
                     onChange={(e) => {
-                        // Update state, ensuring the value is stored as a number
                         const companyId = Number(e.target.value);
-                        if (newJobOffering) {
-                            setNewJobOffering({ ...newJobOffering, company_id: companyId });
-                        } else if (editingJobOffering) {
-                            setEditingJobOffering({ ...editingJobOffering, company_id: companyId });
-                        }
+                        setNewJobOffering({ ...newJobOffering, company_id: companyId });
                     }}
                 >
-                    {/* Default/Placeholder option */}
                     <option value="" disabled>Select a Company</option>
                     {companies.map(company => (
                         <option key={company.id} value={company.id}>
@@ -311,6 +298,18 @@ export default function ManageJobOfferings() {
                 value={editingJobOffering?.end_date ? new Date(editingJobOffering.end_date).toISOString().slice(0,10) : (newJobOffering?.end_date ? new Date(newJobOffering.end_date).toISOString().slice(0,10) : '')}
                 onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, end_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, end_date: e.target.value })}
               />
+            </div>
+            <div className="form-field">
+              <label htmlFor="CGPA">Minimum CGPA:</label>
+              <input id="CGPA" type="number" className="form-input" value={editingJobOffering?.CGPA || newJobOffering?.CGPA || ''} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, CGPA: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, CGPA: e.target.value })} placeholder="Enter minimum CGPA" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="tenth_percentage">Minimum 10th Percentage:</label>
+              <input id="tenth_percentage" type="number" className="form-input" value={editingJobOffering?.tenth_percentage || newJobOffering?.tenth_percentage || ''} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, tenth_percentage: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, tenth_percentage: e.target.value })} placeholder="Enter minimum 10th percentage" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="twelfth_percentage">Minimum 12th Percentage:</label>
+              <input id="twelfth_percentage" type="number" className="form-input" value={editingJobOffering?.twelfth_percentage || newJobOffering?.twelfth_percentage || ''} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, twelfth_percentage: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, twelfth_percentage: e.target.value })} placeholder="Enter minimum 12th percentage" />
             </div>
             <div className="form-field">
               <label htmlFor="req_skills">Required Skills (comma separated):</label>

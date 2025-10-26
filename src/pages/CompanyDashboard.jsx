@@ -1,50 +1,40 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import { NotificationsApiSecure } from '../services/api';
 import './CompanyDashboard.css';
-import { toast } from 'react-toastify';
 
 const CompanyDashboard = () => {
-  const { user } = useAuth();
-  const [companyDetails, setCompanyDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, companyDetails, fetchCompanyDetails, loading } = useAuth();
 
   useEffect(() => {
-    const fetchCompanyDetails = async () => {
-      try {
-        const response = await NotificationsApiSecure.get('/companyonly');
-        setCompanyDetails(response.data.company);
-      } catch (error) {
-        console.error('Error fetching company details:', error);
-        toast.error('Failed to load company details.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCompanyDetails();
-  }, []);
+    if (!companyDetails) {
+      fetchCompanyDetails();
+    }
+  }, [companyDetails, fetchCompanyDetails]);
 
   return (
     <div className="company-dashboard-container">
       <h1 className="page-title">Welcome, {user?.name || 'Company User'}!</h1>
       <p className="page-subtitle">This is your dashboard. More features will be available soon.</p>
 
-      {/* {loading ? (
-        <p>Loading company details...</p>
+      {loading && !companyDetails ? (
+
+      <p>Loading company details...</p>
       ) : companyDetails ? (
         <div className="company-details">
+          <img src={companyDetails.logo} alt={`${companyDetails.name} logo`} className="company-logo" />
           <h2>{companyDetails.name}</h2>
           <p>{companyDetails.description}</p>
-          <p><strong>Website:</strong> <a href={companyDetails.website} target="_blank" rel="noopener noreferrer">{companyDetails.website}</a></p>
-          <p><strong>Industry:</strong> {companyDetails.industry}</p>
-          <p><strong>Location:</strong> {companyDetails.location}</p>
+          <p><strong>Email:</strong> {companyDetails.email}</p>
+          <p><strong>Phone:</strong> {companyDetails.phone}</p>
+          <p><strong>Headquarters:</strong> {companyDetails.headquarters.join(', ')}</p>
+          <p><strong>Sub-branches:</strong> {companyDetails.sub_branch_location.join(', ')}</p>
+          <p><strong>Industry Type:</strong> {companyDetails.type.join(', ')}</p>
         </div>
       ) : (
         <p>Could not load company details.</p>
-      )} */}
+      )}
       
       <div className="dashboard-grid">
         {/* <div className="dashboard-card">

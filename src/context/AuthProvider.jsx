@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { api, NotificationsApi } from "../services/api";
+import { api, NotificationsApi, NotificationsApiSecure } from "../services/api";
 import { toast } from 'react-toastify';
 import { AuthContext } from './AuthContext';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [companyDetails, setCompanyDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const axios = api;
@@ -13,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const loadUser = useCallback(async () => {
     try {
       setError(null);
-      const roles = ['admin', 'faculty', 'student', 'manager'];
+      const roles = ['admin', 'faculty', 'student', 'manager', 'company'];
       let storedUser = null;
       for (const role of roles) {
         const userStr = localStorage.getItem(`${role}User`);
@@ -30,6 +31,8 @@ export const AuthProvider = ({ children }) => {
       }
 
       const res = await axios.get('/api/login', { withCredentials: true });
+      console.log('loadUser response:', res.data);
+
       let newUser = res.data?.data?.user ?? res.data?.user ?? res.data;
       console.log('loadUser fetched user:', newUser);
       if (newUser && newUser.role_id) {
@@ -68,6 +71,18 @@ export const AuthProvider = ({ children }) => {
     };
     initialAuthCheck();
   }, [loadUser]);
+
+  const fetchCompanyDetails = useCallback(async () => {
+    try {
+      const response = await NotificationsApiSecure.get(('/companyonly'), { withCredentials: true });
+      setCompanyDetails(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching company details:', error);
+      toast.error('Failed to load company details.');
+      return null;
+    }
+  }, []);
 
   const login = useCallback(async (email, password, role) => {
     setError(null);
@@ -194,6 +209,8 @@ export const AuthProvider = ({ children }) => {
     logout,
     loadUser,
     isAuthenticated: !!user,
+    companyDetails,
+    fetchCompanyDetails
   };
 
   return (

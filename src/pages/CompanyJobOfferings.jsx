@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { api, NotificationsApi, graphqlRequest, NotificationsApiSecure } from '../services/api'; 
-import './ManageJobOfferings.css';
+import './CompanyJobOfferings.css';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 
 export default function CompanyJobOfferings() {
-  const { user } = useAuth();
+  const { user, companyDetails, fetchCompanyDetails } = useAuth();
   const [jobOfferings, setJobOfferings] = useState([]);
   const [newJobOffering, setNewJobOffering] = useState(null);
   const [editingJobOffering, setEditingJobOffering] = useState(null);
@@ -22,6 +22,24 @@ export default function CompanyJobOfferings() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!companyDetails) {
+      fetchCompanyDetails();
+    }
+    console.log('Company details in Job Offerings:', companyDetails);
+  }, [companyDetails, fetchCompanyDetails]);
+
+  const safeToISOString = (dateString) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '';
+      return date.toISOString().slice(0, 10);
+    } catch (e) {
+      return '';
+    }
+  }
+
   const fetchJobOfferings = async () => {
     const query = `
       query GetAllJobs {
@@ -32,12 +50,13 @@ export default function CompanyJobOfferings() {
           location
           req_skills
           description
-          req_skills
           salary_range
           start_date
           end_date
-          location
           is_active
+          
+          
+          
         }
       }
     `;
@@ -66,9 +85,12 @@ export default function CompanyJobOfferings() {
       const payload = {
         ...newJobOffering,
         req_skills: reqSkillsArray,
+        company_id: companyDetails.id,
       };
 
-      await NotificationsApiSecure.post('/jobs', payload);
+      console.log('Adding job offering with payload:', payload);
+
+      await NotificationsApiSecure.post(`/jobs`, payload , { withCredentials: true });
       setNewJobOffering(null);
       fetchJobOfferings();
       toast.success('Job offering added successfully!');
@@ -92,6 +114,7 @@ export default function CompanyJobOfferings() {
       const payload = {
         ...editingJobOffering,
         req_skills: reqSkillsArray,
+        company_id: companyDetails.id,
       };
 
       await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
@@ -162,7 +185,10 @@ export default function CompanyJobOfferings() {
           start_date: '',
           end_date: '',
           location: '',
-          is_active: true
+          is_active: true,
+          CGPA: '',
+          tenth_percentage: '',
+          twelfth_percentage: ''
         })}>Add Job Offering</button>
       </div>
 
@@ -178,17 +204,15 @@ export default function CompanyJobOfferings() {
             </div>
             <div className="job-card-body">
                 <p><strong>Location:</strong> {job.location || 'N/A'}</p>
-                <p><strong>Salary:</strong> {job.salary_range || 'N/A'}</p>
-                <p><strong>Description:</strong> {job.description || 'N/A'}</p>
+                <p><strong>CGPA:</strong> {job.CGPA || 'N/A'}</p>
+                <p><strong>10th %:</strong> {job.tenth_percentage || 'N/A'}</p>
+                <p><strong>12th %:</strong> {job.twelfth_percentage || 'N/A'}</p>
                 <div>
                     <strong>Skills:</strong>
                     <ul className="skills-list">
                       {(Array.isArray(job.req_skills) ? job.req_skills : (job.req_skills ? job.req_skills.split(',').map(s => s.trim()) : [])).map((skill, index) => <li key={index}>{skill}</li>)}
                     </ul>
                 </div>
-                <p><strong>Applications Open:</strong> {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'N/A'}</p>
-                <p><strong>Applications Close:</strong> {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'N/A'}</p>
-                <p><strong>Active:</strong> {job.is_active ? 'Yes' : 'No'}</p>
             </div>
             <div className="job-card-footer">
               <button className="button" onClick={() => setEditingJobOffering(job)}>Edit</button>
@@ -263,11 +287,23 @@ export default function CompanyJobOfferings() {
             </div>
             <div className="form-field">
               <label htmlFor="start_date">Start Date:</label>
-              <input id="start_date" type="date" className="form-input" value={editingJobOffering?.start_date ? new Date(editingJobOffering.start_date).toISOString().slice(0,10) : (newJobOffering?.start_date ? new Date(newJobOffering.start_date).toISOString().slice(0,10) : '')} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, start_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, start_date: e.target.value })} />
+              <input id="start_date" type="date" className="form-input" value={editingJobOffering?.start_date ? safeToISOString(editingJobOffering.start_date) : (newJobOffering?.start_date ? safeToISOString(newJobOffering.start_date) : '')} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, start_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, start_date: e.target.value })} />
             </div>
             <div className="form-field">
               <label htmlFor="end_date">End Date:</label>
-              <input id="end_date" type="date" className="form-input" value={editingJobOffering?.end_date ? new Date(editingJobOffering.end_date).toISOString().slice(0,10) : (newJobOffering?.end_date ? new Date(newJobOffering.end_date).toISOString().slice(0,10) : '')} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, end_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, end_date: e.target.value })} />
+              <input id="end_date" type="date" className="form-input" value={editingJobOffering?.end_date ? safeToISOString(editingJobOffering.end_date) : (newJobOffering?.end_date ? safeToISOString(newJobOffering.end_date) : '')} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, end_date: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, end_date: e.target.value })} />
+            </div>
+            <div className="form-field">
+              <label htmlFor="CGPA">Minimum CGPA:</label>
+              <input id="CGPA" type="number" className="form-input" value={editingJobOffering?.CGPA || newJobOffering?.CGPA || ''} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, CGPA: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, CGPA: e.target.value })} placeholder="Enter minimum CGPA" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="tenth_percentage">Minimum 10th Percentage:</label>
+              <input id="tenth_percentage" type="number" className="form-input" value={editingJobOffering?.tenth_percentage || newJobOffering?.tenth_percentage || ''} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, tenth_percentage: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, tenth_percentage: e.target.value })} placeholder="Enter minimum 10th percentage" />
+            </div>
+            <div className="form-field">
+              <label htmlFor="twelfth_percentage">Minimum 12th Percentage:</label>
+              <input id="twelfth_percentage" type="number" className="form-input" value={editingJobOffering?.twelfth_percentage || newJobOffering?.twelfth_percentage || ''} onChange={(e) => newJobOffering ? setNewJobOffering({ ...newJobOffering, twelfth_percentage: e.target.value }) : setEditingJobOffering({ ...editingJobOffering, twelfth_percentage: e.target.value })} placeholder="Enter minimum 12th percentage" />
             </div>
             <div className="form-field">
               <label htmlFor="req_skills">Required Skills (comma separated):</label>
