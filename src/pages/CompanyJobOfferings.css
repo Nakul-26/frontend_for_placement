@@ -224,3 +224,9 @@
   color: #666;
   margin-top: 20px;
 }
+
+.button.secondary {
+    background-color: #f0f0f0;
+    color: #ffffff;
+    margin-right: 10px !important;
+}

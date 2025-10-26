@@ -23,6 +23,9 @@ const AdminStudentRegistration = () => {
     LinkedIn: '',
     CGPA: 0,
     phone_number: '',
+    tenth_percentage: 0,
+    twelfth_percentage: 0,
+    backlogs: '',
   });
 
   const fetchUsers = async () => {
@@ -87,6 +90,9 @@ const AdminStudentRegistration = () => {
     formData.append('linkedin', studentData.LinkedIn);
     formData.append('CGPA', studentData.CGPA);
     formData.append('phone_number', studentData.phone_number);
+    formData.append('tenth_percentage', studentData.tenth_percentage);
+    formData.append('twelfth_percentage', studentData.twelfth_percentage);
+    formData.append('backlogs', studentData.backlogs);
 
     try {
       const config = {
@@ -157,13 +163,16 @@ const AdminStudentRegistration = () => {
             formData.append(key, studentData[key]);
         }
     });
+    formData.append('tenth_percentage', studentData.tenth_percentage);
+    formData.append('twelfth_percentage', studentData.twelfth_percentage);
+    formData.append('backlogs', studentData.backlogs);
 
     try {
         const config = {
             headers: { 'Content-Type': 'multipart/form-data' },
             withCredentials: true,
         };
-        await api.put(`/rbac/students/${editingStudent.id}`, formData, config);
+        await api.put(`/rbac/students/register/${editingStudent.id}`, formData, config);
         toast.success('Student updated successfully!');
         setIsEditModalOpen(false);
         setEditingStudent(null);
@@ -336,6 +345,41 @@ const AdminStudentRegistration = () => {
                   onChange={handleStudentDataChange}
                 />
               </div>
+              <div className="form-field">
+                <label htmlFor="tenth_percentage">10th Percentage:</label>
+                <input
+                  id="tenth_percentage"
+                  type="number"
+                  step="0.01"
+                  className="form-input"
+                  name="tenth_percentage"
+                  value={studentData.tenth_percentage}
+                  onChange={handleStudentDataChange}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="twelfth_percentage">12th Percentage:</label>
+                <input
+                  id="twelfth_percentage"
+                  type="number"
+                  step="0.01"
+                  className="form-input"
+                  name="twelfth_percentage"
+                  value={studentData.twelfth_percentage}
+                  onChange={handleStudentDataChange}
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="backlogs">Backlogs:</label>
+                <input
+                  id="backlogs"
+                  type="text"
+                  className="form-input"
+                  name="backlogs"
+                  value={studentData.backlogs}
+                  onChange={handleStudentDataChange}
+                />
+              </div>
             </div>
             <div className="modal-actions">
               <button className="button secondary" onClick={() => setIsRegisterFormVisible(false)}>Cancel</button>
@@ -385,6 +429,18 @@ const AdminStudentRegistration = () => {
               <div className="form-field">
                 <label>LinkedIn Profile:</label>
                 <input type="text" name="LinkedIn" value={studentData.LinkedIn} onChange={handleStudentDataChange} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label>10th Percentage:</label>
+                <input type="number" step="0.01" name="tenth_percentage" value={studentData.tenth_percentage} onChange={handleStudentDataChange} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label>12th Percentage:</label>
+                <input type="number" step="0.01" name="twelfth_percentage" value={studentData.twelfth_percentage} onChange={handleStudentDataChange} className="form-input" />
+              </div>
+              <div className="form-field">
+                <label>Backlogs:</label>
+                <input type="text" name="backlogs" value={studentData.backlogs} onChange={handleStudentDataChange} className="form-input" />
               </div>
               <div className="form-field">
                 <label>Update Resume:</label>

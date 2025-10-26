@@ -17,10 +17,10 @@ export default function CompanyJobOfferings() {
   const [selectedJob, setSelectedJob] = useState(null);
 
   useEffect(() => {
-    if (user) { // Ensure user is available before fetching
+    if (user && companyDetails) { // Ensure user and companyDetails are available before fetching
         fetchJobOfferings();
     }
-  }, [user]);
+  }, [user, companyDetails]);
 
   useEffect(() => {
     if (!companyDetails) {
@@ -41,30 +41,31 @@ export default function CompanyJobOfferings() {
   }
 
   const fetchJobOfferings = async () => {
-    const query = `
-      query GetAllJobs {
-        jobs {
-          id
-          title
-          company_name
-          location
-          req_skills
-          description
-          salary_range
-          start_date
-          end_date
-          is_active
+    // const query = `
+    //   query GetAllJobs {
+    //     jobs {
+    //       id
+    //       title
+    //       company_name
+    //       location
+    //       req_skills
+    //       description
+    //       salary_range
+    //       start_date
+    //       end_date
+    //       is_active
           
           
           
-        }
-      }
-    `;
+    //     }
+    //   }
+    // `;
     try {
       setLoading(true);
       setError(null);
-      const response = await graphqlRequest(query);
-      setJobOfferings(response.data.jobs || []);
+      const response = await NotificationsApiSecure.get(`/companyonly/jobs?companyId=${companyDetails.id}`, {}, { withCredentials: true });
+      console.log('Fetched job offerings:', response.data.data);
+      setJobOfferings(response.data.data || []);
     } catch (err) {
       const errorMsg = err.response?.data?.message || err.message || 'Failed to fetch job offerings';
       setError(errorMsg);
@@ -111,13 +112,16 @@ export default function CompanyJobOfferings() {
         ? editingJobOffering.req_skills
         : (editingJobOffering.req_skills || '').split(',').map(s => s.trim()).filter(Boolean);
 
+      const { id, updated_at, created_at, company_description, company_logo, company_name, ...rest } = editingJobOffering;
+      
       const payload = {
-        ...editingJobOffering,
+        ...rest,
         req_skills: reqSkillsArray,
         company_id: companyDetails.id,
       };
 
-      await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
+      const res = await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
+      console.log('Job offering updated successfully:', res.data);
       setEditingJobOffering(null);
       fetchJobOfferings();
       toast.success('Job offering updated successfully!');

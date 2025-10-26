@@ -111,10 +111,14 @@ export default function ManageJobOfferings() {
         ? editingJobOffering.req_skills
         : (editingJobOffering.req_skills || '').split(',').map(s => s.trim()).filter(Boolean);
 
+      const { id, updated_at, created_at, company_description, company_id, company_logo, company_name, ...rest } = editingJobOffering;
+      
       const payload = {
-        ...editingJobOffering,
+        ...rest,
         req_skills: reqSkillsArray,
       };
+
+      console.log('Editing job offering with payload:', payload); 
 
       const res = await NotificationsApiSecure.put(`/jobs/${editingJobOffering.id}`, payload);
       setEditingJobOffering(null);
@@ -133,18 +137,24 @@ export default function ManageJobOfferings() {
   const handleDeleteJobOffering = async (id) => {
     setError(null);
     setSuccess(null);
-    try {
-      const res = await NotificationsApiSecure.delete(`/jobs/${id}`);
-      console.log('Job offering deleted successfully:', res.data);
-      fetchJobOfferings();
-      setSuccess('Job offering deleted successfully!');
-      toast.success('Job offering deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting job offering:', error);
-      setError(error.response?.data?.message || 'Failed to delete job offering.');
-      toast.error(error.response?.data?.message || 'Failed to delete job offering.');
+
+    // Admin confirmation
+    const adminConfirmation = window.confirm("Are you sure you want to delete this job offering?");
+
+    if (adminConfirmation) {
+        try {
+            const res = await NotificationsApiSecure.delete(`/jobs/${id}`);
+            console.log('Job offering deleted successfully:', res.data);
+            fetchJobOfferings(); // Refresh the list
+            setSuccess('Job offering deleted successfully!');
+            toast.success('Job offering deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting job offering:', error);
+            setError(error.response?.data?.message || 'Failed to delete job offering.');
+            toast.error(error.response?.data?.message || 'Failed to delete job offering.');
+        }
     }
-  };
+};
 
   return (
     <div className="job-offerings-container">
@@ -213,9 +223,9 @@ export default function ManageJobOfferings() {
             <h3 className="modal-title">{newJobOffering ? 'Add Job Offering' : 'Edit Job Offering'}</h3>
             {error && <p className="error-message">{error}</p>}
             {success && <p className="success-message">{success}</p>}
-                
-                {newJobOffering && (
-                  <div className="form-field">
+            
+            {newJobOffering && (
+              <div className="form-field">
                   <label htmlFor="company_id">Company:</label>
                   <select
                     id="company_id"
@@ -235,7 +245,8 @@ export default function ManageJobOfferings() {
                     ))}
                 </select>
                 </div>
-                )}
+            )}
+                
             <div className="form-field">
               <label htmlFor="title">Job Title:</label>
               <input
