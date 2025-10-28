@@ -71,3 +71,35 @@
 .card-link:hover {
   color: #1d4ed8;
 }
+
+.student-info-card {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.student-info-card h2 {
+  margin-bottom: 15px;
+  color: #007bff;
+}
+
+.student-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 20px;
+}
+
+.student-info-grid p {
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 20px;
+}
