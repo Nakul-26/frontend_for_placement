@@ -5,9 +5,11 @@ import './StudentDashboard.css';
 const StudentDashboard = () => {
   const { user, fetchStudentDetails, studentDetails } = useAuth();
 
+  console.log("test2");
   useEffect(() => {
+    console.log("test1");
     fetchStudentDetails(user.id);
-  }, [fetchStudentDetails]);
+  }, [user, fetchStudentDetails]);
 
   return (
     <div className="student-dashboard-container">
