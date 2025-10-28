@@ -12,15 +12,15 @@ export const AuthProvider = ({ children }) => {
   const [studentDetails, setStudentDetails] = useState(null);
   const axios = api;
 
-  const fetchStudentDetails = useCallback(async (userId) => {
-    try {
-      const response = await axios.get(`/rbac/students/${userId}`);
-      setStudentData(response.data.student);
-    } catch (error) {
-      console.error('Error fetching student details:', error);
-      setStudentData(null);
-    }
-  }, [axios]);
+  // const fetchStudentDetails = useCallback(async (userId) => {
+  //   try {
+  //     const response = await axios.get(`/rbac/students/${userId}`);
+  //     setStudentData(response.data.student);
+  //   } catch (error) {
+  //     console.error('Error fetching student details:', error);
+  //     setStudentData(null);
+  //   }
+  // }, [axios]);
 
   // Expose loadUser so any component can restore user state from /api/me
   const loadUser = useCallback(async () => {
