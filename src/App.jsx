@@ -132,7 +132,7 @@ function App() {
             {/* Student Routes */}
             <Route element={<ProtectedRoute roles={['student']} />}>
               <Route path="/student/dashboard" element={<Layout><StudentDashboard /></Layout>} />
-              <Route path="/student/profile/edit" element={<Layout><StudentProfileEdit /></Layout>} />
+              {/* <Route path="/student/profile/edit" element={<Layout><StudentProfileEdit /></Layout>} /> */}
               <Route path="/student/roadmap" element={<Layout><SkillRoadmapRedirect /></Layout>} />
               {/* <Route path="/student/skill-development" element={<Layout><SkillDevelopment /></Layout>} /> */}
               {/* <Route path="/student/assessments" element={<Layout><Assessments /></Layout>} /> */}
