@@ -4,19 +4,26 @@ import { graphqlRequest } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { NotificationsApiSecure } from '../services/api';
+
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, studentDetails, fetchStudentDetails } = useAuth();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [currentJobId, setCurrentJobId] = useState(null);
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [cgpa, setCgpa] = useState('');
-  const [tenthPercentage, setTenthPercentage] = useState('');
-  const [twelfthPercentage, setTwelfthPercentage] = useState('');
-  const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
+  // const [showApplicationForm, setShowApplicationForm] = useState(false);
+  // const [cgpa, setCgpa] = useState('');
+  // const [tenthPercentage, setTenthPercentage] = useState('');
+  // const [twelfthPercentage, setTwelfthPercentage] = useState('');
+  // const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
 
+  useEffect(() => {
+    if(!studentDetails) {
+      fetchStudentDetails();
+    }
+  }, [studentDetails, fetchStudentDetails]);
+  
   useEffect(() => {
     const fetchJobOfferings = async () => {
       const query = `
@@ -56,33 +63,34 @@ export default function RecommendedJobs() {
     fetchJobOfferings();
   }, []);
 
-  const handleApply = (job) => {
-    if (!user) {
-      toast.error('Please login to apply for jobs.');
-      return;
-    }
-    setSelectedJobForApplication(job);
-    setShowApplicationForm(true);
-  };
+  // const handleApply = (job) => {
+  //   if (!user) {
+  //     toast.error('Please login to apply for jobs.');
+  //     return;
+  //   }
+  //   setSelectedJobForApplication(job);
+  //   setShowApplicationForm(true);
+  // };
 
-  const handleSubmitApplication = async (e) => {
-    e.preventDefault();
+  const handleApply = async (job) => {
+    // e.preventDefault();
     if (!selectedJobForApplication) return;
 
     console.log('Submitting application for job:', selectedJobForApplication.id || selectedJobForApplication.jobid || null);
     setSuccess(false);
     setError('');
-    setCurrentJobId(selectedJobForApplication.id || selectedJobForApplication.jobid || null);
+    setCurrentJobId(job);
+    // setCurrentJobId(selectedJobForApplication.id || selectedJobForApplication.jobid || null);
 
     try {
       const res = await NotificationsApiSecure.post('/forms', {
         user_name: user.name || user.user_name || user.fullName || user.username || '',
         user_email: user.email || user.user_email || '',
         user_id: user.id || user.user_id || '',
-        jobid: selectedJobForApplication.id || selectedJobForApplication.jobid || '',
-        CGPA: parseFloat(cgpa),
-        tenth_percentage: parseFloat(tenthPercentage),
-        twelfth_percentage: parseFloat(twelfthPercentage),
+        jobid: job.id || job.jobid || '',
+        CGPA: studentDetails.CGPA,
+        tenth_percentage: studentDetails.tenth_percentage,
+        twelfth_percentage: studentDetails.twelfth_percentage,
       }, { withCredentials: true });
       console.log('Response from application submission:', res);
       const result = res.data;
