@@ -89,8 +89,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.get(`/rbac/students/${userId}`, { withCredentials: true });
       console.log("student details: ",response);
-      setStudentDetails(response.data.data);
-      return response.data.data;
+      setStudentDetails(response.data.student);
+      return response.data.student;
     } catch (error) {
       console.error('Error fetching student details:', error);
       toast.error('Failed to load student details.');
