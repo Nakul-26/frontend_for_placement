@@ -3,7 +3,10 @@ import { useAuth } from '../context/useAuth';
 import './StudentDashboard.css';
 
 const StudentDashboard = () => {
-  const { user } = useAuth();
+  const { user, studentData, fetchStudentDetails } = useAuth();
+
+  // The useEffect for fetching student details is now handled in AuthProvider.jsx
+  // This useEffect is no longer needed here.
 
   return (
     <div className="student-dashboard-container">
@@ -11,13 +14,27 @@ const StudentDashboard = () => {
         <h1>Welcome, {user?.name || 'Student'}!</h1>
         <p>Here is a summary of your placement activities.</p>
       </div>
+      {studentData && (
+        <div className="dashboard-card student-data-card"> {/* Added student-data-card for specific styling if needed */}
+          <div className="card-icon">👨‍🎓</div> {/* Student icon */}
+          <h2>Student Information</h2>
+          <div className="student-details-grid"> {/* New div for better layout of details */}
+            <p><strong>Student ID:</strong> {studentData.id}</p>
+            <p><strong>Official Email:</strong> {studentData.offical_email}</p>
+            <p><strong>Personal Email:</strong> {studentData.personal_email}</p>
+            <p><strong>Phone Number:</strong> {studentData.phone_number}</p>
+            <p><strong>CGPA:</strong> {studentData.CGPA}</p>
+            {studentData.resume && <p><strong>Resume:</strong> <a href={studentData.resume} target="_blank" rel="noopener noreferrer" className="card-link">View Resume</a></p>}
+            {studentData.LeetCode && <p><strong>LeetCode:</strong> <a href={studentData.LeetCode} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            {studentData.HackerRank && <p><strong>HackerRank:</strong> <a href={studentData.HackerRank} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            {studentData.HackerEarth && <p><strong>HackerEarth:</strong> <a href={studentData.HackerEarth} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            {studentData.linkedin && <p><strong>LinkedIn:</strong> <a href={studentData.linkedin} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            <p><strong>Account Created:</strong> {new Date(studentData.created_at).toLocaleDateString()}</p>
+          </div>
+        </div>
+      )}
       <div className="dashboard-grid">
-        {/* <div className="dashboard-card">
-          <div className="card-icon">📝</div>
-          <h2>My Profile</h2>
-          <p>Create/Edit profile, academic details, skills, experience. Upload/View Resume.</p>
-          <a href="/student/profile" className="card-link">View Profile</a>
-        </div> */}
+        {/* The rest of the dashboard cards remain unchanged */}
         <div className="dashboard-card">
           <div className="card-icon">🔍</div>
           <h2>Job Search</h2>
@@ -30,12 +47,6 @@ const StudentDashboard = () => {
           <p>List of all applications with status.</p>
           {/* <a href="/student/my-applications" className="card-link">Track Applications</a> */}
         </div>
-        {/* <div className="dashboard-card">
-          <div className="card-icon">💼</div>
-          <h2>Recommended Jobs</h2>
-          <p>List of jobs tailored to your profile.</p>
-          <a href="/student/recommended-jobs" className="card-link">View Jobs</a>
-        </div> */}
         <div className="dashboard-card">
           <div className="card-icon">❓</div>
           <h2>My Quizzes/Tests</h2>
@@ -66,18 +77,6 @@ const StudentDashboard = () => {
           <p>Bookmarks for tutorials/resources.</p>
           {/* <a href="/student/my-saved-content" className="card-link">View Content</a> */}
         </div>
-        {/* <div className="dashboard-card">
-          <div className="card-icon">🔔</div>
-          <h2>Notifications</h2>
-          <p>In-app alerts for job status, quiz schedules, announcements.</p>
-          <a href="/student/notifications" className="card-link">View Notifications</a>
-        </div> */}
-        {/* <div className="dashboard-card">
-          <div className="card-icon">💬</div>
-          <h2>Chat</h2>
-          <p>Real-time chat with Faculty/Company recruiters.</p>
-          <a href="/chat" className="card-link">Open Chat</a>
-        </div> */}
       </div>
     </div>
   );

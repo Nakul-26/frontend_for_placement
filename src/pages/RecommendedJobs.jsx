@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import './RecommendedJobs.css';
-import { graphqlRequest } from '../services/api';
+import { graphqlRequest, api } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { NotificationsApiSecure } from '../services/api';
+
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, studentData, fetchStudentDetails } = useAuth();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [currentJobId, setCurrentJobId] = useState(null);
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [cgpa, setCgpa] = useState('');
-  const [tenthPercentage, setTenthPercentage] = useState('');
-  const [twelfthPercentage, setTwelfthPercentage] = useState('');
-  const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
+
+  useEffect(() => {
+    if (user?.role !== 'student' || !studentData) {
+      fetchStudentDetails(user.id);
+    }
+  }, [user, studentData, fetchStudentDetails]);
 
   useEffect(() => {
     const fetchJobOfferings = async () => {
@@ -56,46 +58,32 @@ export default function RecommendedJobs() {
     fetchJobOfferings();
   }, []);
 
-  const handleApply = (job) => {
-    if (!user) {
-      toast.error('Please login to apply for jobs.');
-      return;
-    }
-    setSelectedJobForApplication(job);
-    setShowApplicationForm(true);
-  };
+  const handleApply = async (job, event) => {
+    // event.preventDefault();
+    if (!job) return;
 
-  const handleSubmitApplication = async (e) => {
-    e.preventDefault();
-    if (!selectedJobForApplication) return;
+    console.log('Handling application for job:', job.id || job.jobid || null);  
 
-    console.log('Submitting application for job:', selectedJobForApplication.id || selectedJobForApplication.jobid || null);
+    console.log('Submitting application for job:', job.id || job.jobid || null);
     setSuccess(false);
     setError('');
-    setCurrentJobId(selectedJobForApplication.id || selectedJobForApplication.jobid || null);
+    setCurrentJobId(job.id || job.jobid || null);
 
     try {
       const res = await NotificationsApiSecure.post('/forms', {
-        user_name: user.name || user.user_name || user.fullName || user.username || '',
-        user_email: user.email || user.user_email || '',
-        user_id: user.id || user.user_id || '',
-        jobid: selectedJobForApplication.id || selectedJobForApplication.jobid || '',
-        CGPA: parseFloat(cgpa),
-        tenth_percentage: parseFloat(tenthPercentage),
-        twelfth_percentage: parseFloat(twelfthPercentage),
+        user_name: studentData.name || studentData.user_name || studentData.fullName || studentData.username || '',
+        user_email: studentData.email || studentData.user_email || '',
+        user_id: studentData.id || studentData.user_id || '',
+        jobid: job.id || job.jobid || '',
+        CGPA: studentData.CGPA,
+        tenth_percentage: studentData.tenth_percentage,
+        twelfth_percentage: studentData.twelfth_percentage,
       }, { withCredentials: true });
       console.log('Response from application submission:', res);
       const result = res.data;
       if (res.status === 200 || res.status === 201) {
         toast.success(result?.message || 'Your application was submitted successfully!');
         setSuccess(true);
-        setShowApplicationForm(false);
-        setCgpa('');
-        setTenthPercentage('');
-        setTwelfthPercentage('');
-        if (selectedJobForApplication.apply_link) {
-          window.open(selectedJobForApplication.apply_link, '_blank', 'noopener,noreferrer');
-        }
       } else {
         console.error('Error submitting application:', result);
         setError(result?.message || 'Failed to submit your application. Please try again later.');
@@ -170,59 +158,6 @@ export default function RecommendedJobs() {
           )}
         </div>
       </div>
-
-      {showApplicationForm && selectedJobForApplication && (
-        <div className="application-form-overlay">
-          <div className="application-form-modal">
-            <h2>Apply for {selectedJobForApplication.title}</h2>
-            <form onSubmit={handleSubmitApplication}>
-              <div className="form-group">
-                <label htmlFor="cgpa">CGPA:</label>
-                <input
-                  type="number"
-                  id="cgpa"
-                  value={cgpa}
-                  onChange={(e) => setCgpa(e.target.value)}
-                  step="0.01"
-                  min="0"
-                  max="10"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="tenthPercentage">10th Percentage:</label>
-                <input
-                  type="number"
-                  id="tenthPercentage"
-                  value={tenthPercentage}
-                  onChange={(e) => setTenthPercentage(e.target.value)}
-                  step="0.01"
-                  min="0"
-                  max="100"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="twelfthPercentage">12th Percentage:</label>
-                <input
-                  type="number"
-                  id="twelfthPercentage"
-                  value={twelfthPercentage}
-                  onChange={(e) => setTwelfthPercentage(e.target.value)}
-                  step="0.01"
-                  min="0"
-                  max="100"
-                  required
-                />
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="submit-btn">Submit Application</button>
-                <button type="button" className="cancel-btn" onClick={() => setShowApplicationForm(false)}>Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
