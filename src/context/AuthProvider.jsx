@@ -85,9 +85,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchStudentDetails = useCallback(async () => {
+  const fetchStudentDetails = useCallback(async (userId) => {
     try {
-      const response = await NotificationsApiSecure.get('/studentonly', { withCredentials: true });
+      const response = await api.get(`/register/student/${userId}`, { withCredentials: true });
       setStudentDetails(response.data.data);
       return response.data.data;
     } catch (error) {
