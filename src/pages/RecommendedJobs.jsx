@@ -74,9 +74,9 @@ export default function RecommendedJobs() {
 
   const handleApply = async (job) => {
     // e.preventDefault();
-    if (!selectedJobForApplication) return;
+    // if (!selectedJobForApplication) return;
 
-    console.log('Submitting application for job:', selectedJobForApplication.id || selectedJobForApplication.jobid || null);
+    // console.log('Submitting application for job:', selectedJobForApplication.id || selectedJobForApplication.jobid || null);
     setSuccess(false);
     setError('');
     setCurrentJobId(job);
@@ -97,13 +97,13 @@ export default function RecommendedJobs() {
       if (res.status === 200 || res.status === 201) {
         toast.success(result?.message || 'Your application was submitted successfully!');
         setSuccess(true);
-        setShowApplicationForm(false);
-        setCgpa('');
-        setTenthPercentage('');
-        setTwelfthPercentage('');
-        if (selectedJobForApplication.apply_link) {
-          window.open(selectedJobForApplication.apply_link, '_blank', 'noopener,noreferrer');
-        }
+        // setShowApplicationForm(false);
+        // setCgpa('');
+        // setTenthPercentage('');
+        // setTwelfthPercentage('');
+        // if (selectedJobForApplication.apply_link) {
+        //   window.open(selectedJobForApplication.apply_link, '_blank', 'noopener,noreferrer');
+        // }
       } else {
         console.error('Error submitting application:', result);
         setError(result?.message || 'Failed to submit your application. Please try again later.');
@@ -178,59 +178,6 @@ export default function RecommendedJobs() {
           )}
         </div>
       </div>
-
-      {showApplicationForm && selectedJobForApplication && (
-        <div className="application-form-overlay">
-          <div className="application-form-modal">
-            <h2>Apply for {selectedJobForApplication.title}</h2>
-            <form onSubmit={handleSubmitApplication}>
-              <div className="form-group">
-                <label htmlFor="cgpa">CGPA:</label>
-                <input
-                  type="number"
-                  id="cgpa"
-                  value={cgpa}
-                  onChange={(e) => setCgpa(e.target.value)}
-                  step="0.01"
-                  min="0"
-                  max="10"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="tenthPercentage">10th Percentage:</label>
-                <input
-                  type="number"
-                  id="tenthPercentage"
-                  value={tenthPercentage}
-                  onChange={(e) => setTenthPercentage(e.target.value)}
-                  step="0.01"
-                  min="0"
-                  max="100"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="twelfthPercentage">12th Percentage:</label>
-                <input
-                  type="number"
-                  id="twelfthPercentage"
-                  value={twelfthPercentage}
-                  onChange={(e) => setTwelfthPercentage(e.target.value)}
-                  step="0.01"
-                  min="0"
-                  max="100"
-                  required
-                />
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="submit-btn">Submit Application</button>
-                <button type="button" className="cancel-btn" onClick={() => setShowApplicationForm(false)}>Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
