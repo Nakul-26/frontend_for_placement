@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [companyDetails, setCompanyDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [studentDetails, setStudentDetails] = useState(null);
   const axios = api;
 
   // Expose loadUser so any component can restore user state from /api/me
@@ -83,6 +84,19 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   }, []);
+
+  const fetchStudentDetails = useCallback(async () => {
+    try {
+      const response = await NotificationsApiSecure.get('/studentonly', { withCredentials: true });
+      setStudentDetails(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching student details:', error);
+      toast.error('Failed to load student details.');
+      return null;
+    }
+  }, []);
+
 
   const login = useCallback(async (email, password, role) => {
     setError(null);
@@ -210,7 +224,9 @@ export const AuthProvider = ({ children }) => {
     loadUser,
     isAuthenticated: !!user,
     companyDetails,
-    fetchCompanyDetails
+    fetchCompanyDetails,
+    studentDetails,
+    fetchStudentDetails
   };
 
   return (
