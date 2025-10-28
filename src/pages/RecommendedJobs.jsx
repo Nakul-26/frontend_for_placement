@@ -19,10 +19,8 @@ export default function RecommendedJobs() {
   // const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
 
   useEffect(() => {
-    if(!studentDetails) {
-      fetchStudentDetails();
-    }
-  }, [studentDetails, fetchStudentDetails]);
+    fetchStudentDetails();
+  }, [fetchStudentDetails]);
   
   useEffect(() => {
     const fetchJobOfferings = async () => {
@@ -82,6 +80,7 @@ export default function RecommendedJobs() {
     setCurrentJobId(job);
     console.log("called handle apply");
     console.log("job:",job);
+    console.log("studetnDetails:",studentDetails);
     // setCurrentJobId(selectedJobForApplication.id || selectedJobForApplication.jobid || null);
 
     try {
