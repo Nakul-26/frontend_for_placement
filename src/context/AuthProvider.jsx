@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
   const fetchStudentDetails = useCallback(async (userId) => {
     try {
       const response = await api.get(`/rbac/student/${userId}`, { withCredentials: true });
+      console.log("student details: ",response);
       setStudentDetails(response.data.data);
       return response.data.data;
     } catch (error) {
