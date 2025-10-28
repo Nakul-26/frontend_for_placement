@@ -19,7 +19,7 @@ export default function RecommendedJobs() {
   // const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
 
   useEffect(() => {
-    fetchStudentDetails();
+    fetchStudentDetails(user.id);
   }, [fetchStudentDetails]);
   
   useEffect(() => {
