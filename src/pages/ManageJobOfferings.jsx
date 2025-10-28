@@ -153,7 +153,7 @@ function StudentApplications() {
                     )}
                   </td>
                   <td>{new Date(app.created_at).toLocaleString()}</td>
-                  <td>
+                  {/* <td>
                     {app.resume_link ? (
                       <a href={app.resume_link} target="_blank" rel="noopener noreferrer">
                         View Resume
@@ -161,7 +161,7 @@ function StudentApplications() {
                     ) : (
                       "Not uploaded"
                     )}
-                  </td>
+                  </td> */}
                 </tr>
               );
             })}
