@@ -75,6 +75,8 @@ const AdminStudentRegistration = () => {
   }, []);
 
   const handleRegisterStudent = async (userId) => {
+
+    let resumeUrl = '';
     // Logic to register student
     console.log(`Registering user ${userId} as student with data:`, studentData);
     const formData = new FormData();
@@ -82,7 +84,10 @@ const AdminStudentRegistration = () => {
     formData.append('offical_email', studentData.offical_email);
     formData.append('personal_email', studentData.personal_email);
     if (studentData.resume) {
-      formData.append('resume', studentData.resume);
+      const uploadData = new FormData();
+      uploadData.append('file', studentData.resume);
+      const uploadRes = await api.post('/upload', uploadData, { withCredentials: true });
+      resumeUrl = uploadRes.data.url;
     }
     formData.append('LeetCode', studentData.LeetCode);
     formData.append('HackerRank', studentData.HackerRank);
