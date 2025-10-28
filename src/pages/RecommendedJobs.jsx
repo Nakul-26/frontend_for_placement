@@ -81,6 +81,7 @@ export default function RecommendedJobs() {
     setError('');
     setCurrentJobId(job);
     console.log("called handle apply");
+    console.log("job:",job);
     // setCurrentJobId(selectedJobForApplication.id || selectedJobForApplication.jobid || null);
 
     try {
@@ -92,6 +93,7 @@ export default function RecommendedJobs() {
         CGPA: studentDetails.CGPA,
         tenth_percentage: studentDetails.tenth_percentage,
         twelfth_percentage: studentDetails.twelfth_percentage,
+        resume_link: studentDetails.resume
       }, { withCredentials: true });
       console.log('Response from application submission:', res);
       const result = res.data;
