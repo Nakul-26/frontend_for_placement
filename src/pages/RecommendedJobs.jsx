@@ -19,8 +19,10 @@ export default function RecommendedJobs() {
   // const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
 
   useEffect(() => {
-    fetchStudentDetails(user.id);
-  }, [fetchStudentDetails]);
+    if (user?.id) {
+      fetchStudentDetails(user.id);
+    }
+  }, [user, fetchStudentDetails]);
   
   useEffect(() => {
     const fetchJobOfferings = async () => {
@@ -73,6 +75,15 @@ export default function RecommendedJobs() {
   const handleApply = async (job) => {
     // e.preventDefault();
     // if (!selectedJobForApplication) return;
+
+    if (!studentDetails) {
+      toast.error('Student details not loaded yet. Please wait a moment.');
+      return;
+    }
+    if (!user) {
+      toast.error('Please log in first.');
+      return;
+    }
 
     // console.log('Submitting application for job:', selectedJobForApplication.id || selectedJobForApplication.jobid || null);
     setSuccess(false);
@@ -129,6 +140,16 @@ export default function RecommendedJobs() {
       </div>
     );
   }
+
+  if (!studentDetails) {
+    return (
+      <div className="recommended-jobs-container">
+        <h1 className="recommended-jobs-title">Jobs</h1>
+        <p>Loading your profile details...</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="recommended-jobs-container">
