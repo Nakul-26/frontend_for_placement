@@ -12,6 +12,19 @@ export const AuthProvider = ({ children }) => {
   const [studentDetails, setStudentDetails] = useState(null);
   const axios = api;
 
+  const fetchStudentDetails = useCallback(async (userId) => {
+    try {
+      const response = await api.get(`/rbac/students/${userId}`, { withCredentials: true });
+      console.log("student details: ",response);
+      setStudentDetails(response.data.student);
+      return response.data.student;
+    } catch (error) {
+      console.error('Error fetching student details:', error);
+      toast.error('Failed to load student details.');
+      return null;
+    }
+  }, []);
+
   // const fetchStudentDetails = useCallback(async (userId) => {
   //   try {
   //     const response = await axios.get(`/rbac/students/${userId}`);
@@ -82,9 +95,6 @@ export const AuthProvider = ({ children }) => {
       if (storedDummyUser) {
         const dummyUser = JSON.parse(storedDummyUser);
         setUser(dummyUser);
-        if (dummyUser.role === 'student') {
-          await fetchStudentDetails(dummyUser.id);
-        }
         setLoading(false);
         return;
       }
@@ -93,7 +103,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     initialAuthCheck();
-  }, [loadUser, fetchStudentDetails]);
+  }, [loadUser]);
 
   const fetchCompanyDetails = useCallback(async () => {
     try {
@@ -107,18 +117,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchStudentDetails = useCallback(async (userId) => {
-    try {
-      const response = await api.get(`/rbac/students/${userId}`, { withCredentials: true });
-      console.log("student details: ",response);
-      setStudentDetails(response.data.student);
-      return response.data.student;
-    } catch (error) {
-      console.error('Error fetching student details:', error);
-      toast.error('Failed to load student details.');
-      return null;
-    }
-  }, []);
+
 
 
   const login = useCallback(async (email, password, role) => {

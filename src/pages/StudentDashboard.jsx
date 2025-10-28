@@ -17,22 +17,22 @@ const StudentDashboard = () => {
         <h1>Welcome, {user?.name || 'Student'}!</h1>
         <p>Here is a summary of your placement activities.</p>
       </div>
-      {studentData && (
+      {studentDetails && (
         <div className="dashboard-card student-data-card"> {/* Added student-data-card for specific styling if needed */}
           <div className="card-icon">👨‍🎓</div> {/* Student icon */}
           <h2>Student Information</h2>
           <div className="student-details-grid"> {/* New div for better layout of details */}
-            <p><strong>Student ID:</strong> {studentData.id}</p>
-            <p><strong>Official Email:</strong> {studentData.offical_email}</p>
-            <p><strong>Personal Email:</strong> {studentData.personal_email}</p>
-            <p><strong>Phone Number:</strong> {studentData.phone_number}</p>
-            <p><strong>CGPA:</strong> {studentData.CGPA}</p>
-            {studentData.resume && <p><strong>Resume:</strong> <a href={studentData.resume} target="_blank" rel="noopener noreferrer" className="card-link">View Resume</a></p>}
-            {studentData.LeetCode && <p><strong>LeetCode:</strong> <a href={studentData.LeetCode} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
-            {studentData.HackerRank && <p><strong>HackerRank:</strong> <a href={studentData.HackerRank} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
-            {studentData.HackerEarth && <p><strong>HackerEarth:</strong> <a href={studentData.HackerEarth} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
-            {studentData.linkedin && <p><strong>LinkedIn:</strong> <a href={studentData.linkedin} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
-            <p><strong>Account Created:</strong> {new Date(studentData.created_at).toLocaleDateString()}</p>
+            <p><strong>Student ID:</strong> {studentDetails.id}</p>
+            <p><strong>Official Email:</strong> {studentDetails.offical_email}</p>
+            <p><strong>Personal Email:</strong> {studentDetails.personal_email}</p>
+            <p><strong>Phone Number:</strong> {studentDetails.phone_number}</p>
+            <p><strong>CGPA:</strong> {studentDetails.CGPA}</p>
+            {studentDetails.resume && <p><strong>Resume:</strong> <a href={studentDetails.resume} target="_blank" rel="noopener noreferrer" className="card-link">View Resume</a></p>}
+            {studentDetails.LeetCode && <p><strong>LeetCode:</strong> <a href={studentDetails.LeetCode} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            {studentDetails.HackerRank && <p><strong>HackerRank:</strong> <a href={studentDetails.HackerRank} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            {studentDetails.HackerEarth && <p><strong>HackerEarth:</strong> <a href={studentDetails.HackerEarth} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            {studentDetails.linkedin && <p><strong>LinkedIn:</strong> <a href={studentDetails.linkedin} target="_blank" rel="noopener noreferrer" className="card-link">Profile</a></p>}
+            <p><strong>Account Created:</strong> {new Date(studentDetails.created_at).toLocaleDateString()}</p>
           </div>
         </div>
       )}
