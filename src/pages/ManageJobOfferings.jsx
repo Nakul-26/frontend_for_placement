@@ -122,7 +122,7 @@ function StudentApplications() {
               <th>12th %</th>
               <th>Company</th>
               <th>Applied At</th>
-              <th>Resume</th>
+              {/* <th>Resume</th> */}
             </tr>
           </thead>
           <tbody>
