@@ -1,75 +1,107 @@
 .student-applications-container {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 32px 24px;
+  max-width: 1000px;
+  margin: 50px auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 64, 128, 0.08);
+  padding: 40px 30px;
+  font-family: "Inter", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.student-applications-container:hover {
+  box-shadow: 0 6px 20px rgba(0, 64, 128, 0.12);
 }
 
 .student-applications-container h2 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-bottom: 24px;
-  color: #2c3e50;
+  color: #1a3c7d;
   text-align: center;
+  font-weight: 700;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.filter-container label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.job-filter-select {
+  padding: 10px 14px;
+  border: 2px solid #1e90ff;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #f8fbff;
+  color: #1a3c7d;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.job-filter-select:hover,
+.job-filter-select:focus {
+  background-color: #eaf3ff;
+  border-color: #0a66c2;
 }
 
 .student-applications-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .student-applications-table th,
 .student-applications-table td {
-  padding: 12px 10px;
-  border-bottom: 1px solid #eaeaea;
+  padding: 14px 12px;
   text-align: left;
 }
 
 .student-applications-table th {
-  background: #f7f7f7;
-  color: #34495e;
+  background: linear-gradient(135deg, #0a66c2, #1e90ff);
+  color: white;
   font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.student-applications-table tr:nth-child(even) {
+  background: #f9fbff;
 }
 
 .student-applications-table tr:hover {
-  background: #f0f4fa;
-}
-
-@media (max-width: 700px) {
-  .student-applications-container {
-    padding: 16px 6px;
-  }
-  .student-applications-table th,
-  .student-applications-table td {
-    padding: 8px 4px;
-    font-size: 0.95rem;
-  }
+  background: #eaf3ff;
+  transition: background 0.2s ease;
 }
 
 .no-applications-message {
   text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #5a5a5a;
+  margin-top: 25px;
 }
 
-.filter-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
+@media (max-width: 700px) {
+  .student-applications-container {
+    padding: 20px 12px;
+  }
 
-.filter-container label {
-  margin-right: 10px;
-  font-weight: bold;
-}
+  .student-applications-table th,
+  .student-applications-table td {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+  }
 
-.job-filter-select {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
+  .filter-container {
+    flex-direction: column;
+  }
 }
