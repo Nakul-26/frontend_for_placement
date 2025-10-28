@@ -80,6 +80,7 @@ export default function RecommendedJobs() {
     setSuccess(false);
     setError('');
     setCurrentJobId(job);
+    console.log("called handle apply");
     // setCurrentJobId(selectedJobForApplication.id || selectedJobForApplication.jobid || null);
 
     try {
