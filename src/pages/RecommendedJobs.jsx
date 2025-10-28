@@ -97,8 +97,10 @@ export default function RecommendedJobs() {
     user_id: studentDetails.id || studentDetails._id || '',
     jobid: job.id || job.jobid || '',
     CGPA: studentDetails.CGPA,
-    tenth_percentage: studentDetails.tenth_percentage,
-    twelfth_percentage: studentDetails.twelfth_percentage,
+    // tenth_percentage: studentDetails.tenth_percentage,
+    // twelfth_percentage: studentDetails.twelfth_percentage,
+    tenth_percentage: 100,
+    twelfth_percentage: 100,
     resume_link: studentDetails.resume,
   };
 
