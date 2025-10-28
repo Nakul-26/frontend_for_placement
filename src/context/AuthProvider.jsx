@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [studentData, setStudentData] = useState(null); // New state for student data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [studentDetails, setStudentDetails] = useState(null);
   const axios = api;
 
   const fetchStudentDetails = useCallback(async (userId) => {
@@ -105,6 +106,20 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   }, []);
+
+  const fetchStudentDetails = useCallback(async (userId) => {
+    try {
+      const response = await api.get(`/rbac/students/${userId}`, { withCredentials: true });
+      console.log("student details: ",response);
+      setStudentDetails(response.data.student);
+      return response.data.student;
+    } catch (error) {
+      console.error('Error fetching student details:', error);
+      toast.error('Failed to load student details.');
+      return null;
+    }
+  }, []);
+
 
   const login = useCallback(async (email, password, role) => {
     setError(null);
@@ -250,8 +265,8 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     companyDetails,
     fetchCompanyDetails,
-    fetchStudentDetails,
-    studentData, // Expose studentData
+    studentDetails,
+    fetchStudentDetails
   };
 
   return (

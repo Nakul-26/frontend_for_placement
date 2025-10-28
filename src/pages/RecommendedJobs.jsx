@@ -8,17 +8,22 @@ import { NotificationsApiSecure } from '../services/api';
 export default function RecommendedJobs() {
   const [jobOfferings, setJobOfferings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, studentData, fetchStudentDetails } = useAuth();
+  const { user, studentDetails, fetchStudentDetails } = useAuth();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [currentJobId, setCurrentJobId] = useState(null);
+  // const [showApplicationForm, setShowApplicationForm] = useState(false);
+  // const [cgpa, setCgpa] = useState('');
+  // const [tenthPercentage, setTenthPercentage] = useState('');
+  // const [twelfthPercentage, setTwelfthPercentage] = useState('');
+  // const [selectedJobForApplication, setSelectedJobForApplication] = useState(null);
 
   useEffect(() => {
-    if (user?.role !== 'student' || !studentData) {
+    if (user?.id) {
       fetchStudentDetails(user.id);
     }
-  }, [user, studentData, fetchStudentDetails]);
-
+  }, [user, fetchStudentDetails]);
+  
   useEffect(() => {
     const fetchJobOfferings = async () => {
       const query = `
@@ -58,46 +63,72 @@ export default function RecommendedJobs() {
     fetchJobOfferings();
   }, []);
 
-  const handleApply = async (job, event) => {
-    // event.preventDefault();
-    if (!job) return;
+  // const handleApply = (job) => {
+  //   if (!user) {
+  //     toast.error('Please login to apply for jobs.');
+  //     return;
+  //   }
+  //   setSelectedJobForApplication(job);
+  //   setShowApplicationForm(true);
+  // };
 
-    console.log('Handling application for job:', job.id || job.jobid || null);  
+  const handleApply = async (job) => {
+  if (!studentDetails) {
+    toast.error('Student details not loaded yet. Please wait a moment.');
+    return;
+  }
+  if (!user) {
+    toast.error('Please log in first.');
+    return;
+  }
 
-    console.log('Submitting application for job:', job.id || job.jobid || null);
-    setSuccess(false);
-    setError('');
-    setCurrentJobId(job.id || job.jobid || null);
+  setSuccess(false);
+  setError('');
+  setCurrentJobId(job?.id || job?.jobid || null);
 
-    try {
-      const res = await NotificationsApiSecure.post('/forms', {
-        user_name: studentData.name || studentData.user_name || studentData.fullName || studentData.username || '',
-        user_email: studentData.email || studentData.user_email || '',
-        user_id: studentData.id || studentData.user_id || '',
-        jobid: job.id || job.jobid || '',
-        CGPA: studentData.CGPA,
-        tenth_percentage: studentData.tenth_percentage,
-        twelfth_percentage: studentData.twelfth_percentage,
-      }, { withCredentials: true });
-      console.log('Response from application submission:', res);
-      const result = res.data;
-      if (res.status === 200 || res.status === 201) {
-        toast.success(result?.message || 'Your application was submitted successfully!');
-        setSuccess(true);
-      } else {
-        console.error('Error submitting application:', result);
-        setError(result?.message || 'Failed to submit your application. Please try again later.');
-        toast.error(result?.message || 'Failed to submit your application. Please try again later.');
-      }
-    } catch (err) {
-      console.log('Response from application submission:', err.response);
-      console.error('Network error while submitting application:', err);
-      setError('Network error: Unable to submit application.');
-      toast.error('Network error: Unable to submit application.');
-    } finally {
-      console.log('Finished handling application for job:', selectedJobForApplication.id || selectedJobForApplication.jobid || null);
-    }
+  console.log("🟢 handleApply called");
+  console.log("Selected job:", job);
+  console.log("Student details:", studentDetails);
+
+  // Construct payload
+  const payload = {
+    user_name: user.name || user.user_name || user.fullName || user.username || '',
+    user_email: user.email || user.user_email || '',
+    user_id: studentDetails.id || studentDetails._id || '',
+    jobid: job.id || job.jobid || '',
+    CGPA: studentDetails.CGPA,
+    // tenth_percentage: studentDetails.tenth_percentage,
+    // twelfth_percentage: studentDetails.twelfth_percentage,
+    tenth_percentage: 100,
+    twelfth_percentage: 100,
+    resume_link: studentDetails.resume,
   };
+
+  // 🔍 Print the full payload before sending
+  console.log("📦 Application Payload:", payload);
+
+  try {
+    const res = await NotificationsApiSecure.post('/forms', payload, { withCredentials: true });
+    console.log('✅ Response from application submission:', res);
+
+    if (res.status === 200 || res.status === 201) {
+      toast.success(res.data?.message || 'Your application was submitted successfully!');
+      setSuccess(true);
+    } else {
+      console.error('❌ Error submitting application:', res.data);
+      setError(res.data?.message || 'Failed to submit your application. Please try again later.');
+      toast.error(res.data?.message || 'Failed to submit your application. Please try again later.');
+    }
+  } catch (err) {
+    console.error('⚠️ Network error while submitting application:', err);
+    console.log('Full error response:', err.response);
+    setError('Network error: Unable to submit application.');
+    toast.error('Network error: Unable to submit application.');
+  } finally {
+    console.log('🏁 Finished handling application for job:', job.id || job.jobid || null);
+  }
+};
+
 
   if (loading) {
     return (
@@ -107,6 +138,16 @@ export default function RecommendedJobs() {
       </div>
     );
   }
+
+  if (!studentDetails) {
+    return (
+      <div className="recommended-jobs-container">
+        <h1 className="recommended-jobs-title">Jobs</h1>
+        <p>Loading your profile details...</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="recommended-jobs-container">

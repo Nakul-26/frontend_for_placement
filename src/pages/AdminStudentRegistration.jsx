@@ -81,8 +81,8 @@ const AdminStudentRegistration = () => {
     formData.append('id', userId);
     formData.append('offical_email', studentData.offical_email);
     formData.append('personal_email', studentData.personal_email);
-    if (studentData.resume) {
-      formData.append('resume', studentData.resume);
+    if (studentData.resume) { 
+      formData.append('resume', studentData.resume); 
     }
     formData.append('LeetCode', studentData.LeetCode);
     formData.append('HackerRank', studentData.HackerRank);
