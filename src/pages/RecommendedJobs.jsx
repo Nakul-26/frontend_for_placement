@@ -86,7 +86,7 @@ export default function RecommendedJobs() {
       const res = await NotificationsApiSecure.post('/forms', {
         user_name: user.name || user.user_name || user.fullName || user.username || '',
         user_email: user.email || user.user_email || '',
-        user_id: user.id || user.user_id || '',
+        user_id: studentDetails.id || studentDetails._id || '',
         jobid: job.id || job.jobid || '',
         CGPA: studentDetails.CGPA,
         tenth_percentage: studentDetails.tenth_percentage,
