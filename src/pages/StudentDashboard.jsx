@@ -6,7 +6,7 @@ const StudentDashboard = () => {
   const { user, fetchStudentDetails, studentDetails } = useAuth();
 
   useEffect(() => {
-    fetchStudentDetails();
+    fetchStudentDetails(user.id);
   }, [fetchStudentDetails]);
 
   return (
@@ -23,10 +23,11 @@ const StudentDashboard = () => {
           <div className="student-info-grid">
             <p><strong>Name:</strong> {studentDetails.name}</p>
             <p><strong>Email:</strong> {studentDetails.email}</p>
-            <p><strong>Registration No:</strong> {studentDetails.registration_no}</p>
-            <p><strong>Department:</strong> {studentDetails.department}</p>
-            <p><strong>Year:</strong> {studentDetails.year}</p>
+            {/* <p><strong>Registration No:</strong> {studentDetails.registration_no}</p> */}
+            {/* <p><strong>Department:</strong> {studentDetails.department}</p> */}
+            {/* <p><strong>Year:</strong> {studentDetails.year}</p> */}
             <p><strong>CGPA:</strong> {studentDetails.cgpa}</p>
+            
           </div>
         </div>
       ) : (
